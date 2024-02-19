@@ -1,0 +1,13 @@
+
+T3F5C 000:000 SEGGER J-Link V6.16f Log File (0001ms, 0001ms total)
+T3F5C 000:000 DLL Compiled: Jul  3 2017 15:57:26 (0001ms, 0001ms total)
+T3F5C 000:000 Logging started @ 2023-05-01 19:07 (0001ms, 0001ms total)
+T3F5C 000:001 JLINK_Open()
+Firmware: J-Link V9 compiled May  7 2021 16:26:12
+Hardware: V9.60
+S/N: 69663957
+Feature(s): RDI, GDB, FlashDL, FlashBP, JFlashWEBSRV Webserver running on local port 19080 (0024ms, 0025ms total)
+T3F5C 000:001   returns O.K. (0024ms, 0025ms total)
+T3F5C 000:025 JLINK_GetDLLVersion()  returns 61606 (0000ms, 0025ms total)
+T3F5C 000:026 JLINK_GetHardwareVersion()  returns 0x17700 (0000ms, 0025ms total)
+T3F5C 000:026 JLINK_ExecCommand("device = CORTEX-M0", ...). 
