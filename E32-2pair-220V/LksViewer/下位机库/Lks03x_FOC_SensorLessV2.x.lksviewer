@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<lksviewer>
+    <params>
+        <param name="linkType" value="0"/>
+        <param name="jClock" value="1000000"/>
+        <param name="uClock" value="1000000"/>
+        <param name="commPort" value=""/>
+        <param name="commBaud" value="9600"/>
+        <param name="bleName" value=""/>
+        <param name="localIP" value=""/>
+        <param name="localPort" value=""/>
+        <param name="remoteIP" value=""/>
+        <param name="remotePort" value=""/>
+        <param name="rttAddr" value="20000000"/>
+        <param name="rttFreq" value="1000"/>
+        <param name="sampleInterval" value="10"/>
+        <param name="uiInterval" value="50"/>
+        <param name="maxPoint" value="100"/>
+        <param name="checkAxf" value="1"/>
+    </params>
+    <layouts>
+        <param name="geometry" value="AdnQywADAAAAAAAP///7wAAAB5D////iAAABQf///CMAAAWs////jwAAAAECAAAAB4AAAAAQ///73wAAB4/////h"/>
+        <param name="state" value="AAAA/wAAAAD9AAAAAgAAAAAAAAMgAAADn/wCAAAAAvsAAAAIepdT41v8gioBAAAATgAAApQAAABgAP////wAAALmAAABBwAAAKkBAAAY+gAAAAACAAAAAvsAAAAIW/xRZVPYkc8BAAAAAP////8AAACQAP////sAAAAKgepbmk5JU9iRzwEAAAAA/////wAAAHgA////AAAAAQAABFwAAAOf/AIAAAAH+wAAAAwAUgBUAFRUfU7kiEwAAAAAAP////8AAACoAP////sAAAAKAFIAVABUZXBjbgAAAAAA/////wAAARAA////+wAAAAZbxFtYVmgAAAAAAP////8AAAC2AP////sAAAAIj9CITGXlX9cAAAAAAP////8AAABgAP////wAAABOAAADnwAAAGAA/////AEAAAAC+wAAAAqYepAGmM5owG1LAQAAAyQAAAMeAAAAZQD////7AAAABmVwUDwAMAEAAAZGAAABOgAAAFMA////+wAAAAZlcFA8ADABAAAATgAAAVIAAAAAAAAAAPsAAAAGZvJ+vwAwAQAAAaQAAAEPAAAAAAAAAAAAAAAAAAADnwAAAAQAAAAEAAAACAAAAAj8AAAAAQAAAAIAAAACAAAADgB0AG8AbwBsAEIAYQByAQAAAAD/////AAAAAAAAAAAAAAASAHQAbwBvAGwAQgBhAHIAXwAyAQAAANj/////AAAAAAAAAAA="/>
+    </layouts>
+    <forms>
+        <form visible="1" width="800" title="窗口导航" height="660" type="0"/>
+        <form visible="1" width="239" lv-width="150,100,100,100,100" title="自定义变量" height="288" type="1"/>
+        <form visible="1" width="800" mapFile="F:/03吸尘器程序测试/LKS03x_FOC_SensorLessV2.x/Obj/LKS_MC_Project.axf" lv-width="303,100,100,100,178" title="导入变量" height="238" type="2"/>
+        <form visible="0" width="100" title="运行日志" height="30" type="3"/>
+        <form visible="0" width="100" title="RTT命令行" height="30" type="4"/>
+        <form visible="0" autoRange="1" width="100" xTag="0" lineStyle="1" scatterStyle="1" max="500" title="RTT数据" height="30" subMode="0" type="5" xCount="1000" min="-500"/>
+        <form visible="0" width="100" title="寄存器" height="30" type="6"/>
+        <form visible="1" width="314" lv-width="150,150,100,100,100,100,100,120,100,100,100" title="数值0" height="927" type="7">
+            <var color="" perunit="1" interval="10" showType="Signed" desc="mOnTheFlyDetect.wVolMagAvg" addr="0x200002b4" name="mOnTheFlyDetect.wVolMagAvg"/>
+            <var color="" perunit="1" interval="10" showType="Unsigned" desc="g_FluxObsMode" addr="0x2000004e" name="g_FluxObsMode"/>
+        </form>
+        <form visible="1" autoRange="1" width="798" xTag="0" lineStyle="1" scatterStyle="1" max="500" title="顺逆风检测" height="927" subMode="0" type="8" xCount="1000" min="-500">
+            <var name="struFOC_CurrLoop.nQCur_Reference"/>
+            <var name="g_nIqFed"/>
+        </form>
+    </forms>
+</lksviewer>
