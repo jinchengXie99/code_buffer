@@ -128,7 +128,7 @@ I (.\Include\PowerCalculation.h)(0x65D315DD)
 I (.\Include\SpeedScan.h)(0x65D315DD)
 I (.\Include\HeatControl.h)(0x65D315DD)
 I (.\Include\KeyScan.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D41F05)
+I (.\USER_APP\USER_APP.h)(0x65D5B060)
 F (.\AppFunction\System_Init.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\system_init.o --omf_browse .\obj\system_init.crf --depend .\obj\system_init.d)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
@@ -218,7 +218,7 @@ I (.\Include\Time_Process.h)(0x65D315DD)
 I (.\Include\fault_detection.h)(0x65D315DD)
 I (.\Include\PowerCalculation.h)(0x65D315DD)
 I (.\Include\SpeedScan.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D41F05)
+I (.\USER_APP\USER_APP.h)(0x65D5B060)
 I (.\Include\HeatControl.h)(0x65D315DD)
 I (.\Include\KeyScan.h)(0x65D315DD)
 F (.\AppFunction\state_machine.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\state_machine.o --omf_browse .\obj\state_machine.crf --depend .\obj\state_machine.d)
@@ -267,7 +267,7 @@ I (.\Include\SpeedScan.h)(0x65D315DD)
 I (.\Include\PowerCalculation.h)(0x65D315DD)
 I (.\Include\Time_Process.h)(0x65D315DD)
 I (.\Include\HeatControl.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D41F05)
+I (.\USER_APP\USER_APP.h)(0x65D5B060)
 F (.\AppFunction\fault_detection.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\fault_detection.o --omf_browse .\obj\fault_detection.crf --depend .\obj\fault_detection.d)
 I (.\Include\fault_detection.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
@@ -311,7 +311,7 @@ I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
 I (.\Include\HeatControl.h)(0x65D315DD)
 I (.\Include\KeyScan.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D41F05)
+I (.\USER_APP\USER_APP.h)(0x65D5B060)
 F (.\AppFunction\Process_Control.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\process_control.o --omf_browse .\obj\process_control.crf --depend .\obj\process_control.d)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
@@ -481,7 +481,7 @@ I (.\Kernal_Source\pmsmFluxObserve.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
 I (.\Include\fault_detection.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D41F05)
+I (.\USER_APP\USER_APP.h)(0x65D5B060)
 F (.\Kernal_Source\main.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
 I (.\Include\hardware_config.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
@@ -522,7 +522,7 @@ I (.\Kernal_Source\pmsmFluxObserve.h)(0x65D315DD)
 I (.\Include\state_machine.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D41F05)
+I (.\USER_APP\USER_APP.h)(0x65D5B060)
 F (.\Kernal_Source\MC_math.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\mc_math.o --omf_browse .\obj\mc_math.crf --depend .\obj\mc_math.d)
 I (Kernal_Source\mc_math.h)(0x65D315DD)
 I (.\Include\Global_Variable.h)(0x65D315DD)
@@ -686,7 +686,7 @@ I (.\Include\state_machine.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
 I (Kernal_Source\mc_math.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D41F05)
+I (.\USER_APP\USER_APP.h)(0x65D5B060)
 F (.\Kernal_Source\PID_regulators.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\pid_regulators.o --omf_browse .\obj\pid_regulators.crf --depend .\obj\pid_regulators.d)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -940,7 +940,7 @@ F (.\Include\function_config.h)(0x65D315DD)()
 F (.\Include\hardware_config.h)(0x65D315DD)()
 F (.\Include\MC_Parameter.h)(0x65D44BC7)()
 F (.\Include\HeatControl.h)(0x65D315DD)()
-F (.\USER_APP\USER_APP.c)(0x65D415E4)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\user_app.o --omf_browse .\obj\user_app.crf --depend .\obj\user_app.d)
+F (.\USER_APP\USER_APP.c)(0x65D5AEDD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\user_app.o --omf_browse .\obj\user_app.crf --depend .\obj\user_app.d)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -980,11 +980,11 @@ I (.\Kernal_Source\pmsmFluxObserve.h)(0x65D315DD)
 I (.\Include\state_machine.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
-I (USER_APP\USER_APP.h)(0x65D41F05)
+I (USER_APP\USER_APP.h)(0x65D5B060)
 I (.\LKS32MC03x_Periph_Driver\include\lks32MC03x_Flash.h)(0x65D315DD)
 I (.\Include\HeatControl.h)(0x65D315DD)
 I (.\Include\KeyScan.h)(0x65D315DD)
 I (.\Include\fault_detection.h)(0x65D315DD)
 I (.\Include\PowerCalculation.h)(0x65D315DD)
 I (.\Include\SpeedScan.h)(0x65D315DD)
-F (.\USER_APP\USER_APP.h)(0x65D41F05)()
+F (.\USER_APP\USER_APP.h)(0x65D5B060)()
