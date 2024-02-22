@@ -9,7 +9,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -32,7 +32,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Kernal_Source\foc_drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
@@ -48,7 +48,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\ctype.h)(0x60252376)
 I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -71,7 +71,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Include\global_variable.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
@@ -82,7 +82,7 @@ I (.\Include\state_machine.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
 F (.\AppFunction\interrupt.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\interrupt.o --omf_browse .\obj\interrupt.crf --depend .\obj\interrupt.d)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -111,7 +111,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Include\global_variable.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
@@ -128,7 +128,7 @@ I (.\Include\PowerCalculation.h)(0x65D315DD)
 I (.\Include\SpeedScan.h)(0x65D315DD)
 I (.\Include\HeatControl.h)(0x65D315DD)
 I (.\Include\KeyScan.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D44075)
+I (.\USER_APP\USER_APP.h)(0x65D5B5F8)
 F (.\AppFunction\System_Init.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\system_init.o --omf_browse .\obj\system_init.crf --depend .\obj\system_init.d)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
@@ -138,7 +138,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -161,7 +161,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Kernal_Source\foc_drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
@@ -182,7 +182,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -205,7 +205,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Kernal_Source\foc_drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
@@ -218,10 +218,10 @@ I (.\Include\Time_Process.h)(0x65D315DD)
 I (.\Include\fault_detection.h)(0x65D315DD)
 I (.\Include\PowerCalculation.h)(0x65D315DD)
 I (.\Include\SpeedScan.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D44075)
+I (.\USER_APP\USER_APP.h)(0x65D5B5F8)
 I (.\Include\HeatControl.h)(0x65D315DD)
 I (.\Include\KeyScan.h)(0x65D315DD)
-F (.\AppFunction\state_machine.c)(0x65D44716)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\state_machine.o --omf_browse .\obj\state_machine.crf --depend .\obj\state_machine.d)
+F (.\AppFunction\state_machine.c)(0x65D44B12)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\state_machine.o --omf_browse .\obj\state_machine.crf --depend .\obj\state_machine.d)
 I (.\Include\state_machine.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -230,11 +230,11 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\mc_type.h)(0x65D315DD)
-I (.\Include\MC_parameter.h)(0x65D44976)
+I (.\Include\MC_parameter.h)(0x65D69E6E)
 I (.\Kernal_Source\FOC_Drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -267,7 +267,7 @@ I (.\Include\SpeedScan.h)(0x65D315DD)
 I (.\Include\PowerCalculation.h)(0x65D315DD)
 I (.\Include\Time_Process.h)(0x65D315DD)
 I (.\Include\HeatControl.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D44075)
+I (.\USER_APP\USER_APP.h)(0x65D5B5F8)
 F (.\AppFunction\fault_detection.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\fault_detection.o --omf_browse .\obj\fault_detection.crf --depend .\obj\fault_detection.d)
 I (.\Include\fault_detection.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
@@ -277,10 +277,10 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\mc_type.h)(0x65D315DD)
-I (.\Include\MC_parameter.h)(0x65D44976)
+I (.\Include\MC_parameter.h)(0x65D69E6E)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -311,7 +311,7 @@ I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
 I (.\Include\HeatControl.h)(0x65D315DD)
 I (.\Include\KeyScan.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D44075)
+I (.\USER_APP\USER_APP.h)(0x65D5B5F8)
 F (.\AppFunction\Process_Control.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\process_control.o --omf_browse .\obj\process_control.crf --depend .\obj\process_control.d)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
@@ -321,7 +321,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -344,7 +344,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Kernal_Source\foc_drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
@@ -353,7 +353,7 @@ I (.\Include\state_machine.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
 F (.\AppFunction\PowerCalculation.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\powercalculation.o --omf_browse .\obj\powercalculation.crf --depend .\obj\powercalculation.d)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\ctype.h)(0x60252376)
@@ -366,7 +366,7 @@ I (.\Include\SpeedScan.h)(0x65D315DD)
 I (.\Kernal_Source\FOC_Drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -406,7 +406,7 @@ I (.\Kernal_Source\FOC_Drive.h)(0x65D315DD)
 I (.\Include\mc_type.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -429,7 +429,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Kernal_Source\pmsmFluxObserve.h)(0x65D315DD)
 I (.\Include\PowerCalculation.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h)(0x65D315DD)
@@ -457,7 +457,7 @@ I (.\Include\state_machine.h)(0x65D315DD)
 I (.\Include\mc_type.h)(0x65D315DD)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_hal.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_adc.h   )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_cmp.h   )(0x65D315DD)
@@ -474,16 +474,16 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_sys.h   )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Kernal_Source\foc_drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
 I (.\Kernal_Source\pmsmFluxObserve.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
 I (.\Include\fault_detection.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D44075)
+I (.\USER_APP\USER_APP.h)(0x65D5B5F8)
 F (.\Kernal_Source\main.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\main.o --omf_browse .\obj\main.crf --depend .\obj\main.d)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -512,7 +512,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
@@ -522,7 +522,7 @@ I (.\Kernal_Source\pmsmFluxObserve.h)(0x65D315DD)
 I (.\Include\state_machine.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D44075)
+I (.\USER_APP\USER_APP.h)(0x65D5B5F8)
 F (.\Kernal_Source\MC_math.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\mc_math.o --omf_browse .\obj\mc_math.crf --depend .\obj\mc_math.d)
 I (Kernal_Source\mc_math.h)(0x65D315DD)
 I (.\Include\Global_Variable.h)(0x65D315DD)
@@ -533,7 +533,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -556,7 +556,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Kernal_Source\foc_drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
@@ -573,7 +573,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -596,7 +596,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Kernal_Source\foc_drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
@@ -615,7 +615,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (Kernal_Source\PID_regulators.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -638,7 +638,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (Kernal_Source\pmsmFluxObserve.h)(0x65D315DD)
 I (.\Include\global_variable.h)(0x65D315DD)
 I (.\Include\state_machine.h)(0x65D315DD)
@@ -656,7 +656,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (Kernal_Source\PID_regulators.h)(0x65D315DD)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -679,14 +679,14 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (Kernal_Source\pmsmFluxObserve.h)(0x65D315DD)
 I (.\Include\global_variable.h)(0x65D315DD)
 I (.\Include\state_machine.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
 I (Kernal_Source\mc_math.h)(0x65D315DD)
-I (.\USER_APP\USER_APP.h)(0x65D44075)
+I (.\USER_APP\USER_APP.h)(0x65D5B5F8)
 F (.\Kernal_Source\PID_regulators.c)(0x65D315DD)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\pid_regulators.o --omf_browse .\obj\pid_regulators.crf --depend .\obj\pid_regulators.d)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -705,7 +705,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -728,7 +728,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Kernal_Source\foc_drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
@@ -937,10 +937,10 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 F (.\LKS32MC03x_Periph_Driver\Source\startup_lks32mc03x.s)(0x65D315DD)(--cpu Cortex-M0 -g --apcs=interwork -I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include--pd "__UVISION_VERSION SETA 538" --pd "_RTE_ SETA 1" --pd "LKS32MC038Y6P8 SETA 1" --pd "_RTE_ SETA 1"--list .\list\startup_lks32mc03x.lst --xref -o .\obj\startup_lks32mc03x.o --depend .\obj\startup_lks32mc03x.d)
 F (.\LKS32MC03x_Periph_Driver\Source\lks32mc03x_nvr.lib)(0x65D315DD)()
 F (.\Include\function_config.h)(0x65D315DD)()
-F (.\Include\hardware_config.h)(0x65D315DD)()
-F (.\Include\MC_Parameter.h)(0x65D44976)()
+F (.\Include\hardware_config.h)(0x65D5C0FA)()
+F (.\Include\MC_Parameter.h)(0x65D69E6E)()
 F (.\Include\HeatControl.h)(0x65D315DD)()
-F (.\USER_APP\USER_APP.c)(0x65D415E4)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\user_app.o --omf_browse .\obj\user_app.crf --depend .\obj\user_app.d)
+F (.\USER_APP\USER_APP.c)(0x65D5B317)(--c99 -c --cpu Cortex-M0 -g -O2 --apcs=interwork --split_sections -I .\FreeMaster -I .\Include -I .\LKS32MC03x_Periph_Driver\include -I .\RTT -I .\Kernal_Source -I .\USER_APP-I.\RTE\_Linko_03x_Project-IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include-IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include-D__UVISION_VERSION="538" -D_RTE_ -DLKS32MC038Y6P8 -D_RTE_-o .\obj\user_app.o --omf_browse .\obj\user_app.crf --depend .\obj\user_app.d)
 I (.\Include\Global_Variable.h)(0x65D315DD)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h)(0x656F43D6)
 I (C:\Keil_v5\ARM\ARMCC\include\stdlib.h)(0x60252374)
@@ -949,7 +949,7 @@ I (C:\Keil_v5\ARM\ARMCC\include\stdio.h)(0x60252374)
 I (C:\Keil_v5\ARM\ARMCC\include\stdint.h)(0x6025237E)
 I (C:\Keil_v5\ARM\ARMCC\include\stdbool.h)(0x6025237C)
 I (.\Include\function_config.h)(0x65D315DD)
-I (.\Include\hardware_config.h)(0x65D315DD)
+I (.\Include\hardware_config.h)(0x65D5C0FA)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h)(0x656F43D6)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h)(0x60D3E8E2)
 I (C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_version.h)(0x60D3E8E2)
@@ -972,7 +972,7 @@ I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h)(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h )(0x65D315DD)
 I (.\LKS32MC03x_Periph_Driver\include\lks32mc03x_uart.h  )(0x65D315DD)
 I (.\Include\hardware_init.h)(0x65D315DD)
-I (.\Include\MC_Parameter.h)(0x65D44976)
+I (.\Include\MC_Parameter.h)(0x65D69E6E)
 I (.\Include\MC_Type.h)(0x65D315DD)
 I (.\Kernal_Source\foc_drive.h)(0x65D315DD)
 I (.\Kernal_Source\PID_regulators.h)(0x65D315DD)
@@ -980,11 +980,11 @@ I (.\Kernal_Source\pmsmFluxObserve.h)(0x65D315DD)
 I (.\Include\state_machine.h)(0x65D315DD)
 I (.\Kernal_Source\MC_IPD.h)(0x65D315DD)
 I (.\Kernal_Source\mc_hall.h)(0x65D315DD)
-I (USER_APP\USER_APP.h)(0x65D44075)
+I (USER_APP\USER_APP.h)(0x65D5B5F8)
 I (.\LKS32MC03x_Periph_Driver\include\lks32MC03x_Flash.h)(0x65D315DD)
 I (.\Include\HeatControl.h)(0x65D315DD)
 I (.\Include\KeyScan.h)(0x65D315DD)
 I (.\Include\fault_detection.h)(0x65D315DD)
 I (.\Include\PowerCalculation.h)(0x65D315DD)
 I (.\Include\SpeedScan.h)(0x65D315DD)
-F (.\USER_APP\USER_APP.h)(0x65D44075)()
+F (.\USER_APP\USER_APP.h)(0x65D5B5F8)()
