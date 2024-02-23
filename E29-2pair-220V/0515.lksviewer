@@ -1,100 +1,100 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <lksviewer>
     <params>
-        <param value="0" name="linkType"/>
-        <param value="10000000" name="jClock"/>
-        <param value="1000000" name="uClock"/>
-        <param value="" name="commPort"/>
-        <param value="9600" name="commBaud"/>
-        <param value="" name="bleName"/>
-        <param value="" name="localIP"/>
-        <param value="" name="localPort"/>
-        <param value="" name="remoteIP"/>
-        <param value="" name="remotePort"/>
-        <param value="20000000" name="rttAddr"/>
-        <param value="22000" name="rttFreq"/>
-        <param value="1" name="sampleInterval"/>
-        <param value="50" name="uiInterval"/>
-        <param value="100" name="maxPoint"/>
-        <param value="1" name="checkAxf"/>
+        <param name="linkType" value="0"/>
+        <param name="jClock" value="10000000"/>
+        <param name="uClock" value="1000000"/>
+        <param name="commPort" value=""/>
+        <param name="commBaud" value="9600"/>
+        <param name="bleName" value=""/>
+        <param name="localIP" value=""/>
+        <param name="localPort" value=""/>
+        <param name="remoteIP" value=""/>
+        <param name="remotePort" value=""/>
+        <param name="rttAddr" value="20000000"/>
+        <param name="rttFreq" value="22000"/>
+        <param name="sampleInterval" value="1"/>
+        <param name="uiInterval" value="50"/>
+        <param name="maxPoint" value="100"/>
+        <param name="checkAxf" value="1"/>
     </params>
     <layouts>
-        <param value="AdnQywADAAD////+////8wAAC0EAAAa5AAADbwAAAfcAAAfQAAAEvwAAAAACAAAAC0AAAAAAAAAALQAACz8AAAa3" name="geometry"/>
-        <param value="AAAA/wAAAAD9AAAAAgAAAAAAAAI1AAAGBPwCAAAAAvsAAAAIepdT41v8gioBAAAAZgAAAcAAAACqAP////wAAAIqAAAEQAAAAR4BAAAj+gAAAAACAAAAAvsAAAAIW/xRZVPYkc8BAAAAAP////8AAAD6AP////sAAAAKgepbmk5JU9iRzwEAAAAA/////wAAAMwA////AAAAAQAACQcAAAYE/AIAAAAM+wAAAAwAUgBUAFRUfU7kiEwAAAAAAP////8AAAE4AP////sAAAAKAFIAVABUZXBjbgAAAAAA/////wAAAXAA////+wAAAAZbxFtYVmgAAAAAUgAAAc8AAAEeAP////sAAAAIj9CITGXlX9cAAAAAAP////8AAACoAP////wAAABmAAAGBAAAARwA/////AIAAAAC+wAAAAZlcFA8ADABAAAAZgAABD4AAADKAP////sAAAAGZvJ+vwA2AQAABKgAAAHCAAAATgD////8AAADfgAAAuwAAAAAAP////wBAAAAAvsAAAAGZvJ+vwAwAAAABaIAAAWeAAAAlgD////7AAAABmbyfr8AMQAAAAJRAAAFLwAAAJYA////+wAAABAAVAByAGkAZwBnAGUAcgAwAAAAAAD/////AAAA4AD////7AAAABmbyfr8AMgAAAALyAAAASAAAAE4A////+wAAAAZm8n6/ADMAAAACvwAAAJEAAABOAP////sAAAAGZvJ+vwA0AAAAAd4AAAE0AAAATgD////7AAAABmbyfr8ANQAAAAJwAAAAzgAAAE4A////+wAAAAZm8n6/ADcAAAADQQAAAJAAAABOAP///wAAAAAAAAYEAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAIAAAAOAHQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAAAAAAAAAABIAdABvAG8AbABCAGEAcgBfADIBAAABXv////8AAAAAAAAAAA==" name="state"/>
+        <param name="geometry" value="AdnQywADAAD////+////8wAAC0EAAAa5AAADbwAAAfcAAAfQAAAEvwAAAAACAAAAC0AAAAAAAAAALQAACz8AAAa3"/>
+        <param name="state" value="AAAA/wAAAAD9AAAAAgAAAAAAAAI1AAAGBPwCAAAAAvsAAAAIepdT41v8gioBAAAAZgAAAcAAAACqAP////wAAAIqAAAEQAAAAR4BAAAj+gAAAAACAAAAAvsAAAAIW/xRZVPYkc8BAAAAAP////8AAAD6AP////sAAAAKgepbmk5JU9iRzwEAAAAA/////wAAAMwA////AAAAAQAACQcAAAYE/AIAAAAM+wAAAAwAUgBUAFRUfU7kiEwAAAAAAP////8AAAE4AP////sAAAAKAFIAVABUZXBjbgAAAAAA/////wAAAXAA////+wAAAAZbxFtYVmgAAAAAUgAAAc8AAAEeAP////sAAAAIj9CITGXlX9cAAAAAAP////8AAACoAP////wAAABmAAAGBAAAARwA/////AIAAAAC+wAAAAZlcFA8ADABAAAAZgAAAPEAAADKAP////sAAAAGZvJ+vwA2AQAAAVsAAAUPAAAATgD////8AAADfgAAAuwAAAAAAP////wBAAAAAvsAAAAGZvJ+vwAwAAAABaIAAAWeAAAAlgD////7AAAABmbyfr8AMQAAAAJRAAAFLwAAAJYA////+wAAABAAVAByAGkAZwBnAGUAcgAwAAAAAAD/////AAAA4AD////7AAAABmbyfr8AMgAAAALyAAAASAAAAE4A////+wAAAAZm8n6/ADMAAAACvwAAAJEAAABOAP////sAAAAGZvJ+vwA0AAAAAd4AAAE0AAAATgD////7AAAABmbyfr8ANQAAAAJwAAAAzgAAAE4A////+wAAAAZm8n6/ADcAAAADQQAAAJAAAABOAP///wAAAAAAAAYEAAAABAAAAAQAAAAIAAAACPwAAAABAAAAAgAAAAIAAAAOAHQAbwBvAGwAQgBhAHIBAAAAAP////8AAAAAAAAAAAAAABIAdABvAG8AbABCAGEAcgBfADIBAAABXv////8AAAAAAAAAAA=="/>
     </layouts>
     <forms>
-        <form type="0" height="448" width="565" title="窗口导航" floating="0" visible="1"/>
-        <form type="1" height="204" width="228" title="自定义变量" lv-width="150,100,100,100,100" floating="0" visible="1"/>
-        <form type="2" height="1052" width="565" title="导入变量" lv-width="363,100,100,100,194,100,100,343" floating="0" mapFile="./Obj/LKS_MC_Project.axf" visible="1"/>
-        <form type="3" height="30" width="100" title="运行日志" floating="0" visible="0"/>
-        <form type="4" height="30" width="100" title="RTT命令行" floating="0" visible="0"/>
-        <form type="5" subMode="0" max="500" scatterStyle="1" autoRange="1" title="RTT数据" trigName="" trigType="0" floating="0" xCount="1000" xTag="0" min="-500" trigValue="0" visible="0" lineStyle="1" scrollType="0"/>
-        <form type="6" title="寄存器" floating="0" visible="0"/>
-        <form type="7" height="1086" width="2311" title="数值0" lv-width="493,150,100,100,100,418,100,120,100,100,100" floating="0" visible="1">
-            <var perunit="1" desc="struFOC_CtrProc.bMC_RunFlg" color="" addr="0x2000010b" showType="Unsigned" interval="10" name="struFOC_CtrProc.bMC_RunFlg"/>
-            <var perunit="1" desc="struFOC_CtrProc.eSysState" color="" addr="0x2000010c" showType="" interval="10" name="struFOC_CtrProc.eSysState"/>
-            <var perunit="1" desc="stru_Faults.R" color="" addr="0x20000008" showType="Unsigned" interval="1" name="stru_Faults.R"/>
-            <var perunit="1" desc="struFOC_CurrLoop.nBusVoltage" color="" addr="0x2000013a" showType="Signed" interval="1" name="struFOC_CurrLoop.nBusVoltage"/>
-            <var perunit="1" desc="FRSControl.ACFrequency" color="" addr="0x200004bc" showType="Unsigned" interval="1" name="FRSControl.ACFrequency"/>
-            <var perunit="1" desc="FRSControl.CrossZeroPosedgeFlag" color="" addr="0x200004e9" showType="Unsigned" interval="1" name="FRSControl.CrossZeroPosedgeFlag"/>
-            <var perunit="1" desc="stru_FaultValue.nOverVoltage" color="" addr="0x200003c6" showType="Signed" interval="1" name="stru_FaultValue.nOverVoltage"/>
-            <var perunit="1" desc="stru_FaultValue.nUnderVoltage" color="" addr="0x200003c8" showType="Signed" interval="1" name="stru_FaultValue.nUnderVoltage"/>
-            <var perunit="1" desc="struMotorSpeed.wSpeedfbk" color="" addr="0x2000028c" showType="Signed" interval="1" name="struMotorSpeed.wSpeedfbk"/>
-            <var perunit="1" desc="struMotorSpeed.wSpeedRef" color="" addr="0x20000288" showType="Signed" interval="1" name="struMotorSpeed.wSpeedRef"/>
-            <var perunit="1" desc="gPmWeakId" color="" addr="0x20000066" showType="Signed" interval="1" name="gPmWeakId"/>
-            <var perunit="1" desc="zcgcnt1" color="" addr="0x20000002" showType="Signed" interval="1" name="zcgcnt1"/>
-            <var perunit="1" desc="zcgcnt2" color="" addr="0x20000004" showType="Signed" interval="1" name="zcgcnt2"/>
-            <var perunit="1" desc="struMotorSpeed.wSpeedSet" color="" addr="0x20000294" showType="Signed" interval="1" name="struMotorSpeed.wSpeedSet"/>
-            <var perunit="1" desc="iTargetGear" color="" addr="0x20000021" showType="Unsigned" interval="1" name="iTargetGear"/>
-            <var perunit="1" desc="key_on" color="" addr="0x2000003a" showType="Unsigned" interval="1" name="key_on"/>
-            <var perunit="1" desc="key_on_cnt" color="" addr="0x2000003b" showType="Unsigned" interval="1" name="key_on_cnt"/>
-            <var perunit="1" desc="key_off_cnt" color="" addr="0x2000003d" showType="Unsigned" interval="1" name="key_off_cnt"/>
-            <var perunit="1" desc="UserSys.ucUserFunState" color="" addr="0x20000512" showType="Unsigned" interval="1" name="UserSys.ucUserFunState"/>
-            <var perunit="1" desc="FRSControl.ThrowWaveCnt" color="" addr="0x200004e1" showType="Unsigned" interval="1" name="FRSControl.ThrowWaveCnt"/>
-            <var perunit="1" desc="FRSControl.HEATER_NTCTemperature" color="" addr="0x200004ec" showType="Signed" interval="1" name="FRSControl.HEATER_NTCTemperature"/>
-            <var perunit="1" desc="FRSControl.ThrowWaveLimitMax" color="" addr="0x200004f4" showType="Unsigned" interval="1" name="FRSControl.ThrowWaveLimitMax"/>
-            <var perunit="1" desc="TempGear" color="" addr="0x20000020" showType="Unsigned" interval="1" name="TempGear"/>
-            <var perunit="1" desc="FRSControl.CrossDownAcState" color="" addr="0x200004d6" showType="Unsigned" interval="1" name="FRSControl.CrossDownAcState"/>
-            <var perunit="1" desc="struMotorSpeed.wBrakeSpeed" color="" addr="0x200002d8" showType="Signed" interval="1" name="struMotorSpeed.wBrakeSpeed"/>
-            <var perunit="1" desc="struMotorSpeed.wSpeedEst" color="" addr="0x20000298" showType="Signed" interval="1" name="struMotorSpeed.wSpeedEst"/>
-            <var perunit="1" desc="AutoTemp" color="" addr="0x20000022" showType="Unsigned" interval="1" name="AutoTemp"/>
-            <var perunit="1" desc="FRS_ON" color="" addr="0x20000010" showType="Unsigned" interval="1" name="FRS_ON"/>
+        <form width="565" height="448" type="0" floating="0" visible="1" title="窗口导航"/>
+        <form width="228" height="204" type="1" floating="0" visible="1" lv-width="150,100,100,100,100" title="自定义变量"/>
+        <form width="565" height="1052" type="2" floating="0" visible="1" lv-width="363,100,100,100,194,100,100,343" mapFile="./Obj/LKS_MC_Project.axf" title="导入变量"/>
+        <form width="100" height="30" type="3" floating="0" visible="0" title="运行日志"/>
+        <form width="100" height="30" type="4" floating="0" visible="0" title="RTT命令行"/>
+        <form xTag="0" subMode="0" type="5" floating="0" visible="0" xCount="1000" scrollType="0" trigName="" trigValue="0" autoRange="1" lineStyle="1" min="-500" max="500" title="RTT数据" scatterStyle="1" trigType="0"/>
+        <form type="6" floating="0" visible="0" title="寄存器"/>
+        <form width="2311" height="241" type="7" floating="0" visible="1" lv-width="493,150,100,100,100,418,100,120,100,100,100" title="数值0">
+            <var perunit="1" interval="10" name="struFOC_CtrProc.bMC_RunFlg" desc="struFOC_CtrProc.bMC_RunFlg" showType="Unsigned" color="" addr="0x2000010b"/>
+            <var perunit="1" interval="10" name="struFOC_CtrProc.eSysState" desc="struFOC_CtrProc.eSysState" showType="" color="" addr="0x2000010c"/>
+            <var perunit="1" interval="1" name="stru_Faults.R" desc="stru_Faults.R" showType="Unsigned" color="" addr="0x20000008"/>
+            <var perunit="1" interval="1" name="struFOC_CurrLoop.nBusVoltage" desc="struFOC_CurrLoop.nBusVoltage" showType="Signed" color="" addr="0x2000013a"/>
+            <var perunit="1" interval="1" name="FRSControl.ACFrequency" desc="FRSControl.ACFrequency" showType="Unsigned" color="" addr="0x200004bc"/>
+            <var perunit="1" interval="1" name="FRSControl.CrossZeroPosedgeFlag" desc="FRSControl.CrossZeroPosedgeFlag" showType="Unsigned" color="" addr="0x200004e9"/>
+            <var perunit="1" interval="1" name="stru_FaultValue.nOverVoltage" desc="stru_FaultValue.nOverVoltage" showType="Signed" color="" addr="0x200003c6"/>
+            <var perunit="1" interval="1" name="stru_FaultValue.nUnderVoltage" desc="stru_FaultValue.nUnderVoltage" showType="Signed" color="" addr="0x200003c8"/>
+            <var perunit="1" interval="1" name="struMotorSpeed.wSpeedfbk" desc="struMotorSpeed.wSpeedfbk" showType="Signed" color="" addr="0x2000028c"/>
+            <var perunit="1" interval="1" name="struMotorSpeed.wSpeedRef" desc="struMotorSpeed.wSpeedRef" showType="Signed" color="" addr="0x20000288"/>
+            <var perunit="1" interval="1" name="gPmWeakId" desc="gPmWeakId" showType="Signed" color="" addr="0x20000066"/>
+            <var perunit="1" interval="1" name="zcgcnt1" desc="zcgcnt1" showType="Signed" color="" addr="0x20000002"/>
+            <var perunit="1" interval="1" name="zcgcnt2" desc="zcgcnt2" showType="Signed" color="" addr="0x20000004"/>
+            <var perunit="1" interval="1" name="struMotorSpeed.wSpeedSet" desc="struMotorSpeed.wSpeedSet" showType="Signed" color="" addr="0x20000294"/>
+            <var perunit="1" interval="1" name="iTargetGear" desc="iTargetGear" showType="Unsigned" color="" addr="0x20000021"/>
+            <var perunit="1" interval="1" name="key_on" desc="key_on" showType="Unsigned" color="" addr="0x2000003a"/>
+            <var perunit="1" interval="1" name="key_on_cnt" desc="key_on_cnt" showType="Unsigned" color="" addr="0x2000003b"/>
+            <var perunit="1" interval="1" name="key_off_cnt" desc="key_off_cnt" showType="Unsigned" color="" addr="0x2000003d"/>
+            <var perunit="1" interval="1" name="UserSys.ucUserFunState" desc="UserSys.ucUserFunState" showType="Unsigned" color="" addr="0x20000512"/>
+            <var perunit="1" interval="1" name="FRSControl.ThrowWaveCnt" desc="FRSControl.ThrowWaveCnt" showType="Unsigned" color="" addr="0x200004e1"/>
+            <var perunit="1" interval="1" name="FRSControl.HEATER_NTCTemperature" desc="FRSControl.HEATER_NTCTemperature" showType="Signed" color="" addr="0x200004ec"/>
+            <var perunit="1" interval="1" name="FRSControl.ThrowWaveLimitMax" desc="FRSControl.ThrowWaveLimitMax" showType="Unsigned" color="" addr="0x200004f4"/>
+            <var perunit="1" interval="1" name="TempGear" desc="TempGear" showType="Unsigned" color="" addr="0x20000020"/>
+            <var perunit="1" interval="1" name="FRSControl.CrossDownAcState" desc="FRSControl.CrossDownAcState" showType="Unsigned" color="" addr="0x200004d6"/>
+            <var perunit="1" interval="1" name="struMotorSpeed.wBrakeSpeed" desc="struMotorSpeed.wBrakeSpeed" showType="Signed" color="" addr="0x200002d8"/>
+            <var perunit="1" interval="1" name="struMotorSpeed.wSpeedEst" desc="struMotorSpeed.wSpeedEst" showType="Signed" color="" addr="0x20000298"/>
+            <var perunit="1" interval="1" name="AutoTemp" desc="AutoTemp" showType="Unsigned" color="" addr="0x20000022"/>
+            <var perunit="1" interval="1" name="FRS_ON" desc="FRS_ON" showType="Unsigned" color="" addr="0x20000010"/>
         </form>
-        <form type="8" subMode="0" max="500" scatterStyle="1" autoRange="1" title="曲线0" trigName="" trigType="0" floating="0" xCount="3995.78" xTag="0" min="-500" trigValue="0" visible="0" lineStyle="1" scrollType="0">
-            <var desc="struFOC_CurrLoop.nQCur_Reference" color="#ff0000" subPlot="0" name="struFOC_CurrLoop.nQCur_Reference"/>
-            <var desc="struFOC_CurrLoop.nDCur_Reference" color="#00ff00" subPlot="0" name="struFOC_CurrLoop.nDCur_Reference"/>
-            <var desc="struFOC_CurrLoop.mStatCurrDQ.nAxisQ" color="#00ffff" subPlot="0" name="struFOC_CurrLoop.mStatCurrDQ.nAxisQ"/>
-            <var desc="struFOC_CurrLoop.mStatCurrDQ.nAxisD" color="#ff00ff" subPlot="0" name="struFOC_CurrLoop.mStatCurrDQ.nAxisD"/>
+        <form xTag="0" subMode="0" type="8" floating="0" visible="0" xCount="3995.78" scrollType="0" trigName="" trigValue="0" autoRange="1" lineStyle="1" min="-500" max="500" title="曲线0" scatterStyle="1" trigType="0">
+            <var subPlot="0" name="struFOC_CurrLoop.nQCur_Reference" desc="struFOC_CurrLoop.nQCur_Reference" color="#ff0000"/>
+            <var subPlot="0" name="struFOC_CurrLoop.nDCur_Reference" desc="struFOC_CurrLoop.nDCur_Reference" color="#00ff00"/>
+            <var subPlot="0" name="struFOC_CurrLoop.mStatCurrDQ.nAxisQ" desc="struFOC_CurrLoop.mStatCurrDQ.nAxisQ" color="#00ffff"/>
+            <var subPlot="0" name="struFOC_CurrLoop.mStatCurrDQ.nAxisD" desc="struFOC_CurrLoop.mStatCurrDQ.nAxisD" color="#ff00ff"/>
         </form>
-        <form type="8" subMode="0" max="500" scatterStyle="1" autoRange="1" title="曲线1" trigName="" trigType="0" floating="0" xCount="3676.93" xTag="0" min="-500" trigValue="0" visible="0" lineStyle="1" scrollType="0">
-            <var desc="zcgcnt1" color="#ff0000" subPlot="0" name="zcgcnt1"/>
-            <var desc="zcgcnt2" color="#00ff00" subPlot="0" name="zcgcnt2"/>
+        <form xTag="0" subMode="0" type="8" floating="0" visible="0" xCount="3676.93" scrollType="0" trigName="" trigValue="0" autoRange="1" lineStyle="1" min="-500" max="500" title="曲线1" scatterStyle="1" trigType="0">
+            <var subPlot="0" name="zcgcnt1" desc="zcgcnt1" color="#ff0000"/>
+            <var subPlot="0" name="zcgcnt2" desc="zcgcnt2" color="#00ff00"/>
         </form>
-        <form type="8" subMode="0" max="500" scatterStyle="1" autoRange="1" title="曲线2" trigName="" trigType="0" floating="0" xCount="1000" xTag="0" min="-500" trigValue="0" visible="0" lineStyle="1" scrollType="0">
-            <var desc="stru_Faults.R" color="#ff0000" subPlot="0" name="stru_Faults.R"/>
-            <var desc="stru_FaultValue.nStallFlag" color="#00ff00" subPlot="0" name="stru_FaultValue.nStallFlag"/>
-            <var desc="struFOC_CtrProc.bMC_RunFlg" color="#00ffff" subPlot="0" name="struFOC_CtrProc.bMC_RunFlg"/>
+        <form xTag="0" subMode="0" type="8" floating="0" visible="0" xCount="1000" scrollType="0" trigName="" trigValue="0" autoRange="1" lineStyle="1" min="-500" max="500" title="曲线2" scatterStyle="1" trigType="0">
+            <var subPlot="0" name="stru_Faults.R" desc="stru_Faults.R" color="#ff0000"/>
+            <var subPlot="0" name="stru_FaultValue.nStallFlag" desc="stru_FaultValue.nStallFlag" color="#00ff00"/>
+            <var subPlot="0" name="struFOC_CtrProc.bMC_RunFlg" desc="struFOC_CtrProc.bMC_RunFlg" color="#00ffff"/>
         </form>
-        <form type="8" subMode="0" max="500" scatterStyle="1" autoRange="1" title="曲线3" trigName="" trigType="0" floating="0" xCount="1000" xTag="0" min="-500" trigValue="0" visible="0" lineStyle="1" scrollType="0">
-            <var desc="FRSControl.CrossZeroPosedgeFlag" color="#ff0000" subPlot="0" name="FRSControl.CrossZeroPosedgeFlag"/>
+        <form xTag="0" subMode="0" type="8" floating="0" visible="0" xCount="1000" scrollType="0" trigName="" trigValue="0" autoRange="1" lineStyle="1" min="-500" max="500" title="曲线3" scatterStyle="1" trigType="0">
+            <var subPlot="0" name="FRSControl.CrossZeroPosedgeFlag" desc="FRSControl.CrossZeroPosedgeFlag" color="#ff0000"/>
         </form>
-        <form type="8" subMode="0" max="500" scatterStyle="1" autoRange="1" title="曲线4" trigName="" trigType="0" floating="0" xCount="677.909" xTag="0" min="-500" trigValue="0" visible="0" lineStyle="1" scrollType="0">
-            <var desc="UserSys.ucUserFunState" color="#ff0000" subPlot="0" name="UserSys.ucUserFunState"/>
-            <var desc="FRSControl.CrossDownAcState" color="#00ff00" subPlot="0" name="FRSControl.CrossDownAcState"/>
+        <form xTag="0" subMode="0" type="8" floating="0" visible="0" xCount="677.909" scrollType="0" trigName="" trigValue="0" autoRange="1" lineStyle="1" min="-500" max="500" title="曲线4" scatterStyle="1" trigType="0">
+            <var subPlot="0" name="UserSys.ucUserFunState" desc="UserSys.ucUserFunState" color="#ff0000"/>
+            <var subPlot="0" name="FRSControl.CrossDownAcState" desc="FRSControl.CrossDownAcState" color="#00ff00"/>
         </form>
-        <form type="8" subMode="0" max="500" scatterStyle="1" autoRange="1" title="曲线5" trigName="" trigType="0" floating="0" xCount="432.926" xTag="0" min="-500" trigValue="0" visible="0" lineStyle="1" scrollType="0">
-            <var desc="FRS_ON" color="#00ff00" subPlot="0" name="FRS_ON"/>
+        <form xTag="0" subMode="0" type="8" floating="0" visible="0" xCount="432.926" scrollType="0" trigName="" trigValue="0" autoRange="1" lineStyle="1" min="-500" max="500" title="曲线5" scatterStyle="1" trigType="0">
+            <var subPlot="0" name="FRS_ON" desc="FRS_ON" color="#00ff00"/>
         </form>
-        <form type="8" subMode="1" max="500" scatterStyle="1" autoRange="1" title="曲线6" trigName="" trigType="0" floating="0" xCount="859.281" xTag="0" min="-500" trigValue="0" visible="1" lineStyle="1" scrollType="0">
-            <var desc="struMotorSpeed.wSpeedfbk" color="#ff0000" subPlot="0" name="struMotorSpeed.wSpeedfbk"/>
-            <var desc="struMotorSpeed.wSpeedRef" color="#00ff00" subPlot="1" name="struMotorSpeed.wSpeedRef"/>
-            <var desc="struFOC_CurrLoop.nBusVoltage" color="#00ffff" subPlot="1" name="struFOC_CurrLoop.nBusVoltage"/>
+        <form xTag="0" subMode="0" type="8" floating="0" visible="1" xCount="859.281" scrollType="0" trigName="" trigValue="0" autoRange="1" lineStyle="1" min="-500" max="500" title="曲线6" scatterStyle="1" trigType="0">
+            <var subPlot="0" name="struMotorSpeed.wSpeedfbk" desc="struMotorSpeed.wSpeedfbk" color="#ff0000"/>
+            <var subPlot="0" name="struMotorSpeed.wSpeedRef" desc="struMotorSpeed.wSpeedRef" color="#00ff00"/>
+            <var subPlot="0" name="struFOC_CurrLoop.nBusVoltage" desc="struFOC_CurrLoop.nBusVoltage" color="#00ffff"/>
         </form>
-        <form type="8" subMode="0" max="500" scatterStyle="1" autoRange="1" title="曲线7" trigName="" trigType="0" floating="0" xCount="3119.95" xTag="0" min="-500" trigValue="0" visible="0" lineStyle="1" scrollType="0">
-            <var desc="TempGear" color="#ff0000" subPlot="0" name="TempGear"/>
-            <var desc="AutoTemp" color="#00ff00" subPlot="0" name="AutoTemp"/>
-            <var desc="FRS_ON" color="#00ffff" subPlot="0" name="FRS_ON"/>
+        <form xTag="0" subMode="0" type="8" floating="0" visible="0" xCount="3119.95" scrollType="0" trigName="" trigValue="0" autoRange="1" lineStyle="1" min="-500" max="500" title="曲线7" scatterStyle="1" trigType="0">
+            <var subPlot="0" name="TempGear" desc="TempGear" color="#ff0000"/>
+            <var subPlot="0" name="AutoTemp" desc="AutoTemp" color="#00ff00"/>
+            <var subPlot="0" name="FRS_ON" desc="FRS_ON" color="#00ffff"/>
         </form>
-        <form type="9" subMode="0" max="500" scatterStyle="1" autoRange="1" num="500" title="Trigger0" floating="0" xCount="1000" xTag="0" min="-500" interval="100" visible="0" lineStyle="1"/>
+        <form xTag="0" subMode="0" type="9" floating="0" visible="0" xCount="1000" interval="100" autoRange="1" lineStyle="1" num="500" min="-500" max="500" title="Trigger0" scatterStyle="1"/>
     </forms>
 </lksviewer>
