@@ -1,0 +1,631 @@
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERCALCULATE
+OBJECT MODULE PLACED IN .\Output\UserCalculate.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\UserFiles\UserCalculate.c LARGE OMF2 WARNINGLEVEL(0) OPTI
+                    -MIZE(5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\UserCalcula
+                    -te.lst) TABS(2) OBJECT(.\Output\UserCalculate.obj)
+
+line level    source
+
+   1          //  /**************************** (C) COPYRIGHT 2015 Fortiortech shenzhen *****************************
+   2          //* File Name          : Main.c
+   3          //* Author             : Fortiortech Appliction Team
+   4          //* Version            : V1.0
+   5          //* Date               : 01/07/2015
+   6          //* Description        : This file contains main function used for Motor Control.
+   7          //***************************************************************************************************
+   8          //* All Rights Reserved
+   9          //**************************************************************************************************/ 
+  10          
+  11          
+  12          /* Includes -------------------------------------------------------------------------------------*/
+  13          #include <FU68xx_2.h>
+  14          #include <Myproject.h>
+  15          #include <Customer_Debug.h>
+  16          
+  17          #include <UserGlobal.h>
+  18          #include <UserDefine.h>
+  19          
+  20          /* Private typedef ------------------------------------------------------------------------------*/
+  21          /* Private define -------------------------------------------------------------------------------*/
+  22          
+  23          #define MAX_PWR_HI     MAX_POWER
+  24          #define MAX_PWR_LO     (MIN_POWER+((MAX_POWER+MIN_POWER)>>2))
+  25          
+  26          /* Private macro --------------------------------------------------------------------------------*/
+  27          /* Private variables ----------------------------------------------------------------------------*/
+  28          /* Private function prototypes ------------------------------------------------------------------*/
+  29          s16 CalTemperOffset(u16 base,u16 val, u16 warm, u16 cool);
+  30          
+  31          /* Private functions ----------------------------------------------------------------------------*/
+  32          
+  33          extern idata u16 MaxSpdOfStop;
+  34          extern idata u32 MaxRPMOfStop;
+  35          
+  36          extern idata u16 DrvTemperADCVal;
+  37          extern idata s16 DrvTemperCelsius;
+  38          
+  39          extern idata u16 HeatTemperADCVal;
+  40          extern idata s16 HeatTemperCelsius;
+  41          
+  42          extern u16 HighSpdInhibitX10ms;
+  43          extern u16 RunningX1ms;
+  44          
+  45          extern u8  idata AlarmHighSpeed;           // 5 ≥¨ÀŸ
+  46          extern u8  HiSpdLv;                  // ≥¨ÀŸµ»º∂
+  47          
+  48          extern u8  idata FlagOverCurrent;          // »Ìº˛π˝¡˜
+  49          extern u8  idata AlarmOverCurrent;         // 1 »Ìº˛π˝¡˜
+  50          extern u8  OCLv;
+  51          
+  52          //----------------------------------------------------------------------------//
+  53          // Àµ√˜£∫ºÏ≤‚µÁ¡˜
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 2   
+
+  54          //s16 FocIAAbs, FocIBAbs, FocICAbs;
+  55          s16 FocIA, FocIB, FocIC;
+  56          s16 FocIXMax;
+  57          s16 IXMaxOCCnt;
+  58          void CheckCurrent(void)
+  59          {
+  60   1        FocIA = FOC__IA;
+  61   1        FocIB = FOC__IB;
+  62   1        FocIC = -FocIA - FocIB;
+  63   1      
+  64   1        if(FocIA >= 0)
+  65   1          mcCurVarible.Abs_ia = FocIA;
+  66   1        else
+  67   1          mcCurVarible.Abs_ia = -FocIA;
+  68   1        
+  69   1        if(FocIB >= 0)
+  70   1          mcCurVarible.Abs_ib = FocIB;
+  71   1        else
+  72   1          mcCurVarible.Abs_ib = -FocIB;
+  73   1        
+  74   1        if(FocIC >= 0)
+  75   1          mcCurVarible.Abs_ic = FocIC;
+  76   1        else
+  77   1          mcCurVarible.Abs_ic = -FocIC;
+  78   1      
+  79   1        FocIXMax = mcCurVarible.Abs_ia;
+  80   1        if(FocIXMax < mcCurVarible.Abs_ib)
+  81   1          FocIXMax = mcCurVarible.Abs_ib;
+  82   1        if(FocIXMax < mcCurVarible.Abs_ic)
+  83   1          FocIXMax = mcCurVarible.Abs_ic;
+  84   1        
+  85   1        //if(MOE == 1)
+  86   1        {
+  87   2          //if(FocIXMax > I_VALUE(40))I_Value(I_BUS_SHUTDOWN)
+  88   2          if(FocIXMax > I_Value(I_BUS_SHUTDOWN*1.2))
+  89   2          {
+  90   3            if(RunningX1ms >= 500)        // ◊¢“‚º∆ ˝∆˜«Â¡„
+  91   3            {
+  92   4              if(++mcCurVarible.OverCurCnt >= 8)
+  93   4              {
+  94   5                FlagOverCurrent = 1;
+  95   5                AlarmOverCurrent = 1;
+  96   5                OCLv = 1;
+  97   5                ShutPerform();
+  98   5                SetFaultResatrt();
+  99   5              }
+ 100   4            }
+ 101   3          }
+ 102   2          else
+ 103   2          {
+ 104   3            FlagOverCurrent = 0;
+ 105   3            if(mcCurVarible.OverCurCnt > 0)
+ 106   3            {
+ 107   4              mcCurVarible.OverCurCnt--;
+ 108   4            }
+ 109   3          }
+ 110   2        }
+ 111   1      }
+ 112          
+ 113          //----------------------------------------------------------------------------//
+ 114          // Àµ√˜£∫Œ¬∂»º∆À„π´ Ω
+ 115          s16 CalTemperOffset(u16 base,u16 val, u16 warm, u16 cool)
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 3   
+
+ 116          {
+ 117   1        return(base - 25*(val-warm)/(cool-warm));
+ 118   1      }
+ 119          //----------------------------------------------------------------------------//
+ 120          // Àµ√˜£∫«˝∂Ø∆˜Œ¬∂»ºÏ≤‚
+ 121          // «˝∂Ø∆˜»»√ÙµÁ◊ËÃÿ∂®Œ¬∂»◊Ë÷µ
+ 122          // ---------|-------|-------|-------|-------|-------|-------|
+ 123          // °Ê     -25       0      25      50      75     100     125
+ 124          // R  662.729 157.265  47.500  17.266   7.258   3.427   1.778
+ 125          #define CELSIUS_N25_ADC         DRV_CELSIUS_ADC(662.729)
+ 126          #define CELSIUS_0_ADC           DRV_CELSIUS_ADC(157.265)
+ 127          #define CELSIUS_P25_ADC         DRV_CELSIUS_ADC(47.500)
+ 128          #define CELSIUS_P50_ADC         DRV_CELSIUS_ADC(17.266)
+ 129          #define CELSIUS_P75_ADC         DRV_CELSIUS_ADC(7.258)
+ 130          #define CELSIUS_P100_ADC        DRV_CELSIUS_ADC(3.427)
+ 131          #define CELSIUS_P125_ADC        DRV_CELSIUS_ADC(1.778)
+ 132          void CheckTemper(void)
+ 133          {
+ 134   1        //DrvTemperADCVal = DrvTempADCSmpFilt;
+ 135   1        
+ 136   1        // >=25°Ê
+ 137   1        if(DrvTemperADCVal <= CELSIUS_P25_ADC)
+ 138   1        {
+ 139   2          // <50°Ê
+ 140   2          if(DrvTemperADCVal > CELSIUS_P50_ADC)
+ 141   2            DrvTemperCelsius = CalTemperOffset(50,DrvTemperADCVal,CELSIUS_P50_ADC,CELSIUS_P25_ADC);
+ 142   2          // <75°Ê
+ 143   2          else if(DrvTemperADCVal > CELSIUS_P75_ADC)
+ 144   2            DrvTemperCelsius = CalTemperOffset(75,DrvTemperADCVal,CELSIUS_P75_ADC,CELSIUS_P50_ADC);
+ 145   2          // <100°Ê
+ 146   2          else if(DrvTemperADCVal > CELSIUS_P100_ADC)
+ 147   2            DrvTemperCelsius = CalTemperOffset(100,DrvTemperADCVal,CELSIUS_P100_ADC,CELSIUS_P75_ADC);
+ 148   2      //    else
+ 149   2      //      DrvTemperCelsius = 100;
+ 150   2          // <125°Ê
+ 151   2          else if(DrvTemperADCVal > CELSIUS_P125_ADC)
+ 152   2            DrvTemperCelsius = CalTemperOffset(125,DrvTemperADCVal,CELSIUS_P125_ADC,CELSIUS_P100_ADC);
+ 153   2          // >125°Ê
+ 154   2          else
+ 155   2            DrvTemperCelsius = 125;
+ 156   2        }
+ 157   1        // <25°Ê
+ 158   1        else
+ 159   1        {
+ 160   2          DrvTemperCelsius = 25;
+ 161   2      //    // >0°Ê
+ 162   2      //    if(DrvTemperADCVal < CELSIUS_0_ADC)
+ 163   2      //      DrvTemperCelsius = CalTemperOffset(25,DrvTemperADCVal,CELSIUS_P25_ADC,CELSIUS_0_ADC);
+ 164   2      //    // >-25°Ê
+ 165   2      //    else if(DrvTemperADCVal < CELSIUS_N25_ADC)
+ 166   2      //      DrvTemperCelsius = CalTemperOffset(0,DrvTemperADCVal,CELSIUS_0_ADC,CELSIUS_N25_ADC);
+ 167   2      //    else
+ 168   2      //      DrvTemperCelsius = -25;
+ 169   2        }
+ 170   1      }
+ 171          
+ 172          //----------------------------------------------------------------------------//
+ 173          // Àµ√˜£∫µÁ»»ÀøŒ¬∂»ºÏ≤‚
+ 174          // µÁ»»Àø»»√ÙµÁ◊ËÃÿ∂®Œ¬∂»◊Ë÷µ
+ 175          // ---------|-------|-------|-------|-------|-------|-------|
+ 176          // °Ê     -25       0      25      50      75     100     125
+ 177          // R 1287.405 325.711  100.00  35.882  14.665   6.6519   3.2750
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 4   
+
+ 178          
+ 179          // ---------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
+ 180          // °Ê      40      45      50      55      60      65      70      75      80      85
+ 181          // R  53.1347 43.6115 36.0143 29.8255  24.816 20.7406 17.4087 14.6721 12.4143 10.5434
+ 182          
+ 183          #define CELSIUS_N25_ADC_B         HEAT_CELSIUS_ADC(1287.405)
+ 184          #define CELSIUS_0_ADC_B           HEAT_CELSIUS_ADC(325.711)
+ 185          #define CELSIUS_P25_ADC_B         HEAT_CELSIUS_ADC(100.00)
+ 186          #define CELSIUS_P50_ADC_B         HEAT_CELSIUS_ADC(35.882)
+ 187          #define CELSIUS_P75_ADC_B         HEAT_CELSIUS_ADC(14.665)
+ 188          #define CELSIUS_P100_ADC_B        HEAT_CELSIUS_ADC(6.6519)
+ 189          #define CELSIUS_P125_ADC_B        HEAT_CELSIUS_ADC(3.2750)
+ 190          void CheckHeatTemper(void)
+ 191          {
+ 192   1        //HeatTemperADCVal HeatTemperCelsius
+ 193   1        // >=25°Ê
+ 194   1        if(HeatTemperADCVal <= CELSIUS_P25_ADC_B)
+ 195   1        {
+ 196   2          // <50°Ê
+ 197   2          if(HeatTemperADCVal > CELSIUS_P50_ADC_B)
+ 198   2            HeatTemperCelsius = CalTemperOffset(50,HeatTemperADCVal,CELSIUS_P50_ADC_B,CELSIUS_P25_ADC_B);
+ 199   2          // <75°Ê
+ 200   2          else if(HeatTemperADCVal > CELSIUS_P75_ADC_B)
+ 201   2            HeatTemperCelsius = CalTemperOffset(75,HeatTemperADCVal,CELSIUS_P75_ADC_B,CELSIUS_P50_ADC_B);
+ 202   2          // <100°Ê
+ 203   2          else if(HeatTemperADCVal > CELSIUS_P100_ADC_B)
+ 204   2            HeatTemperCelsius = CalTemperOffset(100,HeatTemperADCVal,CELSIUS_P100_ADC_B,CELSIUS_P75_ADC_B);
+ 205   2      //    else
+ 206   2      //      DrvTemperCelsius = 100;
+ 207   2          // <125°Ê
+ 208   2          else if(HeatTemperADCVal > CELSIUS_P125_ADC_B)
+ 209   2            HeatTemperCelsius = CalTemperOffset(125,HeatTemperADCVal,CELSIUS_P125_ADC_B,CELSIUS_P100_ADC_B);
+ 210   2          // >125°Ê
+ 211   2          else
+ 212   2            HeatTemperCelsius = 125;
+ 213   2        }
+ 214   1        // <25°Ê
+ 215   1        else
+ 216   1        {
+ 217   2          HeatTemperCelsius = 25;
+ 218   2      //    // >0°Ê
+ 219   2      //    if(HeatTemperADCVal < CELSIUS_0_ADC_B)
+ 220   2      //      HeatTemperCelsius = CalTemperOffset(25,HeatTemperADCVal,CELSIUS_P25_ADC_B,CELSIUS_0_ADC_B);
+ 221   2      //    // >-25°Ê
+ 222   2      //    else if(HeatTemperADCVal < CELSIUS_N25_ADC_B)
+ 223   2      //      HeatTemperCelsius = CalTemperOffset(0,HeatTemperADCVal,CELSIUS_0_ADC_B,CELSIUS_N25_ADC_B);
+ 224   2      //    else
+ 225   2      //      HeatTemperCelsius = -25;
+ 226   2        }
+ 227   1      }
+ 228          //----------------------------------------------------------------------------//
+ 229          // 
+ 230          void CalMaxRPM(void)
+ 231          {
+ 232   1      //  //if(KeyGoCmdLv == 3)
+ 233   1      //  {
+ 234   1      //    if(UBusX10 <= U_BUS_LOW_X10)
+ 235   1      //      MaxSpdOfStop = U_LOW_MAX_SPD;
+ 236   1      //    else if(UBusX10 <= U_BUS_TURN1_X10)
+ 237   1      //    {
+ 238   1      //      MaxSpdOfStop = U_LOW_MAX_SPD + 
+ 239   1      //        (UBusX10 - U_BUS_LOW_X10)*((s32)U_TURN1_MAX_SPD-U_LOW_MAX_SPD)/(U_BUS_TURN1_X10 - U_BUS_LOW_X10)
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 5   
+
+             -;
+ 240   1      //    }
+ 241   1      //    else if(UBusX10 <= U_BUS_TURN2_X10)
+ 242   1      //    {
+ 243   1      //      MaxSpdOfStop = U_TURN1_MAX_SPD + 
+ 244   1      //        (UBusX10 - U_BUS_TURN1_X10)*((s32)U_TURN2_MAX_SPD-U_TURN1_MAX_SPD)/(U_BUS_TURN2_X10 - U_BUS_TURN
+             -1_X10);
+ 245   1      //    }
+ 246   1      //    else if(UBusX10 <= U_BUS_HIGH_X10)
+ 247   1      //    {
+ 248   1      //      MaxSpdOfStop = U_TURN2_MAX_SPD + 
+ 249   1      //        (UBusX10 - U_BUS_TURN2_X10)*((s32)U_HIGH_MAX_SPD-U_TURN2_MAX_SPD)/(U_BUS_HIGH_X10 - U_BUS_TURN2_
+             -X10);
+ 250   1      //    }
+ 251   1      //    else // if(UBusX10 > U_BUS_HIGH_X10)
+ 252   1      //      MaxSpdOfStop = U_HIGH_MAX_SPD;
+ 253   1      //    
+ 254   1      //    //MaxRPMOfStop = (u32)MaxSpdOfStop<<2;
+ 255   1      //    MaxRPMOfStop = ((uint32)MaxSpdOfStop*(MOTOR_SPEED_BASE>>2))>>13;
+ 256   1      //  }
+ 257   1      //  else if(KeyGoCmdLv == 2)
+ 258   1      //  {
+ 259   1      //    if(UBusX10 <= U_BUS_LOW_X10)
+ 260   1      //      MaxSpdOfStop = U_LOW_MAX_SPD;
+ 261   1      //    else if(UBusX10 <= U_BUS_TURN1_X10_A)
+ 262   1      //    {
+ 263   1      //      MaxSpdOfStop = U_LOW_MAX_SPD_A + 
+ 264   1      //        (UBusX10 - U_BUS_LOW_X10)*((s32)U_TURN1_MAX_SPD_A-U_LOW_MAX_SPD_A)/(U_BUS_TURN1_X10_A - U_BUS_LO
+             -W_X10);
+ 265   1      //    }
+ 266   1      //    else if(UBusX10 <= U_BUS_TURN2_X10_A)
+ 267   1      //    {
+ 268   1      //      MaxSpdOfStop = U_TURN1_MAX_SPD_A + 
+ 269   1      //        (UBusX10 - U_BUS_TURN1_X10_A)*((s32)U_TURN2_MAX_SPD_A-U_TURN1_MAX_SPD_A)/(U_BUS_TURN2_X10_A - U_
+             -BUS_TURN1_X10_A);
+ 270   1      //    }
+ 271   1      //    else if(UBusX10 <= U_BUS_HIGH_X10)
+ 272   1      //    {
+ 273   1      //      MaxSpdOfStop = U_TURN2_MAX_SPD_A + 
+ 274   1      //        (UBusX10 - U_BUS_TURN2_X10_A)*((s32)U_HIGH_MAX_SPD_A-U_TURN2_MAX_SPD_A)/(U_BUS_HIGH_X10 - U_BUS_
+             -TURN2_X10_A);
+ 275   1      //    }
+ 276   1      //    else // if(UBusX10 > U_BUS_HIGH_X10)
+ 277   1      //      MaxSpdOfStop = U_HIGH_MAX_SPD;
+ 278   1      //    
+ 279   1      //    MaxRPMOfStop = ((uint32)MaxSpdOfStop*(MOTOR_SPEED_BASE>>2))>>13;
+ 280   1      //  }
+ 281   1      //  else if(KeyGoCmdLv == 1)
+ 282   1      //  {
+ 283   1      //    if(UBusX10 <= U_BUS_LOW_X10)
+ 284   1      //      MaxSpdOfStop = U_LOW_MAX_SPD;
+ 285   1      //    else if(UBusX10 <= U_BUS_TURN1_X10_B)
+ 286   1      //    {
+ 287   1      //      MaxSpdOfStop = U_LOW_MAX_SPD_B + 
+ 288   1      //        (UBusX10 - U_BUS_LOW_X10)*((s32)U_TURN1_MAX_SPD_B-U_LOW_MAX_SPD_B)/(U_BUS_TURN1_X10_B - U_BUS_LO
+             -W_X10);
+ 289   1      //    }
+ 290   1      //    else if(UBusX10 <= U_BUS_TURN2_X10_B)
+ 291   1      //    {
+ 292   1      //      MaxSpdOfStop = U_TURN1_MAX_SPD_B + 
+ 293   1      //        (UBusX10 - U_BUS_TURN1_X10_B)*((s32)U_TURN2_MAX_SPD_B-U_TURN1_MAX_SPD_B)/(U_BUS_TURN2_X10_B - U_
+             -BUS_TURN1_X10_B);
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 6   
+
+ 294   1      //    }
+ 295   1      //    else if(UBusX10 <= U_BUS_HIGH_X10)
+ 296   1      //    {
+ 297   1      //      MaxSpdOfStop = U_TURN2_MAX_SPD_B + 
+ 298   1      //        (UBusX10 - U_BUS_TURN2_X10_B)*((s32)U_HIGH_MAX_SPD_B-U_TURN2_MAX_SPD_B)/(U_BUS_HIGH_X10 - U_BUS_
+             -TURN2_X10_B);
+ 299   1      //    }
+ 300   1      //    else // if(UBusX10 > U_BUS_HIGH_X10)
+ 301   1      //      MaxSpdOfStop = U_HIGH_MAX_SPD;
+ 302   1      //    
+ 303   1      //    MaxRPMOfStop = ((uint32)MaxSpdOfStop*(MOTOR_SPEED_BASE>>2))>>13;
+ 304   1      //  }
+ 305   1      }
+ 306          
+ 307          //----------------------------------------------------------------------------//
+ 308          // Àµ√˜£∫
+ 309          #if (COMMAND_MODE == CMD_MODE_PULSE)
+              u8  PulseSmpCnt;
+              u16 PulseDutySmp;
+              u16 PulseDutySum;
+              
+              u16 PulseDutySmpOld;
+              u16 PulseDutySmpNew;
+              s16 PulseDutySmpDiff;
+              s16 PulseDutyAvr;
+              
+              void CheckPulse(void)
+              {
+                PulseDutySmpOld = PulseDutySmpNew;
+                
+                if(TIM3__DR > 0)
+                {
+                  if(TIM3__ARR <200)
+                    PulseDutySmpNew = 0;
+                  else if(TIM3__ARR < 30000)
+                    PulseDutySmpNew = ((uint32)TIM3__DR*4096)/(TIM3__ARR);
+                  else
+                    PulseDutySmpNew = 4096;
+                }
+                else
+                {
+                  if(GP11 == 0)
+                    PulseDutySmpNew = 0;
+                  else if(GP11 == 1)
+                    PulseDutySmpNew = 4096;
+                }
+                
+                //∂®∆⁄«Â≥˝¬ˆ≥Â ‰»Î–≈∫≈
+                TIM3__ARR       = 0;
+                TIM3__DR        = 0;
+                
+                PulseDutySmpDiff = PulseDutySmpOld-PulseDutySmpNew;
+                
+                if((PulseDutySmpDiff < 512)&&(PulseDutySmpDiff > -512))
+                {
+                  PulseDutySmp = PulseDutySmpNew;
+                }
+                
+                PulseDutySum += PulseDutySmp;
+                
+                if(++PulseSmpCnt >= 4)
+                {
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 7   
+
+                  PulseSmpCnt = 0;
+                  PulseDutyAvr = PulseDutySum >> 2;
+                  PulseDutySum = 0;
+                }
+              
+                //PulseDuty_Q12 = PulseDutySmp;
+                PulseDuty_Q12 = PulseDutyAvr;
+                //PulseDuty_Q12 = 4096-PulseDuty_Q12;
+              }
+              #endif
+ 365          
+ 366          
+ 367          //----------------------------------------------------------------------------//
+ 368          // Àµ√˜£∫ ÀŸ∂»œﬁ÷∆
+ 369          // »Ùµ±«∞◊™ÀŸ¥Û”⁄◊Ó¥Ûœﬁ÷∆£¨Ωµ∂Ó¥¶¿Ì£¨N¥ŒΩµ∂Ó∫Û»‘»ª∏ﬂÀŸ£¨πÿ±’µÁª˙£¨¥˝÷ÿ–¬…œµÁ°£
+ 370          // ◊¢“‚º∏∏ˆ ±≥§…Ë÷√£∫∏ﬂÀŸ∑«∏ﬂÀŸ¬À≤® ±≥§°¢∑«∏ﬂÀŸ±£≥÷ ±≥§°¢∏ﬂÀŸ“÷÷∆≥÷–¯ ±≥§°¢
+ 371          u8  NormalSpdFiltCnt;
+ 372          u8  MaxSpdFiltCnt;
+ 373          u16 NormalSpdX10ms;
+ 374          u16 MaxSpdX10ms;
+ 375          u16 UltraSpdX10ms;
+ 376          
+ 377          u8  HighSpdInhibitLv;        // œﬁÀŸ◊¥Ã¨µ»º∂
+ 378          u8  HighSpdRestartCnt;       // œﬁÀŸ÷ÿ∆Ùº∆ ˝
+ 379          u16 HighSpdInhibitX10ms;
+ 380          
+ 381          void SpeedRestriction(void)
+ 382          {
+ 383   1      //  
+ 384   1        if(HighSpdInhibitLv == 0)                           //
+ 385   1        {
+ 386   2          //if(RunningX1ms >= 100)                          // ‘À––n ms∫Û
+ 387   2          {
+ 388   3            if(FOC__EOME <= MaxSpdOfStop)
+ 389   3            {
+ 390   4              if(++NormalSpdFiltCnt >= 50/10)               // ∑«∏ﬂÀŸº∆ ˝¥ÔµΩ“ª∂®÷µ£¨»∑»œµ±«∞∑«∏ﬂÀŸ£¨«Â≥˝∏ﬂÀŸº∆ 
+             -˝
+ 391   4              {
+ 392   5                NormalSpdFiltCnt = 50/10;
+ 393   5                MaxSpdFiltCnt = 0;
+ 394   5                MaxSpdX10ms = 0;
+ 395   5              }
+ 396   4              
+ 397   4              if(++NormalSpdX10ms >= 3000/10)               // ∑«∏ﬂÀŸ±£≥÷ N ms
+ 398   4              {
+ 399   5                NormalSpdX10ms = 3000/10;
+ 400   5                HighSpdRestartCnt = 0;
+ 401   5              }
+ 402   4            }
+ 403   3            else
+ 404   3            {
+ 405   4              if(++MaxSpdFiltCnt >= 50/10)                  // ∏ﬂÀŸº∆ ˝¥ÔµΩ“ª∂®÷µ£¨»∑»œµ±«∞∏ﬂÀŸ£¨«Â≥˝∑«∏ﬂÀŸº∆ ˝
+ 406   4              {
+ 407   5                MaxSpdFiltCnt = 50/10;
+ 408   5                NormalSpdFiltCnt = 0;
+ 409   5                NormalSpdX10ms = 0;
+ 410   5              }
+ 411   4              
+ 412   4              if(HighSpdRestartCnt == 0)
+ 413   4              {
+ 414   5                if(++MaxSpdX10ms > HIHG_SPD_TIME/10)        // ∏ﬂÀŸ±£≥÷Ns
+ 415   5                {
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 8   
+
+ 416   6                  MaxSpdX10ms = HIHG_SPD_TIME/10;
+ 417   6                  HighSpdInhibitLv = 1;
+ 418   6                }
+ 419   5              }
+ 420   4              else
+ 421   4              {
+ 422   5                if(++MaxSpdX10ms > 100/10)                  // ∏ﬂÀŸ±£≥÷Ns
+ 423   5                {
+ 424   6                  MaxSpdX10ms = 100/10;
+ 425   6                  HighSpdInhibitLv = 1;
+ 426   6                }
+ 427   5              }
+ 428   4              
+ 429   4              if(HighSpdInhibitLv == 1)
+ 430   4              {
+ 431   5                if(++HighSpdRestartCnt > HIHG_SPD_RESTARTS) 
+ 432   5                {
+ 433   6                  HighSpdRestartCnt = HIHG_SPD_RESTARTS;
+ 434   6                  HighSpdInhibitLv = 0;
+ 435   6                  AlarmHighSpeed = 1;
+ 436   6                  HiSpdLv = 3;
+ 437   6                  ShutPerform();
+ 438   6                }
+ 439   5              }
+ 440   4            }
+ 441   3          }
+ 442   2        }
+ 443   1        else if(HighSpdInhibitLv == 1)
+ 444   1        {
+ 445   2          if(++HighSpdInhibitX10ms >= 500/10)   // ∏ﬂÀŸ“÷÷∆≥÷–¯ ±≥§£¨¥À ±∂Œƒ⁄µÕπ¶¬ ‘À––
+ 446   2          {
+ 447   3            HighSpdInhibitX10ms = 0;
+ 448   3            HighSpdInhibitLv = 0;
+ 449   3          }
+ 450   2        }
+ 451   1        
+ 452   1      //  // ∏ﬂÀŸ±Í÷æ
+ 453   1      //  if(HighSpdInhibitLv == 1)
+ 454   1      //    FlagHighSpeed = 1;
+ 455   1      //  else
+ 456   1      //    FlagHighSpeed = 0;
+ 457   1      
+ 458   1        // ≥¨∏ﬂÀŸπÿ±’
+ 459   1        if(FOC__EOME > ULTRA_SHUT_SPD)
+ 460   1        {
+ 461   2          if(RunningX1ms >= 500)              // ∆Ù∂Ø∫Û‘À––“ª∂Œ ±≥§£¨¥À≤Ÿ◊˜”––ß
+ 462   2          {
+ 463   3            if(++UltraSpdX10ms > 1000/10)     // ≥¨∏ﬂÀŸ ±≥§œﬁ÷∆
+ 464   3            {
+ 465   4              UltraSpdX10ms = 0;
+ 466   4      
+ 467   4              AlarmHighSpeed = 1;
+ 468   4              HiSpdLv = 2;
+ 469   4              ShutPerform();
+ 470   4              SetFaultResatrt();
+ 471   4            }
+ 472   3          }
+ 473   2        }
+ 474   1        else
+ 475   1          UltraSpdX10ms = 0;
+ 476   1      }
+ 477          //----------------------------------------------------------------------------//
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 9   
+
+ 478          u16 VspIBusAlt;
+ 479          s32 VspRPMAlt;
+ 480          s32 VspRPMCmd;
+ 481          //----------------------------------------------------------------------------//
+ 482          // Àµ√˜£∫º∆À„VSP≤Œøº∏¯∂®
+ 483          // ∏˘æ›µ±«∞ µº «Èøˆ∫Õ∏¯∂®¡øVSP£¨º∆À„≤Œøº ‰≥ˆ¡ø
+ 484          void CalcVSPRef(void)
+ 485          {
+ 486   1        //----------∏¯∂®π¶¬ øÿ÷∆----------//
+ 487   1        // µ±µÁ≥ÿµÙµÁµΩ◊Ó–°÷µ÷Æ«∞£¨œﬂ–‘ºı–°π¶¬ ◊Ó¥Û÷µ
+ 488   1      //  if(UBusX10 >= (U_BUS_LOW_X10+4))
+ 489   1      //    MaxPower = MAX_PWR_HI;
+ 490   1      //  else if(UBusX10 >= U_BUS_LOW_X10)
+ 491   1      //    MaxPower = MAX_PWR_LO+ ((UBusX10-U_BUS_LOW_X10)*(MAX_PWR_HI-MAX_PWR_LO)>>2);
+ 492   1      //  else 
+ 493   1      //    MaxPower = MAX_PWR_LO;
+ 494   1      
+ 495   1      ////  if(UBusX10 >= (216))
+ 496   1      ////    MaxPower = MAX_PWR_HI;
+ 497   1      ////  else if(UBusX10 >= U_BUS_LOW_X10)
+ 498   1      ////    MaxPower = MAX_PWR_LO+
+ 499   1      ////               ((UBusX10-U_BUS_LOW_X10)*(MAX_PWR_HI-MAX_PWR_LO)/(216-U_BUS_LOW_X10));
+ 500   1      ////  else 
+ 501   1      ////    MaxPower = MAX_PWR_LO;
+ 502   1      //  
+ 503   1      //  if(Vsp_Q12 >= VSP_ON_Q12)
+ 504   1      //  {
+ 505   1      //    if(Vsp_Q12 >= VSP_MAX_Q12)
+ 506   1      //      VspPowerAlt = (u32)MaxPower*100;
+ 507   1      //    else if(Vsp_Q12 > VSP_MIN_Q12)
+ 508   1      //      VspPowerAlt = (u32)MinPower*100 + ((u32)100*(MaxPower - MinPower)*(Vsp_Q12-VSP_MIN_Q12))/(VSP_MAX_
+             -Q12-VSP_MIN_Q12);
+ 509   1      ////      VspPowerAlt = (u32)MinPower*100 +
+ 510   1      ////        (((u32)((100*4096)/(VSP_MAX_Q12-VSP_MIN_Q12))*(MaxPower - MinPower))*(Vsp_Q12-VSP_MIN_Q12)>>12
+             -);
+ 511   1      //    else
+ 512   1      //      VspPowerAlt = (u32)MinPower*100;
+ 513   1      //  }
+ 514   1      //  else if(Vsp_Q12 >= VSP_OFF_Q12)
+ 515   1      //    VspPowerAlt = (u32)MinPower*100;
+ 516   1      //  else
+ 517   1      //    VspPowerAlt = 0;
+ 518   1      //  
+ 519   1      //  if(UBusX10 <= 50)
+ 520   1      //    IBusCommand_mA = VspPowerAlt*(100/50);
+ 521   1      //  else
+ 522   1      //    IBusCommand_mA = ((u32)VspPowerAlt*100)/UBusX10;
+ 523   1      //    
+ 524   1      //  if(IBusCommand_mA > I_BUS_MAX_X1000)
+ 525   1      //    IBusCommand_mA = I_BUS_MAX_X1000;
+ 526   1        //----------BLOCK END----------//
+ 527   1          
+ 528   1        //----------∏¯∂®µÁ¡˜øÿ÷∆----------//
+ 529   1      //  #define I_BUS_CMD_MAX    6000
+ 530   1      //  #define I_BUS_CMD_MIN    1000
+ 531   1      
+ 532   1      //  if(Vsp_Q12 >= VSP_ON_Q12)
+ 533   1      //  {
+ 534   1      //    if(Vsp_Q12 >= VSP_MAX_Q12)
+ 535   1      //      VspIBusAlt = I_BUS_CMD_MAX;
+ 536   1      //    else if(Vsp_Q12 > VSP_MIN_Q12)
+ 537   1      //      VspIBusAlt = I_BUS_CMD_MIN + 
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 10  
+
+ 538   1      //        ((u32)(I_BUS_CMD_MAX - I_BUS_CMD_MIN)*(Vsp_Q12-VSP_MIN_Q12))/(VSP_MAX_Q12-VSP_MIN_Q12);
+ 539   1      //    else
+ 540   1      //      VspIBusAlt = I_BUS_CMD_MIN;
+ 541   1      //  }
+ 542   1      //  else if(Vsp_Q12 >= VSP_OFF_Q12)
+ 543   1      //    VspIBusAlt = I_BUS_CMD_MIN;
+ 544   1      //  else
+ 545   1      //    VspIBusAlt = 0;
+ 546   1      
+ 547   1      //  IBusCommand_mA = VspIBusAlt;
+ 548   1        //----------BLOCK END----------//
+ 549   1        
+ 550   1        //----------∏¯∂®◊™ÀŸøÿ÷∆----------//
+ 551   1        //VspRPMAlt VspRPMCmd
+ 552   1      //  #define RPM_CMD_MAX    80000
+ 553   1      //  #define RPM_CMD_MIN    10000
+ 554   1      
+ 555   1      //  if(Vsp_Q12 >= VSP_ON_Q12)
+ 556   1      //  {
+ 557   1      //    if(Vsp_Q12 >= VSP_MAX_Q12)
+ 558   1      //      VspRPMAlt = RPM_CMD_MAX;
+ 559   1      //    else if(Vsp_Q12 > VSP_MIN_Q12)
+ 560   1      //      VspRPMAlt = RPM_CMD_MIN +
+ 561   1      //        ((u32)(RPM_CMD_MAX - RPM_CMD_MIN)*(Vsp_Q12-VSP_MIN_Q12))/(VSP_MAX_Q12-VSP_MIN_Q12);
+ 562   1      //    else
+ 563   1      //      VspRPMAlt = RPM_CMD_MIN;
+ 564   1      //  }
+ 565   1      //  else if(Vsp_Q12 >= VSP_OFF_Q12)
+ 566   1      //    VspRPMAlt = RPM_CMD_MIN;
+ 567   1      //  else
+ 568   1      //    VspRPMAlt = 0;
+ 569   1      //    
+ 570   1      //  VspRPMCmd = VspRPMAlt;
+ 571   1        //----------BLOCK END----------//
+ 572   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1135    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     32       8
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

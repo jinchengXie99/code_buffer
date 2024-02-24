@@ -1,0 +1,929 @@
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERFRAME
+OBJECT MODULE PLACED IN .\Output\UserFrame.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\UserFiles\UserFrame.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE
+                    -(5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\UserFrame.lst) 
+                    -TABS(2) OBJECT(.\Output\UserFrame.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2015 Fortiortech shenzhen *****************************
+   2          * File Name          : Main.c
+   3          * Author             : Fortiortech Appliction Team
+   4          * Version            : V1.0
+   5          * Date               : 01/07/2015
+   6          * Description        : This file contains main function used for Motor Control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/ 
+  10          
+  11          
+  12          /* Includes -------------------------------------------------------------------------------------*/
+  13          #include <FU68xx_2.h>
+  14          #include <Myproject.h>
+  15          #include <Customer_Debug.h>
+  16          
+  17          #include <UserGlobal.h>
+  18          #include <UserDefine.h>
+  19          
+  20          /* Private typedef ------------------------------------------------------------------------------*/
+  21          
+  22          #define I_BUS_CMD_INC        10        // u16  IBusCmdInc=90;
+  23          #define I_BUS_CMD_DEC        10        // u16  IBusCmdDec=90;
+  24          /* Private define -------------------------------------------------------------------------------*/
+  25          /* Private macro --------------------------------------------------------------------------------*/
+  26          /* Private variables ----------------------------------------------------------------------------*/
+  27          
+  28          /* Private function prototypes ------------------------------------------------------------------*/
+  29          void GetCommand(void);
+  30          void CheckTemper(void);
+  31          int16 CalTemperOffset(u16 base,u16 val, u16 warm, u16 cool);
+  32          void SpeedRestriction(void);
+  33          void CommandPer10ms(void);
+  34          void CheckCurrent(void);
+  35          void Regulation(void);
+  36          void CalAlarmFlag(void);
+  37          
+  38          extern void SpeedPI(int16 PIDErr);
+  39          
+  40          /* Private functions ----------------------------------------------------------------------------*/
+  41          
+  42          extern uint16 Power_Currt;
+  43          
+  44          extern u8  HighSpdInhibitLv;        // 限速状态等级
+  45          extern u8  HighSpdRestartCnt;       // 限速重启计数
+  46          extern u16 HighSpdInhibitX10ms;
+  47          
+  48          extern u16 URXGoDuty;
+  49          extern u32 URXCmdSpd;
+  50          extern u8  idata RePowerRunTrig;
+  51          
+  52          extern u16 idata HeatTemperADCVal;
+  53          
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 2   
+
+  54          struct KeyIn KeyOn;
+  55          
+  56          //////////////////////////
+  57          //u8  idata ValueCnt;
+  58          //u16 idata ValueLine[16];
+  59          //  ValueLine[ValueCnt] = IBusFilt_mA;
+  60          //  if(++ValueCnt >=16)
+  61          //    ValueCnt = 0;  
+  62          ////////////////////////
+  63          
+  64          u16 UBusADCSmpFilt;
+  65          u16 IBusADCSmpFilt;
+  66          u16 DrvTempADCSmpFilt;
+  67          
+  68          u16 IbusADCOffset;
+  69          
+  70          u8  Loop1msFlag;
+  71          u8  Loop1msCnt;
+  72          u8  Loop10msFlag;
+  73          u8  Loop10msCnt;
+  74          u16 McIdleX1ms;
+  75          u16 RunningX1ms;
+  76          u16 RePowerRunDly;
+  77          
+  78          u16 PwrOnX1ms;
+  79          
+  80          u16 IBusSmp;
+  81          u16 UBusSmp;
+  82          //u16 IBusX10;                // 母线电流 1A×10  1安表示为 10
+  83          //u16 IBus_mA;                // 母线电流 毫安  1安表示为 1000
+  84          u16 IBusFilt_mA;            // 母线电流滤波值 毫安  1安表示为 1000
+  85          u16 UBusX10;                // 母线电压 1V×10  1伏表示为 10
+  86          
+  87          u8  UBusHighCnt;            // 母线电压高压计数
+  88          u8  UBusLowCnt;
+  89          u8  UBusFall;               // 电压跌落标志
+  90          u8  LowVoltLv;
+  91          u16 VoltKeepLowCnt;
+  92          s16 PulseDuty_Q12;
+  93          u16 IBusCommandX10;
+  94          
+  95          u16 IBusCommand_mA;
+  96          u16 IBusCommandAlt;
+  97          
+  98          u32 idata UxISmp;                   // 母线电压电流采样值乘积
+  99          u32 idata VspPwrCmd;                // 给定功率（单位同电压电流采样值）
+ 100          
+ 101          u16 idata MaxPower;                 // 运行中限制给定功率最大值
+ 102          u16 idata MinPower;                 // 运行中限制给定功率最小值
+ 103          u32 idata VspPowerAlt;              // 给定功率变化值，根据运算需要计算
+ 104          
+ 105          s16 idata Vsp_Q12;                  // 综合各因素，确定输出量
+ 106          s16 idata VspSpdAlt;
+ 107          s16 idata VspSpdCmd;
+ 108          s16 idata VspSpdCmdMax;
+ 109          
+ 110          u32 idata MotorRPM;
+ 111          u16 idata MaxSpdOfStop;
+ 112          u32 idata MaxRPMOfStop;
+ 113          
+ 114          u16 IBusOCCnt;                      // 过流计数
+ 115          u16 IBusWarningCnt;                 // 预警(过热)电流计数
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 3   
+
+ 116          
+ 117          u16 KeyGoDuty;                      // 按键给定输出量 Q12
+ 118          u16 KeyGoDutyMax;                   // 按键给定输出量上限 Q12
+ 119          u16 GivenDuty_Q12;                  // 给定输出量 Q12
+ 120          u8  GivenDutyDisFlag;               // 输出禁止
+ 121          
+ 122          u8  HiTemperCnt;                    // 驱动器过热计数
+ 123          u8  HeatProtectLv;                  // 驱动器过热保护级别
+ 124          
+ 125          u8  PowerLose;                      // 掉电标志
+ 126          
+ 127          u16 idata DrvTemperADCVal;
+ 128          s16 idata DrvTemperCelsius;
+ 129          
+ 130          u8  idata VZeroCrossGetFlag;        // 测得交流过零信号
+ 131          u8  idata VZeroCrossOK;             // 交流过零信号正常
+ 132          u8  idata VZeroCrossLose;           // 交流过零信号丢失
+ 133          u8  idata NoVZeroCrossX1ms;         // 未测得交流过零计时
+ 134          u8  idata VZeroCrossCnt;            // 交流过零计数
+ 135          
+ 136          u8  idata FlagHardBeark;            // 硬件过流
+ 137          u8  idata FlagOverCurrent;          // 软件过流
+ 138          u8  idata FlagHighVolt;             // 高压
+ 139          u8  idata FlagLowVolt;              // 低压
+ 140          u8  idata FlagHighTemper;           // 高温
+ 141          u8  idata FlagHighSpeed;            // 超速
+ 142          u8  idata FlagStuck;                // 卡住
+ 143          u8  idata FlagStartLose;            // 启动计算异常
+ 144          
+ 145          u8  idata FlagPhaseLoss;            // 缺相
+ 146          u8  idata FlagOverWind;             // 顺风启动异常
+ 147          
+ 148          u8  idata AlarmHardBeark;           // 0 硬件过流
+ 149          u8  idata AlarmOverCurrent;         // 1 软件过流
+ 150          u8  idata AlarmHighVolt;            // 2 高压
+ 151          u8  idata AlarmLowVolt;             // 3 低压
+ 152          u8  idata AlarmHighTemper;          // 4 高温
+ 153          u8  idata AlarmHighSpeed;           // 5 超速
+ 154          u8  idata AlarmStuck;               // 6 卡住
+ 155          u8  idata AlarmStartLose;           // 7 启动计算异常
+ 156          
+ 157          u8  idata AlarmPhaseLoss;           // 8 缺相
+ 158          u8  idata AlarmOverWind;            // 9 顺风启动异常
+ 159          
+ 160          u8  idata AlarmFlag;                // 报警值
+ 161          u8  idata AlarmFlag2;
+ 162          
+ 163          u8  OCLv;                     // 过流等级
+ 164          u8  HiSpdLv;                  // 超速等级
+ 165          u8  StuckLv;                  // 堵转等级
+ 166          u8  StartFailLv;              // 启动异常等级
+ 167          
+ 168          u8  DrvEnFlag;                // 驱动给定使能标志
+ 169          u8  DrvEnTrig;                // 驱动触发有效标志
+ 170          u8  DrvHystericLv;            // 
+ 171          u8  RunTrigger;               // 启动触发标志
+ 172          
+ 173          u16 ExpectedDrvRef;           // 外部给定驱动量值
+ 174          
+ 175          u8  FltReStartTrig;
+ 176          u8  ReStartCnt;
+ 177          u8  ReStartDlyCmd;
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 4   
+
+ 178          u16 ReStartDlyX10ms;
+ 179          
+ 180          u8  StartCmdLvAlt;
+ 181          u8  StartCmdLv;
+ 182          
+ 183          bit  CheckTemperTurn;
+ 184          
+ 185          //----------------------------------------------------------------------------//
+ 186          // 说明：
+ 187          void UserParas(void)
+ 188          {
+ 189   1        // ！ 选择命令模式
+ 190   1        //CommandMode = COMMAND_MODE;
+ 191   1      
+ 192   1        // ！ 以下参数根据前设计算，无需修改
+ 193   1        MaxPower = MAX_POWER;                         // 给定最大功率
+ 194   1        MinPower = MIN_POWER;                         // 给定最小功率
+ 195   1      
+ 196   1        MaxSpdOfStop = U_RATE_MAX_SPD;                // 最高限制速度
+ 197   1        MaxRPMOfStop = U_RATE_MAX_RPM;                // 最高限制转速
+ 198   1      
+ 199   1        VspSpdCmdMax = GIVEN_MAX_SPD;                 // 可调最高转速
+ 200   1        KeyGoDutyMax = _Q12(1);
+ 201   1      }
+ 202          //----------------------------------------------------------------------------//
+ 203          // 说明：CalAlarmFlag
+ 204          void CalAlarmFlag(void)
+ 205          {
+ 206   1        AlarmFlag =
+ 207   1          (AlarmStuck<<7) + (AlarmStartLose<<6) + (AlarmHighSpeed<<5) + (AlarmHighTemper<<4) + 
+ 208   1          (AlarmLowVolt<<3) + (AlarmHighVolt<<2) + (AlarmOverCurrent<<1) + (AlarmHardBeark);
+ 209   1        
+ 210   1        AlarmFlag2 = (AlarmOverWind<<1) + (AlarmPhaseLoss);
+ 211   1        
+ 212   1      }
+ 213          
+ 214          void VspIBusRamp(void)
+ 215          {
+ 216   1        if(IBusCommandAlt < IBusCommand_mA)
+ 217   1        {
+ 218   2          IBusCommandAlt += I_BUS_CMD_INC;
+ 219   2          
+ 220   2          if(IBusCommandAlt > IBusCommand_mA)
+ 221   2            IBusCommandAlt = IBusCommand_mA;
+ 222   2        }
+ 223   1        else if(IBusCommandAlt > IBusCommand_mA)
+ 224   1        {
+ 225   2          if(IBusCommandAlt > I_BUS_CMD_DEC)
+ 226   2            IBusCommandAlt -= I_BUS_CMD_DEC;
+ 227   2          else
+ 228   2            IBusCommandAlt = 0;
+ 229   2          
+ 230   2          if(IBusCommandAlt < IBusCommand_mA)
+ 231   2            IBusCommandAlt = IBusCommand_mA;
+ 232   2        }
+ 233   1      }
+ 234                
+ 235          void VspSpeedRamp(void)
+ 236          {
+ 237   1        if (VspSpdAlt < VspSpdCmd)
+ 238   1        {
+ 239   2          VspSpdAlt += SPEED_CMD_INC;
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 5   
+
+ 240   2          
+ 241   2          if (VspSpdAlt > VspSpdCmd)
+ 242   2            VspSpdAlt = VspSpdCmd;
+ 243   2        }
+ 244   1        else
+ 245   1        {
+ 246   2          VspSpdAlt -= SPEED_CMD_DEC;
+ 247   2          if (VspSpdAlt < VspSpdCmd)
+ 248   2            VspSpdAlt = VspSpdCmd;
+ 249   2        }
+ 250   1      }
+ 251          
+ 252          //----------------------------------------------------------------------------//
+ 253          // 说明：main loop中，每1ms处理一次对实时响应要求稍慢的处理任务
+ 254          //u8  Loop1msTuskCnt;
+ 255          //u8 UARData,UATData;
+ 256          
+ 257          void LoopProPer1ms(void)
+ 258          {
+ 259   1        
+ 260   1        /* 故障灯显示 */
+ 261   1        //LED_Display();
+ 262   1        
+ 263   1        // 每10ms执行一次
+ 264   1        if(++Loop1msCnt >= 10)
+ 265   1        {
+ 266   2          Loop1msCnt = 0;
+ 267   2        }
+ 268   1        
+ 269   1        // 上电计数
+ 270   1        if(++PwrOnX1ms >= 60000)
+ 271   1          PwrOnX1ms = 60000;
+ 272   1      
+ 273   1        if(mcState == mcReady)//mcInit//mcIdle
+ 274   1        {
+ 275   2          RunningX1ms = 0;
+ 276   2          if(++McIdleX1ms > 60000)
+ 277   2            McIdleX1ms = 60000;
+ 278   2        }
+ 279   1        else
+ 280   1        {
+ 281   2          if(mcState == mcRun)
+ 282   2          {
+ 283   3            if(++RunningX1ms > 60000)
+ 284   3              RunningX1ms = 60000;
+ 285   3          }
+ 286   2          McIdleX1ms = 0;
+ 287   2        }
+ 288   1        
+ 289   1        DrvTemperADCVal  = mcFocCtrl.mcADCTemperature>>3;               // 驱动器温度
+ 290   1        HeatTemperADCVal = AdcSampleValue.ADCTemp>>3;                   // 电热丝温度
+ 291   1      
+ 292   1        // 母线电压
+ 293   1        UBusSmp = mcFocCtrl.mcDcbusFlt>>3;
+ 294   1      
+ 295   1        // 母线电流
+ 296   1        if(Power_Currt > IbusADCOffset)
+ 297   1          IBusSmp = (Power_Currt - IbusADCOffset)>>3;
+ 298   1        else
+ 299   1          IBusSmp = 0;
+ 300   1        
+ 301   1        //计算电流电压，计算功率
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 6   
+
+ 302   1        UBusX10 = ((u32)UBusSmp * U_BUS_X10_COEF)>>12;
+ 303   1        
+ 304   1        //IBus_mA = ((u32)IBusSmp * I_BUS_X1000_COEF)>>12;
+ 305   1        //IBusFilt_mA = LPF(IBus_mA, IBusFilt_mA, QU16(0.1));
+ 306   1        //IBusFilt_mA = IBus_mA;
+ 307   1        IBusFilt_mA = ((u32)IBusSmp * I_BUS_X1000_COEF)>>12;
+ 308   1          
+ 309   1        if((Loop1msCnt&1)==0)
+ 310   1        {
+ 311   2          //计算转速
+ 312   2          MotorRPM = (FOC__EOME*((uint32)MOTOR_SPEED_BASE>>3)) >> 12;
+ 313   2          
+ 314   2          //计算功率采样值
+ 315   2          UxISmp = (u32)UBusSmp * IBusSmp;
+ 316   2        }
+ 317   1        else  // 电流保护
+ 318   1        {
+ 319   2          // 软件过流
+ 320   2          if(IBusFilt_mA > (I_BUS_SHUTDOWN*1000))
+ 321   2          {
+ 322   3            if(++IBusOCCnt >= 4)
+ 323   3            {
+ 324   4              IBusOCCnt = 0;
+ 325   4              FlagOverCurrent = 1;
+ 326   4              AlarmOverCurrent = 1;
+ 327   4              OCLv = 2;
+ 328   4              ShutPerform();
+ 329   4              SetFaultResatrt();
+ 330   4            }
+ 331   3          }
+ 332   2          else
+ 333   2          {
+ 334   3            FlagOverCurrent = 0;
+ 335   3            IBusOCCnt = 0;
+ 336   3          }
+ 337   2          // 大电流超时
+ 338   2          if(IBusFilt_mA > (u16)(I_BUS_WARNING*1000))
+ 339   2          {
+ 340   3            if(++IBusWarningCnt >= (I_BUS_WARNING_TIME>>1))
+ 341   3            {
+ 342   4              AlarmOverCurrent = 1;
+ 343   4              OCLv = 3;
+ 344   4              IBusWarningCnt = 0;
+ 345   4              ShutPerform();
+ 346   4              SetFaultResatrt();
+ 347   4            }
+ 348   3          }
+ 349   2          else
+ 350   2          {
+ 351   3            if(IBusWarningCnt>=2)
+ 352   3              IBusWarningCnt-=2;
+ 353   3          }
+ 354   2          
+ 355   2          CheckCurrent();
+ 356   2          CheckStartFault();
+ 357   2          CheckStallFault();
+ 358   2          
+ 359   2          VspIBusRamp();
+ 360   2          VspSpeedRamp();
+ 361   2        }
+ 362   1      
+ 363   1        // 电压保护
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 7   
+
+ 364   1        if((Loop1msCnt==3)||(Loop1msCnt==7))
+ 365   1        {
+ 366   2          //----------------------------------------------------//
+ 367   2          // 过压检测
+ 368   2          if(UBusX10 > U_BUS_HIGH_X10)
+ 369   2          {
+ 370   3            if(++UBusHighCnt >= 10)
+ 371   3            {
+ 372   4              UBusHighCnt = 0;
+ 373   4              FlagHighVolt = 1;
+ 374   4              AlarmHighVolt = 1;
+ 375   4              ShutPerform();
+ 376   4              CancleResatrt();
+ 377   4            }
+ 378   3          }
+ 379   2          else
+ 380   2          {
+ 381   3            FlagHighVolt = 0;
+ 382   3            UBusHighCnt = 0;
+ 383   3          }
+ 384   2          
+ 385   2          // 欠压检测
+ 386   2          if(UBusX10 < (U_BUS_LOW_X10))
+ 387   2          {
+ 388   3            if(++UBusLowCnt >= 10)
+ 389   3            {
+ 390   4              if(LowVoltLv == 2)
+ 391   4              {
+ 392   5                UBusFall = 1;
+ 393   5                //ShutPerform();
+ 394   5              }
+ 395   4      
+ 396   4              LowVoltLv = 0;
+ 397   4            }
+ 398   3          }
+ 399   2          else
+ 400   2          {
+ 401   3            UBusLowCnt = 0;
+ 402   3          }
+ 403   2          
+ 404   2      //    // 若电压掉落保持N秒，视为欠压，设置标志
+ 405   2      //    if(UBusFall == 1)
+ 406   2      //    {
+ 407   2      //      if(UBusX10 <= U_BUS_START_X10)
+ 408   2      //      {
+ 409   2      //        if(++VoltKeepLowCnt >= (3000/5))
+ 410   2      //        {
+ 411   2      //          VoltKeepLowCnt = 0;
+ 412   2      //          FlagLowVolt = 1;
+ 413   2      //          AlarmLowVolt = 1;
+ 414   2      //        }
+ 415   2      //      }
+ 416   2      //    }
+ 417   2          
+ 418   2          // 若电压恢复正常，清除欠压标志
+ 419   2          if(UBusX10 > U_BUS_START_X10)
+ 420   2          {
+ 421   3            LowVoltLv = 2;
+ 422   3            VoltKeepLowCnt = 0;
+ 423   3            FlagLowVolt = 0;
+ 424   3          }
+ 425   2        }
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 8   
+
+ 426   1        else if(Loop1msCnt == 5)
+ 427   1        {
+ 428   2          // 检测温度
+ 429   2            
+ 430   2          if(CheckTemperTurn == 0)
+ 431   2          {
+ 432   3            CheckTemperTurn = 1;
+ 433   3            
+ 434   3            CheckTemper();
+ 435   3            
+ 436   3            if(DrvTemperCelsius > SHUT_TEMPER)          // 大于工作正常温度最大值
+ 437   3            {
+ 438   4              if(++HiTemperCnt >= 2)  // HIGH_TEMPER_TIMES
+ 439   4              {
+ 440   5                HiTemperCnt = 0;
+ 441   5                
+ 442   5                if(HeatProtectLv < 2)
+ 443   5                {
+ 444   6                  HeatProtectLv = 2;
+ 445   6                  ShutPerform();
+ 446   6                  CancleResatrt();
+ 447   6                }
+ 448   5                AlarmHighTemper = 1;
+ 449   5                FlagHighTemper = 1;
+ 450   5              }
+ 451   4            }
+ 452   3            else
+ 453   3            {
+ 454   4              HiTemperCnt = 0;
+ 455   4              
+ 456   4              if(DrvTemperCelsius < RECOVER_TEMPER)   // 降温后，清除保护标志
+ 457   4              {
+ 458   5                HeatProtectLv = 0;
+ 459   5                FlagHighTemper = 0;
+ 460   5              }
+ 461   4            }
+ 462   3          }
+ 463   2          else
+ 464   2          {
+ 465   3            CheckTemperTurn = 0;
+ 466   3            
+ 467   3            CheckHeatTemper();
+ 468   3          }
+ 469   2          
+ 470   2        }
+ 471   1        else if(Loop1msCnt == 1)
+ 472   1        {
+ 473   2          // 母线电压变化较大，不同电压对应不同最高转速，采用以下处理方式
+ 474   2      //    CalMaxRPM();
+ 475   2      //    MaxSpdOfStop = U_RATE_MAX_SPD;
+ 476   2      //    MaxRPMOfStop = U_RATE_MAX_RPM;
+ 477   2          
+ 478   2          //转速限制
+ 479   2          SpeedRestriction();
+ 480   2        }
+ 481   1      
+ 482   1        // 交流过零检测-------------------------------------//
+ 483   1        // 如需检测交流过零情况执行以下操作
+ 484   1        // 检测是否由中断内获得交流过零信号
+ 485   1        // 如一定时长内未测得交流过零信号，表明交流输入异常，设置标志位
+ 486   1        // 如要求交流异常停机，则在此时设置标志停止电机运行
+ 487   1        // 当检测交流信号回归正常，设置标志，提醒是否开机
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 9   
+
+ 488   1      
+ 489   1        #if (CHECK_AC_CROSS_ENABLE == 1)
+ 490   1        
+ 491   1        // 是否获得标志位
+ 492   1        if(VZeroCrossGetFlag == 1)
+ 493   1        {
+ 494   2          VZeroCrossGetFlag = 0;      // 清除标志位
+ 495   2      
+ 496   2          NoVZeroCrossX1ms = 0;       // 无交流过零计时清零
+ 497   2          
+ 498   2          // 累计获得一定数量过零信号，清除交流过零故障标志
+ 499   2          if(++VZeroCrossCnt >= 10)
+ 500   2          {
+ 501   3            VZeroCrossCnt = 10;
+ 502   3            VZeroCrossOK = 1;
+ 503   3          }
+ 504   2        }
+ 505   1      
+ 506   1        // 无交流过零计时，当一定时长无交流过零信号，表明交流输出故障
+ 507   1        if(++NoVZeroCrossX1ms >= 40)
+ 508   1        {
+ 509   2          NoVZeroCrossX1ms = 40;        // 限制计数
+ 510   2          
+ 511   2          VZeroCrossCnt = 0;            // 交流过零计数清除
+ 512   2          
+ 513   2          if(VZeroCrossOK == 1)         // 交流过零从正常转为异常，
+ 514   2            VZeroCrossLose = 1;       // 交流故障暂停标志，待正常后恢复
+ 515   2          
+ 516   2          VZeroCrossOK = 0;
+ 517   2        }
+ 518   1        
+ 519   1      //  // 交流电源输入恢复，重启电机
+ 520   1      //  if(VZeroCrossReturn == 1)
+ 521   1      //  {
+ 522   1      //    VZeroCrossReturn = 0;
+ 523   1      //    RePowerRunTrig = 1;
+ 524   1      //  }
+ 525   1      
+ 526   1      //  if(VZeroCrossReturn == 1)
+ 527   1      //  {
+ 528   1      //    if(UBusX10 > U_BUS_START_X10)
+ 529   1      //    {
+ 530   1      //      VZeroCrossReturn = 0;
+ 531   1      //      RePowerRunTrig = 1;
+ 532   1      //    }
+ 533   1        
+ 534   1        #endif
+ 535   1       
+ 536   1      //  CheckPhaseLoss();
+ 537   1        
+ 538   1      
+ 539   1        if(Loop1msCnt == 9)
+ 540   1        {
+ 541   2          Loop10msFlag = 1;
+ 542   2        }
+ 543   1      }
+ 544          
+ 545          //----------------------------------------------------------------------------//
+ 546          // 说明：main loop中，每10ms处理一次对实时响应要求稍慢的处理任务
+ 547          //u16 PwrOnX10msCnt;
+ 548          //u16 Run1sCnt;
+ 549          //u8  To1sX10msCnt;
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 10  
+
+ 550          u8  Restart10msCnt;
+ 551          u8  QuickStartFlag;
+ 552          u16 AlarmX10msCnt;
+ 553          u16 AutostartCnt;
+ 554          
+ 555          u16 UBusLowKeepCnt;  // 低压保持计数
+ 556          u16 UBusNormKeepCnt; // 正常电压保持计数
+ 557          
+ 558          u8  KeyOnOffTrig;    // 开关启动触发
+ 559          u8  KeyOnOffCmd;     // 开关启动命令
+ 560          
+ 561          u8  DrvRefTrig;      // 外部给定生成的启动触发
+ 562          u8  SumUpTrig;       // 综合各条件生成的启动触发
+ 563          
+ 564          void CommandPer10ms(void)
+ 565          {
+ 566   1      //  if(++PwrOnX10msCnt > 60000)
+ 567   1      //    PwrOnX10msCnt = 60000;
+ 568   1        
+ 569   1      //  if(++To1sX10msCnt >= 100)
+ 570   1      //  {
+ 571   1      //    To1sX10msCnt = 0;
+ 572   1      //    if(++Run1sCnt >= 10000)
+ 573   1      //      Run1sCnt = 10000;
+ 574   1      //  }
+ 575   1        
+ 576   1        // 有延时重启命令，倒计时
+ 577   1        if(ReStartDlyCmd == 1)
+ 578   1        {
+ 579   2          if(ReStartDlyX10ms > 0)
+ 580   2            ReStartDlyX10ms--;
+ 581   2          else
+ 582   2          {
+ 583   3            FltReStartTrig = 1;
+ 584   3            ReStartDlyCmd = 0;
+ 585   3            ReStartCnt++;
+ 586   3          }
+ 587   2        }
+ 588   1        
+ 589   1        // 正常运行一段时间后，禁止试探重启
+ 590   1        if(ReStartCnt > 0)
+ 591   1          if((McIdleX1ms > 500)||(RunningX1ms > 2500))
+ 592   1          ReStartCnt = 0;
+ 593   1        
+ 594   1        // . 吹风机按钮控制
+ 595   1        #if (COMMAND_MODE == CMD_MODE_DRYER_KEYS)
+ 596   1          GivenDuty_Q12 = KeyGoDuty;
+ 597   1          
+ 598   1        // . 强制给定
+ 599   1        #elif (COMMAND_MODE == CMD_MODE_FAST)
+                  GivenDuty_Q12 = _Q12(1);
+                  VspSpdCmd = _Q15(60000 / MOTOR_SPEED_BASE);//GIVEN_MAX_SPD;
+                  
+                // . 脉宽给定
+                #elif (COMMAND_MODE == CMD_MODE_PULSE)
+                  CheckPulse();
+                  GivenDuty_Q12 = PulseDuty_Q12;
+                  
+                // . 按钮给定
+                #elif (COMMAND_MODE == CMD_MODE_KEYS)
+                  if(QuickStartFlag == 1)
+                    CalKeysDuty();
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 11  
+
+                  GivenDuty_Q12 = KeyGoDuty;
+                  
+                // . UART给定
+                #elif (COMMAND_MODE == CMD_MODE_UART)
+                  GivenDuty_Q12 = _Q12(1);
+                  VspSpdCmd = _Q15(4000 / MOTOR_SPEED_BASE);
+              //    GivenDuty_Q12 = URXGoDuty;
+              //    VspSpdCmd = URXCmdSpd;
+                  
+                // . 定时启停测试
+                #elif (COMMAND_MODE == CMD_ON_OFF_TEST)
+                  if(++AutostartCnt < (2500/10))
+                    GivenDuty_Q12 = _Q12(1);
+                  else if(AutostartCnt < (4000/10))
+                    GivenDuty_Q12 = _Q12(0);
+                  else
+                    AutostartCnt = 0;
+                  
+                #endif
+ 631   1      
+ 632   1      //  //掉电后，电容缓慢放电。当母线电压降至某值，认为已断电
+ 633   1        if((UBusX10 < U_BUS_LOW_OFF_X10)&&(AlarmFlag > 0))
+ 634   1        {
+ 635   2          if(++UBusLowKeepCnt > (500/10))            // 每10ms计数
+ 636   2          {
+ 637   3            UBusLowKeepCnt = 0;
+ 638   3            AlarmHighSpeed = 0;
+ 639   3          }
+ 640   2        }
+ 641   1        else
+ 642   1          UBusLowKeepCnt = 0;
+ 643   1          
+ 644   1        
+ 645   1      //  if(VoltReturnLv == 1)
+ 646   1      //  {
+ 647   1      //    if(UBusX10 > U_BUS_START_X10)
+ 648   1      //    {
+ 649   1      //      if(++UBusNormKeepCnt > (500/10))
+ 650   1      //      {
+ 651   1      //        UBusNormKeepCnt = 0;
+ 652   1      //        VoltReturnLv = 0;
+ 653   1      //        RunTrigger = 1;
+ 654   1      //        //AlarmHighSpeed = 0;
+ 655   1      //      }
+ 656   1      //    }
+ 657   1      //  }
+ 658   1        
+ 659   1        // 输出许可
+ 660   1        GivenDutyDisFlag = 0;
+ 661   1        
+ 662   1        //上电后等待电压稳定
+ 663   1        if(QuickStartFlag == 0)
+ 664   1        {
+ 665   2          //if((PwrOnX1ms<50) || (UBusVoltX10<150))
+ 666   2          if((PwrOnX1ms < 50)||(UBusX10 <= U_BUS_START_X10))
+ 667   2            GivenDutyDisFlag = 1;
+ 668   2          else
+ 669   2            QuickStartFlag = 1;
+ 670   2        }
+ 671   1      
+ 672   1        // 电压跌落或过零异常，设置掉电标志位
+ 673   1        // 电压跌落后暂停运行，在无故障并且无关机指令的情况下，电压回升后继续运行
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 12  
+
+ 674   1        // 当过零异常暂停置位，在无故障并且无关机指令的情况下，过零正常后继续运行
+ 675   1        
+ 676   1        if((UBusFall == 1)||(VZeroCrossLose == 1))
+ 677   1          PowerLose = 1;
+ 678   1        
+ 679   1        if(PowerLose == 1)
+ 680   1        {
+ 681   2      //    if(AlarmFlag == 0)
+ 682   2          {
+ 683   3            GivenDutyDisFlag = 1;
+ 684   3            
+ 685   3            if(UBusX10 > U_BUS_START_X10)
+ 686   3                UBusFall = 0;
+ 687   3            
+ 688   3            if(VZeroCrossOK == 1)
+ 689   3              VZeroCrossLose = 0;
+ 690   3            
+ 691   3            KeyOnOffCmd = 0;
+ 692   3          }
+ 693   2      //    else
+ 694   2      //    {
+ 695   2      //      UBusFall = 0;
+ 696   2      //      VZeroCrossLose = 0;
+ 697   2      //    }
+ 698   2          
+ 699   2          if((UBusFall == 0)&&(VZeroCrossLose == 0))   // 掉电后是否已恢复
+ 700   2          {
+ 701   3            PowerLose = 0;                  // 
+ 702   3            RePowerRunDly = (400/10);       // 掉电后恢复，设置重启延时
+ 703   3          }
+ 704   2        }
+ 705   1        
+ 706   1        if(RePowerRunDly > 0)
+ 707   1        {
+ 708   2          GivenDutyDisFlag = 1;
+ 709   2          if(--RePowerRunDly == 0)
+ 710   2            RePowerRunTrig = 1;
+ 711   2        }
+ 712   1        
+ 713   1        if(GivenDutyDisFlag == 1)
+ 714   1          GivenDuty_Q12 = 0;
+ 715   1      
+ 716   1        //2. 获得使能指令
+ 717   1          
+ 718   1        {
+ 719   2          ExpectedDrvRef = GivenDuty_Q12;
+ 720   2          
+ 721   2          DrvEnTrig = 0;               // 清除驱动给定触发
+ 722   2      
+ 723   2          DrvRefTrig = 0;
+ 724   2          
+ 725   2          SumUpTrig = 0;
+ 726   2          
+ 727   2          // 处理滞回比较
+ 728   2          if(ExpectedDrvRef >= VSP_ON_Q12)
+ 729   2          {
+ 730   3            if(DrvHystericLv == 0)         // 驱动给定有改变，驱动给定触发使能
+ 731   3              DrvRefTrig = 1;
+ 732   3            DrvHystericLv = 2;
+ 733   3          }
+ 734   2          else if(ExpectedDrvRef < VSP_OFF_Q12)
+ 735   2            DrvHystericLv = 0;
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 13  
+
+ 736   2          
+ 737   2          // 根据所处滞回区间位置，确定是否开启
+ 738   2          if(DrvHystericLv == 2)           // 大于开启值，可运行
+ 739   2          {
+ 740   3            if(DrvRefTrig == 1)
+ 741   3              DrvEnFlag = 1;               // 驱动给定有触发，驱动给定使能
+ 742   3          }
+ 743   2          else if(DrvHystericLv == 0)      // 小于关闭值，不可运行
+ 744   2          {
+ 745   3            DrvEnFlag = 0;                 // 驱动给定不使能
+ 746   3          }
+ 747   2        }
+ 748   1        
+ 749   1        if(FltReStartTrig == 1)           // 故障重启，设置触发命令
+ 750   1        {
+ 751   2          FltReStartTrig = 0;
+ 752   2          KeyOnOffCmd = 1;
+ 753   2          SumUpTrig = 1;
+ 754   2        }
+ 755   1          
+ 756   1        if(KeyOnOffTrig == 1)             // 开关启动，设置触发命令
+ 757   1        {
+ 758   2          KeyOnOffTrig = 0;
+ 759   2          SumUpTrig = 1;
+ 760   2        }
+ 761   1        
+ 762   1        if(DrvRefTrig == 1)
+ 763   1        {
+ 764   2          DrvRefTrig = 0;
+ 765   2          SumUpTrig = 1;
+ 766   2        }
+ 767   1        
+ 768   1      //  if(SumUpTrig == 1)                // 外部触发置位，驱动给定触发使能
+ 769   1      //  {
+ 770   1      //    SumUpTrig = 0;
+ 771   1      //    //if(GivenDuty_Q12 == 0)       // 驱动给定必须由0位开始运动才视为有效命令，否则视为0
+ 772   1      //      DrvEnTrig = 1;
+ 773   1      //  }
+ 774   1        
+ 775   1        // 当综合所有给定确认有触发，设置运行触发位
+ 776   1        if(SumUpTrig == 1)
+ 777   1          RunTrigger = 1;
+ 778   1        
+ 779   1        // 若当前使能端禁止，或给定量在滞回无效区，设置检测计数值为0，表明无需计数
+ 780   1        if(DrvHystericLv == 0)
+ 781   1          RunTrigger = 0;
+ 782   1        
+ 783   1        //----------------------------------------------------------------//
+ 784   1        //4. 考虑保护信号，确定是否驱动
+ 785   1        // 若检测计数值为0，表明当前驱动无效或在运行中
+ 786   1        if(RunTrigger == 0)
+ 787   1        {
+ 788   2          // Alarm作为故障信号，将一直保持至下次启动，启动命令下达后检测各项正常，方能解禁
+ 789   2          CalAlarmFlag();
+ 790   2      
+ 791   2          if(AlarmFlag > 0)
+ 792   2            DrvEnFlag = 0;
+ 793   2            
+ 794   2          //StartTryCircleX10ms = 0;
+ 795   2        }
+ 796   1        // 驱动给定有触发,重新检测各量
+ 797   1        else// if(RunTrigger>0)
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 14  
+
+ 798   1        {
+ 799   2          RunTrigger = 0;   // 清除标志
+ 800   2          
+ 801   2          // 超速保护相关量清除
+ 802   2          HighSpdInhibitLv = 0;
+ 803   2          HighSpdInhibitX10ms = 0;
+ 804   2          HighSpdRestartCnt = 0;
+ 805   2          
+ 806   2          AlarmHighSpeed = 0;
+ 807   2          //AlarmLowVolt = 0;
+ 808   2          
+ 809   2          AlarmHardBeark = 0;
+ 810   2          AlarmStuck = 0;
+ 811   2          AlarmStartLose = 0;
+ 812   2          AlarmPhaseLoss = 0;
+ 813   2          AlarmOverWind = 0;
+ 814   2          
+ 815   2          AlarmLowVolt = FlagLowVolt;
+ 816   2          AlarmHighVolt = FlagHighVolt;
+ 817   2          AlarmOverCurrent = FlagOverCurrent;
+ 818   2          AlarmHighTemper = FlagHighTemper;
+ 819   2      
+ 820   2          CalAlarmFlag();
+ 821   2      
+ 822   2          if(AlarmFlag > 0)
+ 823   2            DrvEnFlag = 0;
+ 824   2          else
+ 825   2            DrvEnFlag = 1;
+ 826   2        }
+ 827   1        
+ 828   1        if(DrvEnFlag == 1)
+ 829   1          Vsp_Q12 = GivenDuty_Q12;
+ 830   1        else
+ 831   1          Vsp_Q12 = 0; 
+ 832   1          
+ 833   1      //  if(AlarmHighSpeed == 1)
+ 834   1      //    Vsp_Q12 = 0; 
+ 835   1        
+ 836   1        // 多次高速抑制
+ 837   1        if(Vsp_Q12 >= VSP_MIN_Q12)
+ 838   1        {
+ 839   2          if(HighSpdInhibitLv == 1)         // 转速大于限制，需限速，强制给定量为Min
+ 840   2            Vsp_Q12 = VSP_MIN_Q12;
+ 841   2        }
+ 842   1        
+ 843   1        // 计数处理所需，VspPowerAlt为实际功率值-(瓦 W)乘以10
+ 844   1        if(Vsp_Q12 >= VSP_MAX_Q12)
+ 845   1          VspPowerAlt = (u32)MAX_POWER*10;
+ 846   1        else if(Vsp_Q12 >= VSP_ON_Q12)
+ 847   1          VspPowerAlt = (u32)MIN_POWER*10 + (((u32)MAX_POWER*10 - MIN_POWER*10)*(Vsp_Q12-VSP_MIN_Q12))/(VSP_MAX_
+             -Q12-VSP_MIN_Q12);
+ 848   1        else if(Vsp_Q12 >= VSP_OFF_Q12)
+ 849   1          VspPowerAlt = (u32)MIN_POWER*10;
+ 850   1        else
+ 851   1          VspPowerAlt = 0;
+ 852   1        
+ 853   1        // VspPwrCmd是将VspPowerAlt换算为电压电流的采样值格式，此处乘以系数即可
+ 854   1        VspPwrCmd = VspPowerAlt * (u16)(VSP_PWR_COEF/10.2);//240;//实际给定功率
+ 855   1      
+ 856   1        //
+ 857   1        if(UBusX10 > 1000)
+ 858   1          IBusCommand_mA = ((u32)VspPowerAlt*1000)/UBusX10;
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 15  
+
+ 859   1        else
+ 860   1          //IBusCommand_mA = ((u32)VspPowerAlt*10000)/2500;
+ 861   1          IBusCommand_mA = (u32)VspPowerAlt;
+ 862   1          
+ 863   1        // 限制最大母线电流，由最大功率和欠压值
+ 864   1        if(IBusCommand_mA > I_BUS_MAX_X1000)
+ 865   1          IBusCommand_mA = I_BUS_MAX_X1000;
+ 866   1        
+ 867   1      //  // Alarm输出处理
+ 868   1      //  #if (ALM_ENABLE == 1)
+ 869   1      //  AlarmPulseOut();
+ 870   1      //  #endif
+ 871   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   2288    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     87    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =     65    ----
+   BIT SIZE         =      1    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

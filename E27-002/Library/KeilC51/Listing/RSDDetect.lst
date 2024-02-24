@@ -1,0 +1,14 @@
+C51 COMPILER V9.60.7.0   RSDDETECT                                                         02/24/2024 09:59:47 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE RSDDETECT
+OBJECT MODULE PLACED IN .\Output\RSDDetect.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Function\RSDDetect.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE(
+                    -5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\RSDDetect.lst) T
+                    -ABS(2) OBJECT(.\Output\RSDDetect.obj)
+
+line level    source
+
+*** ERROR C318 OF ..\User\Source\Function\RSDDetect.c: can't open file '..\User\Source\Function\RSDDetect.c'
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

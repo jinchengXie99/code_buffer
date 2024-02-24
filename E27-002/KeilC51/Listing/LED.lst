@@ -1,0 +1,230 @@
+C51 COMPILER V9.60.7.0   LED                                                               02/24/2024 10:04:50 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE LED
+OBJECT MODULE PLACED IN .\Output\LED.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Function\LED.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE(5,SPEE
+                    -D) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\LED.lst) TABS(2) OBJEC
+                    -T(.\Output\LED.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2015 Fortiortech shenzhen *****************************
+   2          * File Name          : LED.c
+   3          * Author             : Billy Long Fortiortech  Market Dept
+   4          * Version            : V1.0
+   5          * Date               : 01/07/2015
+   6          * Description        : This file contains LPF control function used for Motor Control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/ 
+  10          
+  11          
+  12          /* Includes -------------------------------------------------------------------------------------*/
+  13          #include <FU68xx_2.h>
+  14          #include <Myproject.h>
+  15          
+  16          uint16 KeyCount_Up;
+  17          uint16 KeyCount_Dd;
+  18          uint16 KeyCount_Dd1;
+  19          uint16 KeyCount_Long;
+  20          bit  LH_Gear = 0;
+  21          extern uint16  POWER_VSP;
+  22          /*-------------------------------------------------------------------------------------------------
+  23            Function Name :  void LEDControl(void)
+  24            Description   :  功能函数，LED控制，显示系统状态
+  25                            Stop状态--LED长灭
+  26                            Normal状态--LED长亮
+  27                            Fault状态--LED闪烁        
+  28            Input         :  无
+  29            Output        :  无
+  30          -------------------------------------------------------------------------------------------------*/
+  31          void LEDControl(void)
+  32          {
+  33   1      //  if((mcState != mcFault))
+  34   1      //  {
+  35   1      //     switch(KS.KeyValuetotal & 0x70)     //转速判断
+  36   1      //     {
+  37   1      //       case 0x10:
+  38   1      //         D4 = LEDON;
+  39   1      //         D5 = LEDOFF;
+  40   1      //         D6 = LEDOFF;
+  41   1      ////         mcSpeedRamp.TargetValue = Motor_Speed_Low;             // 转速赋值
+  42   1      //         POWER_VSP = POWER_LOW;
+  43   1      //         break;
+  44   1      //       case 0x20:
+  45   1      //         D4 = LEDON;
+  46   1      //         D5 = LEDON;
+  47   1      //         D6 = LEDOFF;  
+  48   1      //         POWER_VSP = POWER_gear;
+  49   1      ////         mcSpeedRamp.TargetValue = Motor_Speed_Mid;            // 转速赋值     
+  50   1      //         break;
+  51   1      //       case 0x40:
+  52   1      //         D4 = LEDON;
+  53   1      //         D5 = LEDON;
+C51 COMPILER V9.60.7.0   LED                                                               02/24/2024 10:04:50 PAGE 2   
+
+  54   1      //         D6 = LEDON;
+  55   1      //         POWER_VSP =POWER_HIGH;
+  56   1      ////         mcSpeedRamp.TargetValue = Motor_Speed_HIgh;          // 转速赋值       
+  57   1      //         break;
+  58   1      //       default:
+  59   1      //         break;
+  60   1      //    }
+  61   1      //    
+  62   1      //   if((KS.KeyValuetotal & 0x80) == 0)                         //温度赋值
+  63   1      //   { 
+  64   1      //    switch(KS.KeyValuetotal & 0x0F)
+  65   1      //     {
+  66   1      //       case 0x01:
+  67   1      //         D1 = LEDOFF;
+  68   1      //         D2 = LEDOFF;
+  69   1      //         D3 = LEDOFF;
+  70   1      //         mcFocCtrl.HW_ZeroZ = HW_Gear[Temp_Off][1];
+  71   1      //         mcFocCtrl.HW_ZeroT = HW_Gear[Temp_Off][0];
+  72   1      //         HW1 = HWOFF;
+  73   1      //         HW2 = HWOFF;
+  74   1      //         break;
+  75   1      //       case 0x02:
+  76   1      //         D1 = LEDOFF;
+  77   1      //         D2 = LEDOFF;
+  78   1      //         D3 = LEDON;   
+  79   1      //         mcFocCtrl.HW_ZeroZ = HW_Gear[Temp_LOW][1];
+  80   1      //         mcFocCtrl.HW_ZeroT = HW_Gear[Temp_LOW][0];
+  81   1      //         break;
+  82   1      //       case 0x04:
+  83   1      //         D1 = LEDOFF;
+  84   1      //         D2 = LEDON;
+  85   1      //         D3 = LEDON;
+  86   1      //         mcFocCtrl.HW_ZeroZ = HW_Gear[Temp_Mid][1];
+  87   1      //         mcFocCtrl.HW_ZeroT = HW_Gear[Temp_Mid][0];
+  88   1      //         break;
+  89   1      //       case 0x08:
+  90   1      //         D1 = LEDON;
+  91   1      //         D2 = LEDON;
+  92   1      //         D3 = LEDON; 
+  93   1      //         mcFocCtrl.HW_ZeroZ = HW_Gear[Temp_High][1];
+  94   1      //         mcFocCtrl.HW_ZeroT = HW_Gear[Temp_High][0];
+  95   1      //         break;
+  96   1      //       default:
+  97   1      //         break;
+  98   1      //     }  
+  99   1      //   }
+ 100   1      //   else                                                        //一键冷风按下
+ 101   1      //   {
+ 102   1      //     mcFocCtrl.HW_ZeroZ = HW_Gear[Temp_Off][1];
+ 103   1      //     mcFocCtrl.HW_ZeroT = HW_Gear[Temp_Off][0];
+ 104   1      //     D1 = LEDOFF;
+ 105   1      //     D2 = LEDOFF;
+ 106   1      //     D3 = LEDOFF;
+ 107   1      //     HW1 = HWOFF;
+ 108   1      //     HW2 = HWOFF;
+ 109   1      //   }
+ 110   1      // }
+ 111   1       
+ 112   1      //   mcFocCtrl.HW_ZeroZ = Temp_HighZ;
+ 113   1      //   mcFocCtrl.HW_ZeroT = Temp_HighT;
+ 114   1      // 
+ 115   1      //   mcFocCtrl.HW_interval = (uint8)(Temp_HighZ/Temp_HighT);
+C51 COMPILER V9.60.7.0   LED                                                               02/24/2024 10:04:50 PAGE 3   
+
+ 116   1       
+ 117   1      //  mcFocCtrl.HW_ZeroZ = Temp_HighZ;
+ 118   1      //  mcFocCtrl.HW_ZeroT = Temp_HighT;
+ 119   1      // 
+ 120   1      //  mcFocCtrl.HW_Gcd =  Get_Gcd(mcFocCtrl.HW_ZeroT, mcFocCtrl.HW_ZeroZ);
+ 121   1      //  mcFocCtrl.HW_ZeroZ = mcFocCtrl.HW_ZeroZ / mcFocCtrl.HW_Gcd;
+ 122   1      //  mcFocCtrl.HW_ZeroT = mcFocCtrl.HW_ZeroT / mcFocCtrl.HW_Gcd;
+ 123   1      }
+ 124          
+ 125          /*-------------------------------------------------------------------------------------------------
+ 126            Function Name :  void LEDControl(void)
+ 127            Description   :  功能函数,控制开关
+ 128                              
+ 129            Input         :  无
+ 130            Output        :  无
+ 131          -------------------------------------------------------------------------------------------------*/
+ 132          void Motor_EN(void)
+ 133          {
+ 134   1         if(GP10==0) 
+ 135   1          {
+ 136   2            KeyCount_Up = 0;
+ 137   2            if(KeyCount_Dd < 50)
+ 138   2            {
+ 139   3              KeyCount_Dd++;
+ 140   3            }
+ 141   2            else
+ 142   2            {        
+ 143   3              LH_Gear = 1;
+ 144   3            }
+ 145   2          }    
+ 146   1          else 
+ 147   1          {
+ 148   2            KeyCount_Dd = 0;
+ 149   2            if(KeyCount_Up < 50)  
+ 150   2            {
+ 151   3              KeyCount_Up++;  
+ 152   3            }
+ 153   2            else
+ 154   2            {
+ 155   3              if(LH_Gear == 1)
+ 156   3              {
+ 157   4                LH_Gear = 0;
+ 158   4                if(POWER_VSP==POWER_LOW)  
+ 159   4                {
+ 160   5                 POWER_VSP = POWER_gear;
+ 161   5                }
+ 162   4                else
+ 163   4                {
+ 164   5                  POWER_VSP = POWER_LOW;
+ 165   5                }
+ 166   4          
+ 167   4              }  
+ 168   3            }
+ 169   2          }
+ 170   1      }
+ 171          /*-------------------------------------------------------------------------------------------------
+ 172            Function Name :  void LEDControl(void)
+ 173            Description   :  功能函数,控制开关
+ 174                              
+ 175            Input         :  无
+ 176            Output        :  无
+ 177          -------------------------------------------------------------------------------------------------*/
+C51 COMPILER V9.60.7.0   LED                                                               02/24/2024 10:04:50 PAGE 4   
+
+ 178          void KEYControl(void)
+ 179          {
+ 180   1      //  if(LOCK==1)                  //未锁定
+ 181   1      //  {
+ 182   1          if(KS.KeyLongPressFlag==0)
+ 183   1             {
+ 184   2              if(mcState == mcRun)
+ 185   2              {
+ 186   3                KeyScan();              //获取按键值
+ 187   3              }                                                               
+ 188   2              if(KS.ChangeKeyFlg)      //
+ 189   2              {
+ 190   3                LEDControl();
+ 191   3                KS.ChangeKeyFlg = 0;
+ 192   3              }
+ 193   2            }
+ 194   1      //  }
+ 195   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    144    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      8    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

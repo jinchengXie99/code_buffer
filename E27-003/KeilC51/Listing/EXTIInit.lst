@@ -1,0 +1,261 @@
+C51 COMPILER V9.60.7.0   EXTIINIT                                                          02/24/2024 10:00:31 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE EXTIINIT
+OBJECT MODULE PLACED IN .\Output\EXTIInit.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Hardware\EXTIInit.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE(5
+                    -,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\EXTIInit.lst) TAB
+                    -S(2) OBJECT(.\Output\EXTIInit.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2017 Fortiortech shenzhen *****************************
+   2          * File Name          : EXTIInit.c
+   3          * Author             : Fortiortech Appliction Team
+   4          * Version            : V1.0
+   5          * Date               : 10-Apr-2017
+   6          * Description        : This file contains EXTI init used for Motor Control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/
+  10          
+  11          
+  12          /* Includes -------------------------------------------------------------------------------------*/
+  13          #include <FU68xx_2.h>
+  14          #include <Myproject.h>
+  15          
+  16          USER_TYPEDEF        User;
+  17          uint8 const code HW_Gear[][2] = {  //33个
+  18            {0,  1},                        //off
+  19            {1,  10},                       //1    170
+  20            {1,  9},                       //2     170-210
+  21            {1,  8},                       //3     160-190
+  22            {1,  7},                       //4     170-210
+  23            {1,  6},                       //5
+  24            {1,  5},                       //6
+  25            {2,  9},                       //7
+  26            {1, 4},                       //8
+  27            {2,  7},                       //9
+  28            {3,  10},                       //10   //350
+  29            {1,  3},                       //11
+  30            {3,  8},                       //12
+  31            {2,  5},                       //13
+  32            {3,  7},                       //14
+  33            {4,  9},                       //15   //400-500
+  34            {1,  2},                       //16
+  35            {5, 9},                       //17
+  36            {4,  7},                       //18
+  37            {3,  5},                       //19
+  38            {5,  8},                       //20  //650
+  39            {2,  3},                       //21
+  40            {7,  10},                       //22
+  41            {5,  7},                       //23
+  42            {3,  4},                       //24
+  43            {7,  9},                       //25  //780 - 850
+  44            {4, 5},                       //26
+  45            {5,  6},                       //27
+  46            {6,  7},                       //28
+  47            {7,  8},                       //29
+  48            {8,  9},                       //30 // 900-950
+  49            {9,  10},                       //31
+  50            {1,  0}                                    //全开
+  51          };
+  52          
+  53          /*-------------------------------------------------------------------------------------------------
+C51 COMPILER V9.60.7.0   EXTIINIT                                                          02/24/2024 10:00:31 PAGE 2   
+
+  54            Function Name :  void EXTI_Init(void)
+  55            Description   :  外部中断配置
+  56            Input         :  无
+  57            Output      :  无
+  58          -------------------------------------------------------------------------------------------------*/
+  59          /*******************************************************************************
+  60          * Function Name  : EXTERN_Init
+  61          * Description    : P10
+  62          * Input          : None
+  63          * Output         : None
+  64          * Return         : None
+  65          *******************************************************************************/
+  66          void EXTI_Init(void)
+  67          {
+  68   1        /*EXTI Input Pin 配置 ---------------------------------------- */
+  69   1          ClrBit(P0_OE, P00);  // config P00 as input，配置P0.0为硬件过流FO端口
+  70   1          ClrBit(P0_PU, P00);  // 0:disable pull up, 1:enable P10 pull up
+  71   1      
+  72   1        /*-------------------------------------------------------------------------------------------------
+  73   1        外部中断模式配置
+  74   1        00: 上升沿产生中断  01: 下降沿产生中断  1x: 上升/下降沿产生中断
+  75   1      -------------------------------------------------------------------------------------------------*/
+  76   1          IF0   = 0;                // clear P00 interrupt flag
+  77   1          IT01 = 0;
+  78   1          IT00 = 1;                // 00: rising edge interrupt，01: failing edge interrupt，1x: edge-change m
+             -ode interrupt
+  79   1      
+  80   1        /*-------------------------------------------------------------------------------------------------
+  81   1        外部中断优先级配置及芯片中断总使能
+  82   1        PX01-PX00，中断优先级控制值从0-3依次表示优先级从最低到最高，共4级优化级控�
+             -��
+  83   1        EX0，外部中断0使能
+  84   1        EA,芯片中断总使能
+  85   1        外部中断是否有滤波的配置，决定于选择硬件保护触发信号源，外部中断0或者�
+             -��较器3中断。
+  86   1        若选择了比较器3中断，则外部中断无法进行滤波配置
+  87   1        -------------------------------------------------------------------------------------------------*/
+  88   1          PX01 = 1;
+  89   1          PX00 = 1;                // 中断优先级别3，中断优先级最高,
+  90   1          EX0 = 1;                // 使能外部中断0, POO位外部中断输入硬件
+  91   1          EA = 1;                  // 使能全局中断
+  92   1      
+  93   1      }
+  94          void Sleepmode_Init(void)
+  95          {
+  96   1        ClrBit(P1_OE, P11);  // config P11 as input
+  97   1        ClrBit(P1_PU, P11);  // diasable P11 Pull Up
+  98   1        // ClrBit(P1_AN, P11);  // diasable P11 analog function
+  99   1        ClrBit(P1_IF, P11);         // clear P11 interrupt flag
+ 100   1        ClrBit(P1_IE, P11);   // config P11 as the source of EXTI1
+ 101   1      
+ 102   1        IT11 = 1;
+ 103   1        IT10 = 0;                // 00: posedge mode interrupt，01: negedge mode interrupt，1x: edge-change mo
+             -de interrupt
+ 104   1      
+ 105   1        PX11 = 0;
+ 106   1        PX10 = 0;                // 中断优先级别0，中断优先级最高
+ 107   1      
+ 108   1        EX1 = 1;                // 使能外部中断1, P11位外部中断输入硬件
+ 109   1        EA = 1;                  // 使能全局中断
+ 110   1      }
+ 111          
+C51 COMPILER V9.60.7.0   EXTIINIT                                                          02/24/2024 10:00:31 PAGE 3   
+
+ 112          /*-------------------------------------------------------------------------------------------------
+ 113            Function Name :  ZeroCrossing_Init(void)
+ 114            Description   :  外部中断配置
+ 115            Input         :  供电频率
+ 116            Output        :  无
+ 117          -------------------------------------------------------------------------------------------------*/
+ 118          void ZeroCrossing_Init(void)
+ 119          {
+ 120   1        ClrBit(P2_OE, P20);   // config P20 as input
+ 121   1        ClrBit(P2_PU, P20);   // diasable P20 Pull Up
+ 122   1        ClrBit(P2_AN, P20);   // diasable P20 analog function
+ 123   1        
+ 124   1        ClrBit(P2_IF, P20);   // clear P11 interrupt flag
+ 125   1        SetBit(P2_IE, P20);   // config P11 as the source of EXTI1
+ 126   1      
+ 127   1        // 过零前：上升沿 00，过零后：下降沿 01
+ 128   1        IT11 = 0;
+ 129   1        IT10 = 0;                // 00: posedge mode interrupt，01: negedge mode interrupt，1x: edge-change mo
+             -de interrupt
+ 130   1      
+ 131   1        PX11 = 0;
+ 132   1        PX10 = 1;                // 中断优先级别0，中断优先级最高
+ 133   1      
+ 134   1        EX1 = 1;                // 外部中断在预充电后面才打开 
+ 135   1        EA = 1;                  // 使能全局中断
+ 136   1        
+ 137   1      }
+ 138          
+ 139          /*-------------------------------------------------------------------------------------------------
+ 140            Function Name :  TemperaturePID(void)
+ 141            Description   :  温度PI调节
+ 142            Input         :  供电频率
+ 143            Output        :  无
+ 144          -------------------------------------------------------------------------------------------------*/
+ 145          void TemperaturePID(void)
+ 146          {
+ 147   1        
+ 148   1        
+ 149   1      //  if((abs(User.TemperatureEkL) > 500))
+ 150   1      //  {
+ 151   1          PI_KP     = _Q12(1.0);
+ 152   1          PI_KI     = _Q12(0.01);
+ 153   1          PI_EK     = User.TemperatureEkL;
+ 154   1          
+ 155   1          SetBit(PI_LPF_CR,PISTA);                                                    // Start PI
+ 156   1          _nop_();  _nop_();  _nop_();  _nop_();  _nop_();
+ 157   1          
+ 158   1          PI_UKMAX   = User.ScrOnAngleTime +2000;
+ 159   1          PI_UKMIN   = User.ScrOnAngleTime -800;
+ 160   1          PI_UK     = User.ScrOnAngleTimeDatum;  
+ 161   1          User.TemperatureEkL   = User.TemperatureDatum - User.TemperatureAverage;
+ 162   1          PI_EK     = User.TemperatureEkL;
+ 163   1          
+ 164   1          SetBit(PI_LPF_CR,PISTA);                                                    // Start PI
+ 165   1          _nop_();  _nop_();  _nop_();  _nop_();  _nop_();
+ 166   1          
+ 167   1          User.ScrOnAngleTimeDatum  = PI_UK;      
+ 168   1      //  }
+ 169   1      }
+ 170          
+ 171          /*-------------------------------------------------------------------------------------------------
+ 172            Function Name :  TempAverage(void)
+C51 COMPILER V9.60.7.0   EXTIINIT                                                          02/24/2024 10:00:31 PAGE 4   
+
+ 173            Description   :  温度求平均值
+ 174            Input         :  供电频率
+ 175            Output        :  无
+ 176          -------------------------------------------------------------------------------------------------*/
+ 177          void TempAverage(void)
+ 178          {
+ 179   1        static uint8 peratureCount =0;
+ 180   1        uint8 i;
+ 181   1        
+ 182   1        if(peratureCount <10)
+ 183   1        {
+ 184   2          User.TemperatureCount[peratureCount] = User.Temperature;
+ 185   2          peratureCount ++;
+ 186   2          
+ 187   2          for(i=0; i<10; i++)
+ 188   2          {
+ 189   3            User.TemperatureSum += User.TemperatureCount[i];
+ 190   3          }
+ 191   2          
+ 192   2          User.TemperatureAverage = (uint16)(User.TemperatureSum /10);
+ 193   2          User.TemperatureSum =0;
+ 194   2        }
+ 195   1        else
+ 196   1        {
+ 197   2          peratureCount = 0;
+ 198   2          
+ 199   2        }
+ 200   1        
+ 201   1      }
+ 202          
+ 203          /*-------------------------------------------------------------------------------------------------
+ 204            Function Name :  
+ 205            Description   :  分数化简
+ 206            Input         :  
+ 207            Output        :  无
+ 208          -------------------------------------------------------------------------------------------------*/
+ 209          uint8 Get_Gcd(uint8 mm,uint8 nn)  //nn 为大值
+ 210          {
+ 211   1        uint8 rr = 0;
+ 212   1        while(mm!=0)
+ 213   1        {
+ 214   2          rr=nn%mm;
+ 215   2          nn=mm;
+ 216   2          mm=rr;
+ 217   2        }
+ 218   1        return nn;
+ 219   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    403    ----
+   CONSTANT SIZE    =     66    ----
+   XDATA SIZE       =     37       1
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+C51 COMPILER V9.60.7.0   EXTIINIT                                                          02/24/2024 10:00:31 PAGE 5   
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

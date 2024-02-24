@@ -1,0 +1,280 @@
+C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERFLASH
+OBJECT MODULE PLACED IN .\Output\UserFlash.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\UserFiles\UserFlash.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE
+                    -(5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\UserFlash.lst) 
+                    -TABS(2) OBJECT(.\Output\UserFlash.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2015 Fortiortech shenzhen *****************************
+   2          * File Name          : Main.c
+   3          * Author             : Andrew Kong Fortiortech  Market Dept
+   4          * Version            : V1.0
+   5          * Date               : 11/09/2015
+   6          * Description        : This file contains all the common data types used for
+   7          *                      Motor Control.
+   8          ***************************************************************************************************
+   9          * All Rights Reserved
+  10          **************************************************************************************************/
+  11          
+  12          /*Include ---------------------------------------------------------------------------------------*/
+  13          #include <FU68xx_2.h>
+  14          #include <Myproject.h>
+  15          #include <Customer_Debug.h>
+  16          
+  17          #include <UserGlobal.h>
+  18          #include <UserDefine.h>
+  19          
+  20          #define  USER_FALSH_ADDRESS 0X3E00             // 15616
+  21          
+  22          extern uint8 Flash_Sector_Erase(uint8 xdata *FlashAddress);
+  23          extern uint8 Flash_Sector_Write(uint8 xdata *FlashAddress, uint8 FlashData);
+  24          
+  25          extern u8  PowerLose;
+  26          
+  27          // UserDryer.c
+  28          extern u8  idata SpeedShiftStep;
+  29          extern u8  idata SpeedCmdLv;
+  30          
+  31          extern u8  idata HeatShiftStep;
+  32          extern u8  idata HeatCmdLv;
+  33          
+  34          extern u8  idata CoolCmdLv;
+  35          extern u8  idata CoolShiftLv;
+  36          
+  37          //----------------------------------------------------------------------------//
+  38          // 说明：用户操作flash
+  39          // 启动时读取存档，获得启动时的挡位指令，低4位是风速挡，高4位是热度挡
+  40          //u8  FaultCode=0;
+  41          //u8  FaultLine[8];
+  42          u8  FaultOffset;
+  43          u8  FlashInitFlag;
+  44          
+  45          u8  FlashReadLine[4];
+  46          
+  47          u8  FlashPieceNum;
+  48          u8  FlashAddrOffset;
+  49          u8  FlashSaveFlag;
+  50          u16 FlashWriteTimes;
+  51          
+  52          //----------------------------------------------------------------------------//
+  53          // 说明：用户数据组写入存储区
+C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 2   
+
+  54          void FlashWriteData(void)
+  55          {
+  56   1        // 每4byte为一组，其中第一个byte写入0xA5，第四个byte写入本次高低档，第二三byte预留
+  57   1        Flash_Sector_Write(USER_FALSH_ADDRESS+FlashAddrOffset+0,(uint8)0xA5);
+  58   1        _nop_();
+  59   1        Flash_Sector_Write(USER_FALSH_ADDRESS+FlashAddrOffset+1,(uint8)SpeedShiftStep);
+  60   1        _nop_();
+  61   1        Flash_Sector_Write(USER_FALSH_ADDRESS+FlashAddrOffset+2,(uint8)HeatShiftStep);
+  62   1        _nop_();
+  63   1        Flash_Sector_Write(USER_FALSH_ADDRESS+FlashAddrOffset+3,(uint8)CoolShiftLv);
+  64   1        _nop_();
+  65   1      }
+  66          
+  67          //----------------------------------------------------------------------------//
+  68          // 说明：擦除用户数据区，并写入前2个存储组
+  69          void FlashEarseAndWrite(void)
+  70          {
+  71   1        // 擦除此存储区间
+  72   1        Flash_Sector_Erase(USER_FALSH_ADDRESS);
+  73   1        
+  74   1        // 基地址设置标志0xA5，表明已写入数据
+  75   1        Flash_Sector_Write(USER_FALSH_ADDRESS+0,(uint8)0xA5 );
+  76   1        Flash_Sector_Write(USER_FALSH_ADDRESS+1,(uint8)0x5A );
+  77   1      
+  78   1        // 基地址偏移16位，记录擦除次数，次数为16位数据
+  79   1        Flash_Sector_Write(USER_FALSH_ADDRESS+2,(uint8)FlashWriteTimes);
+  80   1        Flash_Sector_Write(USER_FALSH_ADDRESS+3,(uint8)(FlashWriteTimes>>8));
+  81   1      
+  82   1        // 每4byte为一组，其中第一个byte写入0xA5，第二三四个byte写入本次数据
+  83   1        Flash_Sector_Write(USER_FALSH_ADDRESS+4,(uint8)0xA5 );
+  84   1        Flash_Sector_Write(USER_FALSH_ADDRESS+5,(uint8)SpeedShiftStep);
+  85   1        Flash_Sector_Write(USER_FALSH_ADDRESS+6,(uint8)HeatShiftStep);
+  86   1        Flash_Sector_Write(USER_FALSH_ADDRESS+7,(uint8)CoolShiftLv);
+  87   1      
+  88   1      //    //bool TempEA;
+  89   1      //    //TempEA = EA;
+  90   1      //    EA = 0;
+  91   1      
+  92   1      //    FLA_CR = 0x03;                  //使能自擦除
+  93   1      //    FLA_KEY = 0x5a;
+  94   1      //    FLA_KEY = 0x1f;                 //flash预编程解锁
+  95   1      //    _nop_();
+  96   1      //    
+  97   1      //    //写数据
+  98   1      //    *(uint8 xdata *)(USER_FALSH_ADDRESS+0) = 0xA5;
+  99   1      //    _nop_();
+ 100   1      //    *(uint8 xdata *)(USER_FALSH_ADDRESS+1) = 0x5A;
+ 101   1      //    _nop_();
+ 102   1      //    *(uint8 xdata *)(USER_FALSH_ADDRESS+2) = (uint8)FlashWriteTimes;
+ 103   1      //    _nop_();
+ 104   1      //    *(uint8 xdata *)(USER_FALSH_ADDRESS+3) = (uint8)(FlashWriteTimes>>8);
+ 105   1      //    _nop_();
+ 106   1      //    *(uint8 xdata *)(USER_FALSH_ADDRESS+4) = 0xA5;
+ 107   1      //    _nop_();
+ 108   1      //    *(uint8 xdata *)(USER_FALSH_ADDRESS+5) = (uint8)SpeedShiftStep;
+ 109   1      //    _nop_();
+ 110   1      //    *(uint8 xdata *)(USER_FALSH_ADDRESS+6) = (uint8)HeatShiftStep;
+ 111   1      //    _nop_();
+ 112   1      ////    *(uint8 xdata *)(USER_FALSH_ADDRESS+7) = (uint8)CoolShiftLv);
+ 113   1      ////    _nop_();
+ 114   1      //    
+ 115   1      //    FLA_CR = 0x08;                  //开始预编程，完成后Flash再次上锁
+C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 3   
+
+ 116   1      //    //EA = TempEA;
+ 117   1      
+ 118   1      }
+ 119          //----------------------------------------------------------------------------//
+ 120          // 说明：Flash处理，上电即执行一次，后每1ms执行
+ 121          void DryerFlashInit(void)
+ 122          {
+ 123   1        u8 i;
+ 124   1      
+ 125   1        EA = 0;
+ 126   1            
+ 127   1        // 上电后读取Flash
+ 128   1        if(FlashInitFlag == 0)
+ 129   1        {
+ 130   2          FlashInitFlag = 1;
+ 131   2          
+ 132   2          // 读取前4byte
+ 133   2          for(i=0;i<4;i++)
+ 134   2            FlashReadLine[i] = *(uint8 code *)(USER_FALSH_ADDRESS + i);
+ 135   2          
+ 136   2          // 如第一个字节非0xA5,表明未设置过参数
+ 137   2          if(FlashReadLine[0] != 0xA5)
+ 138   2          {
+ 139   3            FlashWriteTimes = 1;                // 首次擦写
+ 140   3            
+ 141   3            DryerKeysDefault();                 // 
+ 142   3            
+ 143   3            FlashEarseAndWrite();               // 擦写
+ 144   3      
+ 145   3            FlashPieceNum = 2;                  // flash预备区编号
+ 146   3            FlashAddrOffset = 8;                // flash预备区偏移首地址
+ 147   3          }
+ 148   2          // 否则,表明已设置过参数，
+ 149   2          else
+ 150   2          {
+ 151   3            // 搜索最后一个已存储数据的数组
+ 152   3            FlashPieceNum = 1;                  // 
+ 153   3            for(i=1;i<=30;i++)
+ 154   3            {
+ 155   4              if((*(uint8 code *)(USER_FALSH_ADDRESS + i*4)) == 0xA5)
+ 156   4                FlashPieceNum=i;
+ 157   4            }
+ 158   3            
+ 159   3            // 计算上次存储组首地址偏移量
+ 160   3            FlashAddrOffset = FlashPieceNum*4;
+ 161   3            // 读取擦写次数并加一次
+ 162   3            FlashWriteTimes = FlashReadLine[2] + (FlashReadLine[3]<<8);
+ 163   3            
+ 164   3            // 读取开机挡
+ 165   3            SpeedShiftStep = *(uint8 code *)(USER_FALSH_ADDRESS + FlashAddrOffset + 1);
+ 166   3            HeatShiftStep = *(uint8 code *)(USER_FALSH_ADDRESS + FlashAddrOffset + 2);
+ 167   3            CoolShiftLv = *(uint8 code *)(USER_FALSH_ADDRESS + FlashAddrOffset + 3);
+ 168   3            
+ 169   3            // 若此区块写满，为便于下次存储，应将此区域擦除，开始新一轮flash操作，并记录擦写次数
+ 170   3            if(FlashPieceNum >= 30)        // 此处是 >=
+ 171   3            {
+ 172   4              FlashWriteTimes += 1;       // 擦写次数递增
+ 173   4              
+ 174   4              FlashEarseAndWrite();       // 擦写
+ 175   4              
+ 176   4              FlashPieceNum = 2;          // 更改待写入数组的存储区编号
+ 177   4              FlashAddrOffset = 8;        // 更改待写入数组的存储区偏移首地址
+C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 4   
+
+ 178   4            }
+ 179   3            // 区块未写满，计算待操作区块的编号及首地址，用以下次写入
+ 180   3            else
+ 181   3            {
+ 182   4              FlashPieceNum += 1;
+ 183   4              FlashAddrOffset += 4;
+ 184   4            }
+ 185   3          }
+ 186   2        }
+ 187   1        
+ 188   1        //EA = 1;
+ 189   1      }
+ 190          
+ 191          //----------------------------------------------------------------------------//
+ 192          // 说明：Flash处理，每1ms执行
+ 193          void FlashLoopPro(void)
+ 194          {
+ 195   1        // 1 当供电异常，保存数据
+ 196   1        if(PowerLose == 1)
+ 197   1        {
+ 198   2          if(mcState == mcReady)
+ 199   2          {
+ 200   3            if(FlashSaveFlag == 0)
+ 201   3            {
+ 202   4              FlashSaveFlag = 1;
+ 203   4            }
+ 204   3          }
+ 205   2        }
+ 206   1      
+ 207   1        // 2 存储标志置位，执行flash存储
+ 208   1        if(FlashSaveFlag == 1)
+ 209   1        {
+ 210   2          FlashSaveFlag = 2;
+ 211   2          
+ 212   2      //    FlashWriteData();
+ 213   2          EA = 0;
+ 214   2          if(FlashPieceNum > 30)           // 此处是 >=
+ 215   2          {
+ 216   3            FlashWriteTimes += 1;         // 擦写次数递增
+ 217   3            
+ 218   3            FlashEarseAndWrite();         // 擦写
+ 219   3            
+ 220   3            FlashPieceNum = 2;            // 更改待写入数组的存储区编号
+ 221   3            FlashAddrOffset = 8;          // 更改待写入数组的存储区偏移首地址
+ 222   3          }
+ 223   2          // 区块未写满，计算待操作区块的编号及首地址，用以下次写入
+ 224   2          else
+ 225   2          {
+ 226   3            FlashWriteData();
+ 227   3            
+ 228   3            FlashPieceNum += 1;
+ 229   3            FlashAddrOffset += 4;
+ 230   3          }
+ 231   2          EA = 1;
+ 232   2      
+ 233   2        }
+ 234   1        
+ 235   1        // 若掉电时数据存储完毕，但未完全关闭时供电又恢复，此时需重新执行Flash初始化
+ 236   1        if(FlashSaveFlag == 2)
+ 237   1        {
+ 238   2          if(PowerLose == 0)
+ 239   2          {
+C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 5   
+
+ 240   3            FlashSaveFlag = 0;
+ 241   3          }
+ 242   2        }
+ 243   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    560    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     11       1
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

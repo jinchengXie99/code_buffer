@@ -1,0 +1,14 @@
+C51 COMPILER V9.60.7.0   USERMAIN                                                          02/24/2024 09:59:46 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERMAIN
+OBJECT MODULE PLACED IN .\Output\UserMain.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\UserFiles\UserMain.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE(
+                    -5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\UserMain.lst) TA
+                    -BS(2) OBJECT(.\Output\UserMain.obj)
+
+line level    source
+
+*** ERROR C318 OF ..\User\Source\UserFiles\UserMain.c: can't open file '..\User\Source\UserFiles\UserMain.c'
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

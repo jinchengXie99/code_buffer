@@ -1,0 +1,939 @@
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE FOCCONTROLFUNCTION
+OBJECT MODULE PLACED IN .\Output\FocControlFunction.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Function\FocControlFunction.c LARGE OMF2 WARNINGLEVEL(0) 
+                    -OPTIMIZE(5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\FocCont
+                    -rolFunction.lst) TABS(2) OBJECT(.\Output\FocControlFunction.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2017 Fortiortech shenzhen *****************************
+   2          * File Name          : FocControl.c
+   3          * Author             : Fortiortech  Appliction Team
+   4          * Version            : V1.0
+   5          * Date               : 10-Apr-2017
+   6          * Description        : This file contains all the foc control function used for motor control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/
+  10          
+  11          
+  12          /* Includes -------------------------------------------------------------------------------------*/
+  13          #include <FU68xx_2.h>
+  14          #include <Myproject.h>
+  15          #include <FU68xx_2_DMA.h>
+  16          
+  17          CurrentOffset xdata mcCurOffset;
+  18          
+  19          extern float brakeduty;
+  20          extern uint8  KeyLongPressFlag;
+  21          extern uint16 POWER_VSP;
+  22          extern bit ReverseCleanCmd;
+  23          /*---------------------------------------------------------------------------*/
+  24          /* Name    :  void FOC_Init(void)
+  25          /* Input  :  NO
+  26          /* Output  :  NO
+  27          /* Description:  mcInit×´Ì¬ÏÂ£¬¶ÔFOCµÄÏà¹Ø¼Ä´æÆ÷½øÐÐÅäÖÃ,ÏÈÇåÀí¼Ä´æÆ÷£¬ºóÅäÖÃ£¬×îºóÊ¹ÄÜ
+  28          /*---------------------------------------------------------------------------*/
+  29          void FOC_Init(void)
+  30          {
+  31   1        /*Ê¹ÄÜFOC*/
+  32   1        ClrBit(DRV_CR, FOCEN);
+  33   1        SetBit(DRV_CR, FOCEN);
+  34   1        /*ÅäÖÃFOC¼Ä´æÆ÷*/
+  35   1        FOC_CR1       = 0;                                      // ÇåÁã FOC_CR1
+  36   1        FOC_CR2       = 0;                                      // ÇåÁã FOC_CR2
+  37   1        FOC_IDREF     = 0;                                      // ÇåÁã Id
+  38   1        FOC_IQREF     = 0;                                      // ÇåÁã Iq
+  39   1      
+  40   1        FOC__THETA     = 0;                                      // ÇåÁã ½Ç¶È
+  41   1        FOC_RTHEACC   = 0;                                      // ÇåÁã ÅÀÆÂº¯ÊýµÄ³õÊ¼¼ÓËÙ¶È
+  42   1        FOC__RTHESTEP   = 0;                                    //
+  43   1        FOC__RTHECNT   = 0;                                      //
+  44   1        FOC__THECOMP   = _Q15(2.0/180.0);                        // SMO ¹ÀËã²¹³¥½Ç
+  45   1        FOC__THECOR     = 0x02;                                  // Îó²î½Ç¶È²¹³¥
+  46   1      
+  47   1        /*µçÁ÷»·²ÎÊýÅäÖÃ*/
+  48   1        FOC_DMAX       = DOUTMAX;
+  49   1        FOC_DMIN       = DOUTMIN;
+  50   1      
+  51   1        FOC_QMAX       = QOUTMAX;
+  52   1        FOC_QMIN       = QOUTMIN;
+  53   1      
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 2   
+
+  54   1        /*Î»ÖÃ¹ÀËã²ÎÊýÅäÖÃ*/
+  55   1        FOC_EK1       = OBS_K1T;
+  56   1        FOC_EK2       = OBS_K2T;
+  57   1        FOC_EK3       = OBS_K3T * 1.2;
+  58   1        FOC_EK4       = OBS_K4T;
+  59   1        FOC_FBASE     = OBS_FBASE;
+  60   1        FOC_OMEKLPF   = SPEED_KLPF;
+  61   1        FOC_EBMFK     = OBS_KLPF;
+  62   1      
+  63   1      //  FOC_TGLI      = PWM_TGLI_LOAD;
+  64   1        FOC_TGLI      = 0;
+  65   1      
+  66   1        /*********PLL»òSMO**********/
+  67   1        #if (EstimateAlgorithm == SMO)
+  68   1        {
+  69   2            ClrBit(FOC_CR2, ESEL);
+  70   2            FOC_KSLIDE    = OBS_KSLIDE;
+  71   2            FOC_EKLPFMIN  = OBS_EA_KS;
+  72   2        }
+  73   1        #elif (EstimateAlgorithm == PLL)
+                {
+                    SetBit(FOC_CR2, ESEL);
+                    FOC_KSLIDE    = OBSE_PLLKP_GAIN;
+                    FOC_EKLPFMIN  = OBSE_PLLKI_GAIN;
+                }
+                #endif //end SVPMW_Mode
+  80   1      
+  81   1        SetBit(FOC_CR1, SVPWMEN);                              // SVPWMÄ£Ê½
+  82   1      
+  83   1        /*Õý·´×ª*/
+  84   1        if(mcFRState.FR==CCW)                                 // ÉèÖÃF/R
+  85   1        {
+  86   2          SetBit(DRV_CR,DDIR);
+  87   2        }
+  88   1        else
+  89   1        {
+  90   2          ClrBit(DRV_CR,DDIR);
+  91   2        }
+  92   1        
+  93   1      //  if(KS.KeyLongPressFlag == 0)
+  94   1      //  {
+  95   1      //    ClrBit(DRV_CR,DDIR);                               // ·´×ª±êÖ¾Î»
+  96   1      //  }
+  97   1      //  else
+  98   1      //  {
+  99   1      //    SetBit(DRV_CR,DDIR); 
+ 100   1      //  }
+ 101   1        // ·´×ª±êÖ¾Î»
+ 102   1        #if (IRMODE==1)
+                {
+                  SetBit(DRV_CR,DDIR);                               // ·´×ª±êÖ¾Î»
+                  if (ReverseCleanCmd == 1)
+                    ClrBit(DRV_CR,DDIR); 
+                }
+                #else
+ 109   1        {
+ 110   2          ClrBit(DRV_CR,DDIR);                               // ·´×ª±êÖ¾Î»
+ 111   2          if (ReverseCleanCmd == 1)
+ 112   2            SetBit(DRV_CR,DDIR); 
+ 113   2        }
+ 114   1        #endif //end IRMODE
+ 115   1          
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 3   
+
+ 116   1      
+ 117   1        /**¹ýµ÷ÖÆ**/
+ 118   1        #if (OverModulation == 1)
+                {
+                    SetBit(FOC_CR1,OVMDL);                          // ¹ýµ÷ÖÆ
+                }
+                #endif //end OverModulation
+ 123   1      
+ 124   1        /*µ¥µç×è²ÉÑù£»ÐèÒª×îÐ¡²ÉÑù´°,FOC_TRGDLYÎª0£¬Æß¶ÎÊ½SVPWM·½Ê½*/
+ 125   1        #if (Shunt_Resistor_Mode == Single_Resistor)
+ 126   1        {
+ 127   2          SetReg(FOC_CR1, CSM0 | CSM1, 0x00);
+ 128   2          FOC_TSMIN = PWM_TS_LOAD;                              // ×îÐ¡²ÉÑù´°¿Ú
+ 129   2          FOC_TRGDLY = 0x9;                                    // ²ÉÑùÊ±¿ÌÔÚÖÐµã£¬Ò»°ã¿¼ÂÇ¿ª¹ØÔëÉùÓ°Ïì£¬»áÉèÖÃÑÓ
+             -³Ù£»
+ 130   2                                                                // 0x0c±íÊ¾ÑÓ³Ù12¸öclock£¬ÌáÇ°ÓÃ·´ÂëÐÎÊ½£¬Èç0x84
+             -±íÊ¾ÌáÇ°12¸öclock¡£
+ 131   2          ClrBit(FOC_CR2,F5SEG);                                // 7¶ÎÊ½
+ 132   2          SetReg(CMP_CR1, CMP3MOD0 | CMP3MOD1, 0x00);
+ 133   2        }
+ 134   1        /*Ë«µç×è²ÉÑù£¬¿ÉÉèÖÃËÀÇø²¹³¥Öµ£¬ÔÚÏÂ½µÑØ½áÊøÇ°¿ªÊ¼²ÉÑùIa£¬ÅäÖÃ81*/
+ 135   1        #elif (Shunt_Resistor_Mode == Double_Resistor)          // double resistor sample
+                {
+                  SetReg(FOC_CR1, CSM0 | CSM1, CSM0);
+              
+                  FOC_TSMIN = PWM_DT_LOAD;                              // ËÀÇø²¹³¥Öµ
+                  FOC_TRGDLY = 0x83;                                    // ADC²ÉÑùµÄÊ±¿Ì£¬²ÉÑùÊ±¿ÌÔÚ¼ÆÊýÆ÷Áãµã¸½½ü£¬83Îª
+             -ÏÂ½µÑØ½áÊøÇ°3¸öclock²ÉÑùIa£¬Óëµ¥µç×è²»Í¬
+                                                                        // 01ÎªÉÏÉýÑØ¿ªÊ¼ºóµÚÒ»¸öclock¿ªÊ¼²ÉÑù¡£¸ù¾ÝÊµ¼Ê
+             -Çé¿öµ÷Õû¡£
+                  FOC_TBLO=PWM_DLOWL_TIME;                              //ÏÂÇÅ±Û×îÐ¡Âö³å£¬±£Ö¤²ÉÑù
+                  SetReg(CMP_CR1, CMP3MOD0 | CMP3MOD1, 0x00);
+              
+                  /*Îå¶ÎÊ½»òÆß¶ÎÊ½Ñ¡Ôñ*/
+                  #if (SVPMW_Mode == SVPWM_7_Segment)
+                  {
+                    ClrBit(FOC_CR2,F5SEG);                              // 7¶ÎÊ½
+                  }
+                  #elif (SVPMW_Mode == SVPWM_5_Segment)
+                  {
+                    SetBit(FOC_CR2,F5SEG);                              // 7¶ÎÊ½
+                  }
+                  #endif
+              
+                  #if (DouRes_Sample_Mode == DouRes_1_Cycle)
+                  {
+                    ClrBit(FOC_CR2,DSS);                                // 7¶ÎÊ½
+                  }
+                  #elif (DouRes_Sample_Mode == DouRes_2_Cycle)
+                  {
+                    SetBit(FOC_CR2,FOC_DSS);                            // 7¶ÎÊ½
+                  }
+                  #endif //end DouRes_Sample_Mode
+                }
+                /*Èýµç×è²ÉÑù*/
+                #elif (Shunt_Resistor_Mode == Three_Resistor)            // signel resistor sample
+                {
+              
+                  SetReg(FOC_CR1, CSM0 | CSM1, CSM0 | CSM1);// Èýµç×è
+              
+                  FOC_TSMIN  = PWM_DT_LOAD;                              // ËÀÇø²¹³¥Öµ
+                  FOC_TRGDLY =0F;                                        // ADC²ÉÑùµÄÊ±¿Ì£¬²ÉÑùÊ±¿ÌÔÚ¼ÆÊýÆ÷Áãµã¸½½ü£¬83Î
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 4   
+
+             -ªÏÂ½µÑØ½áÊøÇ°3¸öclock²ÉÑùIa£¬Óëµ¥µç×è²»Í¬¡£
+                                                                        // 01ÎªÉÏÉýÑØ¿ªÊ¼ºóµÚÒ»¸öclock¿ªÊ¼²ÉÑù¡£¸ù¾ÝÊµ¼Ê
+             -Çé¿öµ÷Õû¡£
+              
+                  SetReg(CMP_CR1, CMP3MOD0 | CMP3MOD1, CMP3MOD0 | CMP3MOD1);
+                  FOC_TBLO= PWM_OVERMODULE_TIME;                        // ¹ýµ÷ÖÆµçÁ÷²ÉÑù´¦ÀíµÄTBÂö¿í
+              
+                  /*Îå¶ÎÊ½»òÆß¶ÎÊ½Ñ¡Ôñ*/
+                  #if (SVPMW_Mode == SVPWM_7_Segment)
+                  {
+                    ClrBit(FOC_CR2,F5SEG);                              // 7¶ÎÊ½
+                  }
+                  #elif (SVPMW_Mode == SVPWM_5_Segment)
+                  {
+                    SetBit(FOC_CR2,F5SEG);                              // 7¶ÎÊ½
+                  }
+                  #endif //end SVPMW_Mode
+              
+                  #if (DouRes_Sample_Mode == DouRes_1_Cycle)
+                  {
+                    ClrBit(FOC_CR2,DSS);                              // 7¶ÎÊ½
+                  }
+                  #elif (DouRes_Sample_Mode == DouRes_2_Cycle)
+                  {
+                    SetBit(FOC_CR2,DSS);                              // 7¶ÎÊ½
+                  }
+                  #endif //end DouRes_Sample_Mode
+                }
+                #endif  //end Shunt_Resistor_Mode
+ 201   1      
+ 202   1      
+ 203   1        /* Ê¹ÄÜµçÁ÷»ù×¼Ð£Õý  */
+ 204   1        #if (CalibENDIS == Enable)
+ 205   1        {
+ 206   2          if(mcCurOffset.OffsetFlag==1)
+ 207   2          {
+ 208   3            #if (Shunt_Resistor_Mode == Single_Resistor)        // µ¥µç×èÐ£Õý
+ 209   3            {
+ 210   4              /*set ibus current sample offset*/
+ 211   4              SetReg(FOC_CR2, CSOC0 | CSOC1, 0x00);
+ 212   4              FOC_CSO = mcCurOffset.Iw_busOffset;                // Ð´ÈëIbusµÄÆ«ÖÃ
+ 213   4      
+ 214   4            }
+ 215   3            #elif (Shunt_Resistor_Mode == Double_Resistor)      // Ë«µç×èÐ£Õý
+                    {
+                      /*set ia, ib current sample offset*/
+                      SetReg(FOC_CR2, CSOC0 | CSOC1, CSOC0);
+                      FOC_CSO  = mcCurOffset.IuOffset;                  // Ð´ÈëIAµÄÆ«ÖÃ
+              
+                      SetReg(FOC_CR2, CSOC0 | CSOC1, CSOC1);
+                      FOC_CSO  = mcCurOffset.IvOffset;                  // Ð´ÈëIBµÄÆ«ÖÃ
+              
+                    }
+                    #elif (Shunt_Resistor_Mode == Three_Resistor)        // Èýµç×èÐ£Õý
+                    {
+                      /*set ibus current sample offset*/
+                      SetReg(FOC_CR2, CSOC0 | CSOC1, CSOC0);
+                      FOC_CSO = mcCurOffset.IuOffset;                   // Ð´ÈëIAµÄÆ«ÖÃ
+              
+                      SetReg(FOC_CR2, CSOC0 | CSOC1, CSOC1);
+                      FOC_CSO = mcCurOffset.IvOffset;                    // Ð´ÈëIBµÄÆ«ÖÃ
+              
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 5   
+
+                      SetReg(FOC_CR2, CSOC0 | CSOC1, 0x00);
+                      FOC_CSO = mcCurOffset.Iw_busOffset;                // Ð´ÈëICµÄÆ«ÖÃ
+                    }
+                    #endif  //end Shunt_Resistor_Mode
+ 238   3          }
+ 239   2        }
+ 240   1        #endif  //end CalibENDIS
+ 241   1        /*-------------------------------------------------------------------------------------------------
+ 242   1        DRV_CTL£ºPWMÀ´Ô´Ñ¡Ôñ
+ 243   1        OCS = 0, DRV_COMR
+ 244   1        OCS = 1, FOC/SVPWM/SPWM
+ 245   1        -------------------------------------------------------------------------------------------------*/
+ 246   1        /*¼ÆÊýÆ÷±È½ÏÖµÀ´Ô´FOC*/
+ 247   1        SetBit(DRV_CR, OCS);
+ 248   1      }
+ 249          /*---------------------------------------------------------------------------*/
+ 250          /* Name    :  void Motor_Charge(void)
+ 251          /* Input  :  NO
+ 252          /* Output  :  NO
+ 253          /* Description:  Ô¤³äµç£¬µ±Ò»Ö±´¦ÓÚÔ¤³äµç×´Ì¬ÏÂ£¬²»½Óµç»ú£¬¿ÉÓÃÓÚÑéÖ¤IPM»òÕßMos¡£
+ 254          Ô¤³äµç·ÖÈý²½£¬µÚÒ»²½ÊÇ¶ÔUÏà½øÐÐÔ¤³äµç£¬µÚ¶þ²½ÊÇ¶ÔU,VÁ½Ïà½øÐÐÔ¤³äµç;µÚÈý²½ÊÇ¶ÔU¡¢V¡¢WÈýÏà½øÐÐÔ¤³äµç¡£
+ 255          /*---------------------------------------------------------------------------*/
+ 256          void Motor_Charge(void)
+ 257          {
+ 258   1           if(McStaSet.SetFlag.ChargeSetFlag==0)
+ 259   1           {
+ 260   2              McStaSet.SetFlag.ChargeSetFlag = 1;
+ 261   2               #if (IPMState == IPMtest)
+                       {
+                         DRV_DR = 0.7*DRV_ARR;                // IPM 70% duty
+                       }
+                       #elif (IPMState == NormalRun)          // Õý³£°´µç»ú×´Ì¬»úÔËÐÐ
+ 266   2               {
+ 267   3                 DRV_DR = 0.1*DRV_ARR;                //ÏÂÇÅ±Û10% duty
+ 268   3               }
+ 269   2              #endif
+ 270   2               /*-----------------------------------------------------------------------------------------------
+             ---
+ 271   2              DRV_CTL£ºPWMÀ´Ô´Ñ¡Ôñ
+ 272   2              OCS = 0, DRV_COMR
+ 273   2              OCS = 1, FOC/SVPWM/SPWM
+ 274   2              -------------------------------------------------------------------------------------------------*
+             -/
+ 275   2              ClrBit(DRV_CR, OCS);
+ 276   2              mcFocCtrl.ChargeStep = 0;
+ 277   2           }
+ 278   1           if((mcFocCtrl.State_Count < Charge_Time)&&(mcFocCtrl.ChargeStep == 0))
+ 279   1           {
+ 280   2             mcFocCtrl.ChargeStep = 1;
+ 281   2             #if (IPMState == IPMtest)
+                     {
+                       DRV_CMR |= 0x03;                         // UÏàÊä³ö
+                     }
+                     #elif (IPMState == NormalRun)              // Õý³£°´µç»ú×´Ì¬»úÔËÐÐ
+ 286   2             {
+ 287   3               DRV_CMR |= 0x01;                         // UÏàÏÂÇÅ±ÛÍ¨
+ 288   3             }
+ 289   2             #endif
+ 290   2             MOE = 1;
+ 291   2           }
+ 292   1           if(( mcFocCtrl.State_Count <= (Charge_Time<<1)/3)&&(mcFocCtrl.ChargeStep== 1))
+ 293   1           {
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 6   
+
+ 294   2             mcFocCtrl.ChargeStep = 2;
+ 295   2             #if (IPMState == IPMtest)
+                     {
+                       DRV_CMR |= 0x0F;                         // U¡¢VÏàÊä³ö
+                     }
+                     #elif (IPMState == NormalRun)              // Õý³£°´µç»ú×´Ì¬»úÔËÐÐ
+ 300   2             {
+ 301   3               DRV_CMR |= 0x04;                         // VÏàÏÂÇÅ±Ûµ¼Í¨
+ 302   3             }
+ 303   2             #endif
+ 304   2           }
+ 305   1           if((mcFocCtrl.State_Count <= Charge_Time/3)&&(mcFocCtrl.ChargeStep== 2))
+ 306   1           {
+ 307   2              mcFocCtrl.ChargeStep = 3;
+ 308   2             #if (IPMState == IPMtest)
+                     {
+                       DRV_CMR |= 0x3F;                         // U¡¢V¡¢WÏàÊä³ö
+                     }
+                     #elif (IPMState == NormalRun)              // Õý³£°´µç»ú×´Ì¬»úÔËÐÐ
+ 313   2             {
+ 314   3               DRV_CMR |= 0x10;                         // WÏàÏÂÇÅ±Ûµ¼Í¨
+ 315   3             }
+ 316   2             #endif
+ 317   2           }
+ 318   1      }
+ 319          /*---------------------------------------------------------------------------*/
+ 320          /* Name    :  void Motor_Align(void)
+ 321          /* Input  :  NO
+ 322          /* Output  :  NO
+ 323          /* Description:  Ô¤¶¨Î»º¯Êý£¬µ±ÎÞÄæ·çÅÐ¶ÏÊ±£¬²ÉÓÃÔ¤¶¨Î»¹Ì¶¨³õÊ¼Î»ÖÃ;µ±ÓÐÄæ·çÅÐ¶ÏÊ±£¬²ÉÓÃÔ¤¶¨Î»É²³µ
+ 324          /*---------------------------------------------------------------------------*/
+ 325          void Motor_Align(void)
+ 326          {
+ 327   1        if(McStaSet.SetFlag.AlignSetFlag==0)
+ 328   1        {
+ 329   2            McStaSet.SetFlag.AlignSetFlag=1;
+ 330   2      
+ 331   2            /*FOC³õÊ¼»¯*/
+ 332   2            FOC_Init();
+ 333   2      
+ 334   2            /*ÅäÖÃÔ¤¶¨Î»µÄµçÁ÷¡¢KP¡¢KI*/
+ 335   2            FOC_IDREF = ID_Align_CURRENT;
+ 336   2            FOC_IQREF = IQ_Align_CURRENT;
+ 337   2      
+ 338   2            FOC_DQKP = DQKP_Alignment;
+ 339   2            FOC_DQKI = DQKI_Alignment;
+ 340   2      
+ 341   2            FOC_EKP   = OBSW_KP_GAIN;
+ 342   2            FOC_EKI   = OBSW_KI_GAIN;
+ 343   2      
+ 344   2            /*ÅäÖÃÔ¤¶¨Î»½Ç¶È*/
+ 345   2            #if (AlignTestMode==1)
+                    {
+                      FOC__THETA    = Align_Theta;
+                    }
+                    #else
+ 350   2            {
+ 351   3              #if (PosCheckEnable==1)
+                      {
+                        FOC__THETA   = mcFocCtrl.mcPosCheckAngle + _Q15((float)60.0/180.0);;
+                      }
+                      #else
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 7   
+
+ 356   3              {
+ 357   4                FOC__THETA    =Align_Theta;
+ 358   4              }
+ 359   3              #endif  //end PosCheckEnable
+ 360   3            }
+ 361   2            #endif  //end AlignTestMode
+ 362   2                  /*********PLL»òSMO**********/
+ 363   2            #if (EstimateAlgorithm == SMO)
+ 364   2            {
+ 365   3              FOC__ETHETA   = FOC__THETA-4096;
+ 366   3            }
+ 367   2            #elif (EstimateAlgorithm == PLL)
+                    {
+                      FOC__ETHETA   = FOC__THETA;
+                    }
+                    #endif //end   EstimateAlgorithm
+ 372   2            TimeCnt=FOC__THETA;
+ 373   2      
+ 374   2            /*Ê¹ÄÜÊä³ö*/
+ 375   2            DRV_CMR |= 0x3F;                         // U¡¢V¡¢WÏàÊä³ö
+ 376   2            MOE = 1;
+ 377   2      
+ 378   2        }
+ 379   1      }
+ 380          
+ 381          /*---------------------------------------------------------------------------*/
+ 382          /* Name    :  void Motor_Open(void)
+ 383          /* Input  :  NO
+ 384          /* Output  :  NO
+ 385          /* Description:  ¿ª»·Æô¶¯µÄ²ÎÊýÅäÖÃ
+ 386          /*---------------------------------------------------------------------------*/
+ 387          void Motor_Open(void)
+ 388          {
+ 389   1          static uint8 OpenRampCycles;
+ 390   1          if(McStaSet.SetFlag.StartSetFlag==0)
+ 391   1          {
+ 392   2            McStaSet.SetFlag.StartSetFlag=1;
+ 393   2      //      POWER_VSP = POWER_gear;
+ 394   2            /****Æô¶¯³õÊ¼½Ç¶È¸³Öµ**/
+ 395   2            #if (PosCheckEnable)
+                    {
+                      FOC__THETA   = mcFocCtrl.mcPosCheckAngle;// ÓÐ³õÊ¼Î»ÖÃ¼ì²â£¬ÔòÓÃ³õÊ¼Î»ÖÃ½Ç
+                    }
+                    #else
+ 400   2            {
+ 401   3              FOC__THETA    = Align_Theta;            // ÎÞ³õÊ¼Î»ÖÃ¼ì²â£¬ÔòÓÃÔ¤¶¨Î»½Ç
+ 402   3            }
+ 403   2            #endif
+ 404   2            /*********PLL»òSMO**********/
+ 405   2            #if (EstimateAlgorithm == SMO)
+ 406   2            {
+ 407   3              FOC__ETHETA   = FOC__THETA-4915;
+ 408   3            }
+ 409   2            #elif (EstimateAlgorithm == PLL)
+                    {
+                      FOC__ETHETA   = FOC__THETA;
+                    }
+                    #endif //end   EstimateAlgorithm
+ 414   2      
+ 415   2            TimeCnt=FOC__ETHETA;
+ 416   2            /*Æô¶¯µçÁ÷¡¢KP¡¢KI¡¢FOC_EKP¡¢FOC_EKI*/
+ 417   2            FOC_IDREF = ID_Start_CURRENT;                         // DÖáÆô¶¯µçÁ÷
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 8   
+
+ 418   2            mcFocCtrl.mcIqref= IQ_Start_CURRENT;                  // QÖáÆô¶¯µçÁ÷
+ 419   2            
+ 420   2            FOC_DQKP = DQKPStart;
+ 421   2            FOC_DQKI = DQKIStart;
+ 422   2      
+ 423   2            //Æô¶¯Ê±ÉèÖÃQÖáPIÏÂÏÞÆðÊ¼Öµ
+ 424   2      //      FOC_QMAX       = QOUTMAX;
+ 425   2      //      FOC_QMIN       = QOUTMINST;
+ 426   2            
+ 427   2            FOC_EKP   = OBSW_KP_GAIN;
+ 428   2            FOC_EKI   = OBSW_KI_GAIN;
+ 429   2            
+ 430   2            /*Æô¶¯·½Ê½Ñ¡Ôñ*/
+ 431   2            #if (Open_Start_Mode == Omega_Start)                  // Omega Æô¶¯
+ 432   2            {
+ 433   3              FOC_EFREQACC   = Motor_Omega_Ramp_ACC;
+ 434   3              FOC_EFREQMIN   = Motor_Omega_Ramp_Min;
+ 435   3              FOC_EFREQHOLD = Motor_Omega_Ramp_End;
+ 436   3      
+ 437   3              SetBit(FOC_CR1,EFAE);                              // ¹ÀËãÆ÷Ç¿ÖÆÊä³ö
+ 438   3              ClrBit(FOC_CR1,RFAE);                              // ½ûÖ¹Ç¿À­
+ 439   3              SetBit(FOC_CR1,ANGM);                              // ¹ÀËãÄ£Ê½
+ 440   3            }
+ 441   2            #elif (Open_Start_Mode == Open_Start)
+                    {
+                      FOC_RTHEACC   = Motor_Open_Ramp_ACC;                // ÅÀÆÂº¯ÊýµÄ³õÊ¼¼ÓËÙ¶È
+                      FOC__RTHESTEP   = Motor_Open_Ramp_Min;              // 0.62 degree acce speed
+                      RPDPara.ThetaGet=Motor_Open_Ramp_Min;
+                      FOC__RTHECNT   = MOTOR_OPEN_ACC_CNT;                // acce time
+              
+                      ClrBit(FOC_CR1,EFAE);                              // ¹ÀËãÆ÷Ç¿ÖÆÊä³ö
+                      SetBit(FOC_CR1,RFAE);                              // ½ûÖ¹Ç¿À­
+                      ClrBit(FOC_CR1,ANGM);                              // ¹ÀËãÄ£Ê½
+                    }
+                    #elif (Open_Start_Mode == Open_Omega_Start)
+                    {
+                      FOC_RTHEACC   = Motor_Open_Ramp_ACC;                  // ÅÀÆÂº¯ÊýµÄ³õÊ¼¼ÓËÙ¶È
+                      FOC__RTHESTEP   = Motor_Open_Ramp_Min;                // 0.62 degree acce speed
+                      FOC__RTHECNT   = MOTOR_OPEN_ACC_CNT;                  // acce time
+              
+                      FOC_EFREQACC   = Motor_Omega_Ramp_ACC;
+                      FOC_EFREQMIN   = Motor_Omega_Ramp_Min;
+                      FOC_EFREQHOLD = Motor_Omega_Ramp_End;
+              
+                      SetBit(FOC_CR1,EFAE);                              // ¹ÀËãÆ÷Ç¿ÖÆÊä³ö
+                      SetBit(FOC_CR1,RFAE);                              // ½ûÖ¹Ç¿À­
+                      SetBit(FOC_CR1,ANGM);                              // ¹ÀËãÄ£Ê½
+                    }
+                    #endif //end Open_Start_Mode
+ 467   2            
+ 468   2          }
+ 469   1            /*²»Í¬Æô¶¯·½Ê½ÏÂ£¬ÇÐ»»µ½MCRUN×´Ì¬*/
+ 470   1            #if (Open_Start_Mode == Open_Start)      //OPEN×´Ì¬Æô¶¯Ê±ÍÏ¶¯¶à´Î
+                    {
+                      if(OpenRampCycles<(MOTOR_OPEN_ACC_CYCLE-1))
+                      {
+                        if(!ReadBit(FOC_CR1,RFAE))
+                        {
+                          SetBit(FOC_CR1,RFAE);
+                          OpenRampCycles++;
+                        }
+                      }
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 9   
+
+                      else
+                      {
+                        mcFocCtrl.State_Count = 2;
+              
+                        mcState = mcRun;
+                      }
+                        FOC_EKP = OBSW_KP_GAIN_RUN4;                        // ¹ÀËãÆ÷ÀïµÄPIµÄKP
+                        FOC_EKI  = OBSW_KI_GAIN_RUN4;                       // ¹ÀËãÆ÷ÀïµÄPIµÄKI
+                    }
+                    #elif (Open_Start_Mode == Open_Omega_Start)
+                    {
+                        mcFocCtrl.State_Count = 200;
+                        mcState = mcRun;
+                    }
+                    #elif (Open_Start_Mode == Omega_Start)
+ 495   1            {
+ 496   2              /*********PLL»òSMO**********/
+ 497   2              #if (EstimateAlgorithm == SMO)
+ 498   2              {
+ 499   3                 mcFocCtrl.State_Count = 120;
+ 500   3              }
+ 501   2              #elif (EstimateAlgorithm == PLL)
+                      {
+                        FOC_EKP = OBSW_KP_GAIN_RUN4;                        // ¹ÀËãÆ÷ÀïµÄPIµÄKP
+                        FOC_EKI  = OBSW_KI_GAIN_RUN4;                       // ¹ÀËãÆ÷ÀïµÄPIµÄKI
+                      }
+                      #endif //end   EstimateAlgorithm
+ 507   2              mcState = mcRun;
+ 508   2            }
+ 509   1            #endif //end Open_Start_Mode
+ 510   1            
+ 511   1            FOC_IQREF = mcFocCtrl.mcIqref;                        // QÖáÆô¶¯µçÁ÷
+ 512   1      }
+ 513          
+ 514          /*---------------------------------------------------------------------------*/
+ 515          /* Name    :  void Motor_Open(void)
+ 516          /* Input  :  NO
+ 517          /* Output  :  NO
+ 518          /* Description:  ¿ª»·Æô¶¯µÄ²ÎÊýÅäÖÃ
+ 519          /*---------------------------------------------------------------------------*/
+ 520          void Motor_PllStart(void)
+ 521          {
+ 522   1          static uint8 OpenRampCycles;
+ 523   1          if(TailWindDetect.PLLFlag==1)
+ 524   1          {
+ 525   2            TailWindDetect.PLLSpeed=FOC__EOME;
+ 526   2            if(Abs_F16(TailWindDetect.PLLSpeed)<100)  //Äæ·ç×´Ì¬ÏÂ£¬ËÙ¶ÈµÍÓÚ100Ê±£¬¼ÆÊý£¬´ïµ½Ò»¶¨Ê±¼äºó£¬PLLFlag
+             -ÇåÁã¡£
+ 527   2            {
+ 528   3              TailWindDetect.PLLDetectCnt++;
+ 529   3              if(TailWindDetect.PLLDetectCnt>3000)    //·ÀÖ¹¹ÀËã´íÎó
+ 530   3              {
+ 531   4                TailWindDetect.PLLFlag=0;
+ 532   4                TailWindDetect.PLLTheta=FOC__ETHETA;
+ 533   4                FOC_IQREF =0;
+ 534   4              }
+ 535   3            }
+ 536   2            else
+ 537   2            {
+ 538   3              if(TailWindDetect.PLLDetectCnt>0)
+ 539   3              {
+ 540   4                TailWindDetect.PLLDetectCnt--;
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 10  
+
+ 541   4              }
+ 542   3            }
+ 543   2          }
+ 544   1          if((McStaSet.SetFlag.StartSetFlag==0)&&(TailWindDetect.PLLFlag==0))
+ 545   1          {
+ 546   2            McStaSet.SetFlag.StartSetFlag=1;
+ 547   2            MOE = 0;
+ 548   2            FOC_Init();
+ 549   2            FOC__ETHETA    = TailWindDetect.PLLTheta+19000;//16668;//
+ 550   2      
+ 551   2            /*Æô¶¯µçÁ÷¡¢KP¡¢KI¡¢FOC_EKP¡¢FOC_EKI*/
+ 552   2            FOC_IDREF = ID_Start_CURRENT;                         // DÖáÆô¶¯µçÁ÷
+ 553   2            FOC_IQREF = mcFocCtrl.mcIqref;                        // QÖáÆô¶¯µçÁ÷
+ 554   2      
+ 555   2            FOC_DQKP = DQKP;
+ 556   2            FOC_DQKI = DQKI;
+ 557   2      
+ 558   2            /*Æô¶¯·½Ê½Ñ¡Ôñ*/
+ 559   2            #if (Open_Start_Mode == Omega_Start)                  // Omega Æô¶¯
+ 560   2            {
+ 561   3              FOC_EFREQACC   = Motor_Omega_Ramp_ACC;
+ 562   3              FOC_EFREQMIN   = Motor_Omega_Ramp_Min;
+ 563   3              FOC_EFREQHOLD = Motor_Omega_Ramp_End;
+ 564   3      
+ 565   3              SetBit(FOC_CR1,EFAE);                              // ½ûÖ¹¹ÀËãÆ÷Ç¿ÖÆÊä³ö
+ 566   3              ClrBit(FOC_CR1,RFAE);                              // Ê¹ÄÜÇ¿À­
+ 567   3              SetBit(FOC_CR1,ANGM);                              // ¹ÀËãÄ£Ê½
+ 568   3            }
+ 569   2            #elif (Open_Start_Mode == Open_Start)
+                    {
+                      FOC_RTHEACC   = Motor_Open_Ramp_ACC;                      // ÅÀÆÂº¯ÊýµÄ³õÊ¼¼ÓËÙ¶È
+                      FOC__RTHESTEP   = Motor_Open_Ramp_Min;                // 0.62 degree acce speed
+                      FOC__RTHECNT   = MOTOR_OPEN_ACC_CNT;                  // acce time
+              
+                      ClrBit(FOC_CR1,EFAE);                              // ½ûÖ¹¹ÀËãÆ÷Ç¿ÖÆÊä³ö
+                      SetBit(FOC_CR1,RFAE);                              // Ê¹ÄÜÇ¿À­
+                      ClrBit(FOC_CR1,ANGM);                              // ¹ÀËãÄ£Ê½
+                    }
+                    #elif (Open_Start_Mode == Open_Omega_Start)
+                    {
+                      FOC_RTHEACC   = Motor_Open_Ramp_ACC;                      // ÅÀÆÂº¯ÊýµÄ³õÊ¼¼ÓËÙ¶È
+                      FOC__RTHESTEP   = Motor_Open_Ramp_Min;                // 0.62 degree acce speed
+                      FOC__RTHECNT   = MOTOR_OPEN_ACC_CNT;                  // acce time
+              
+                      FOC_EFREQACC   = Motor_Omega_Ramp_ACC;
+                      FOC_EFREQMIN   = Motor_Omega_Ramp_Min;
+                      FOC_EFREQHOLD = Motor_Omega_Ramp_End;
+              
+                      SetBit(FOC_CR1,EFAE);                              // ½ûÖ¹¹ÀËãÆ÷Ç¿ÖÆÊä³ö
+                      SetBit(FOC_CR1,RFAE);                              // Ê¹ÄÜÇ¿À­
+                      SetBit(FOC_CR1,ANGM);                              // ¹ÀËãÄ£Ê½
+                    }
+                    #endif //end Open_Start_Mode
+ 594   2            DRV_CMR |= 0x3F;                         // U¡¢V¡¢WÏàÊä³ö
+ 595   2            MOE = 1;
+ 596   2          }
+ 597   1      
+ 598   1          if((McStaSet.SetFlag.StartSetFlag==1)&&(TailWindDetect.PLLFlag==0))
+ 599   1          {
+ 600   2            /*²»Í¬Æô¶¯·½Ê½ÏÂ£¬ÇÐ»»µ½MCRUN×´Ì¬*/
+ 601   2            #if (Open_Start_Mode == Open_Start)      //OPEN×´Ì¬Æô¶¯Ê±ÍÏ¶¯¶à´Î
+                    {
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 11  
+
+                      if(OpenRampCycles<(MOTOR_OPEN_ACC_CYCLE-1))
+                      {
+                        if(!ReadBit(FOC_CR1,RFAE))
+                        {
+                          SetBit(FOC_CR1,RFAE);
+                          OpenRampCycles++;
+                        }
+                      }
+                      else
+                      {
+                        mcFocCtrl.State_Count = 2;
+                        mcState = mcRun;
+                      }
+                        FOC_EKP = OBSW_KP_GAIN_RUN4;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKP
+                        FOC_EKI  = OBSW_KI_GAIN_RUN4;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKI
+                    }
+                    #elif (Open_Start_Mode == Open_Omega_Start)
+                    {
+                        mcFocCtrl.State_Count = 2600;
+                        mcState = mcRun;
+                    }
+                    #elif (Open_Start_Mode == Omega_Start)
+ 625   2            {
+ 626   3      
+ 627   3                FOC_EKP = OBSW_KP_GAIN_RUN4;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKP
+ 628   3                FOC_EKI  = OBSW_KI_GAIN_RUN4;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKI
+ 629   3                mcState = mcRun;
+ 630   3            }
+ 631   2            #endif //end Open_Start_Mode
+ 632   2          }
+ 633   1      
+ 634   1      }
+ 635          /*---------------------------------------------------------------------------*/
+ 636          /* Name    :  void Motor_Align(void)
+ 637          /* Input   :  NO
+ 638          /* Output  :  NO
+ 639          /* Description:  Ë³·çÄæ·ç²ÎÊýÅäÖÃº¯Êý
+ 640          /*---------------------------------------------------------------------------*/
+ 641          void Motor_TailWind(void)
+ 642          {
+ 643   1        if(mcFocCtrl.State_Count == 0)
+ 644   1        {
+ 645   2          if(McStaSet.SetFlag.TailWindSetFlag == 0)//³õÊ¼»¯
+ 646   2          {
+ 647   3              McStaSet.SetFlag.TailWindSetFlag = 1;
+ 648   3      
+ 649   3              #if (FRDetectMethod==RSDMethod)
+                       {
+                         RSDDetectInit();
+                       }
+                      #elif (FRDetectMethod==BEMFMethod)
+                       {
+                         BEMFDetectInit();
+                       }
+                      #elif (FRDetectMethod==FOCMethod)
+ 658   3               {
+ 659   4                 TailWindDetectInit();
+ 660   4               }
+ 661   3              #endif
+ 662   3      
+ 663   3          }
+ 664   2          #if (FRDetectMethod==RSDMethod)
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 12  
+
+                  {
+                    RSDDealwith();
+                  }
+                  #elif (FRDetectMethod==BEMFMethod)
+                  {
+                    BEMFDealwith();
+                  }
+                  #elif (FRDetectMethod==FOCMethod)
+ 673   2          {
+ 674   3            FOCTailWindDealwith();
+ 675   3          }
+ 676   2         #endif
+ 677   2      
+ 678   2        }
+ 679   1      }
+ 680          
+ 681          /*---------------------------------------------------------------------------*/
+ 682          /* Name    :  void MC_Stop(void)
+ 683          /* Input  :  NO
+ 684          /* Output  :  NO
+ 685          /* Description:  inital motor control parameter
+ 686          /*---------------------------------------------------------------------------*/
+ 687          void MC_Stop(void)
+ 688          {
+ 689   1        MOE     = 0;
+ 690   1        ClrBit(DRV_CR, FOCEN, 0);  //¹Ø±ÕFOC                                                      // disable FOC
+             - output and initial register
+ 691   1        mcState = mcInit;
+ 692   1      }
+ 693          
+ 694          /*-------------------------------------------------------------------------------------------------
+ 695            Function Name :  void MotorControlInit(void)
+ 696            Description   :  ¿ØÖÆ±äÁ¿³õÊ¼»¯ÇåÁã,°üÀ¨±£»¤²ÎÊýµÄ³õÊ¼»¯¡¢µç»ú×´Ì¬³õÊ¼»¯
+ 697            Input         :  ÊäÈëËµÃ÷£¨ÏêÏ¸£©
+ 698            Output        :  Êä³öËµÃ÷£¨ÏêÏ¸£©
+ 699          -------------------------------------------------------------------------------------------------*/
+ 700          void MotorcontrolInit(void)
+ 701          {
+ 702   1        /***********±£»¤******************/
+ 703   1        memset(&mcFaultDect,0, sizeof(FaultVarible));                                // FaultVarible±äÁ¿ÇåÁã
+ 704   1        
+ 705   1        /******±£»¤´ÎÊý*********/
+ 706   1        memset(&mcProtectTime,0, sizeof(ProtectVarible));                            // ProtectVarible±£»¤´ÎÊýÇå
+             -Áã
+ 707   1        
+ 708   1        /*******¹ýÁ÷±£»¤*****************/
+ 709   1        memset(&mcCurVarible,0, sizeof(CurrentVarible));                            // µçÁ÷±£»¤µÄ±äÁ¿ÇåÁã
+ 710   1      
+ 711   1        /*******ÆôÍ£²âÊÔµÄ²ÎÊý***************/
+ 712   1        memset(&ONOFFTest,0, sizeof(ONVarible));
+ 713   1        
+ 714   1         /*****Íâ²¿¿ØÖÆ»·*******/
+ 715   1        memset(&mcFocCtrl,0, sizeof(FOCCTRL));                                // mcFocCtrl±äÁ¿ÇåÁã
+ 716   1      
+ 717   1        /******ADC²ÉÑùÂË²¨Öµ*********/
+ 718   1        memset(&AdcSampleValue,0, sizeof(ADCSample));                         // ADCSample±äÁ¿ÇåÁã
+ 719   1      
+ 720   1        /******µçÁ÷Æ«ÖÃÐ£×¼±äÁ¿*****/
+ 721   1        memset(&mcCurOffset,0, sizeof(CurrentOffset));                        // mcCurOffset±äÁ¿ÇåÁã
+ 722   1        mcCurOffset.IuOffsetSum            = 16383;
+ 723   1        mcCurOffset.IvOffsetSum            = 16383;
+ 724   1        mcCurOffset.Iw_busOffsetSum        = 16383;
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 13  
+
+ 725   1      
+ 726   1        /*****LEDµÆÏìÓ¦***/
+ 727   1        memset(&mcLedDisplay,0, sizeof(MCLedDisplay));                        // mcLedDisplay±äÁ¿ÇåÁã
+ 728   1        mcLedDisplay.Counttime            = 4999;
+ 729   1      
+ 730   1        /*****ËÙ¶È»·µÄÏìÓ¦***/
+ 731   1        memset(&mcSpeedRamp,0, sizeof(MCRAMP));                               // mcSpeedRamp±äÁ¿ÇåÁã
+ 732   1        mcSpeedRamp.DelayPeriod           = 1;
+ 733   1      
+ 734   1        /*PWMµ÷ËÙ±äÁ¿*/
+ 735   1        memset(&mcPwmInput,0, sizeof(PWMINPUTCAL));                           // ÇåÁãPWM duty µ÷ËÙ±äÁ¿mcPwmInput
+ 736   1      
+ 737   1        /*´®¿Ú±äÁ¿*/
+ 738   1        memset(&Uart,0, sizeof(MCUART));                                      // MCUART±äÁ¿ÇåÁã
+ 739   1      
+ 740   1        /*Ë¯ÃßÄ£Ê½*/  
+ 741   1        memset(&SleepSet,0, sizeof(SLEEPMODE));                               // Ë¯ÃßÄ£Ê½ÇåÁã
+ 742   1      
+ 743   1       /*****µç»ú×´Ì¬»úÊ±Ðò±äÁ¿***********/
+ 744   1        McStaSet.SetMode                   = 0;
+ 745   1      
+ 746   1        /*****µç»úÄ¿±ê·½Ïò**********/
+ 747   1        mcFRState.TargetFR                 = 0;
+ 748   1        mcFRState.FR = 0;
+ 749   1        POWER_VSP = POWER_LOW;
+ 750   1      }
+ 751          
+ 752          /*---------------------------------------------------------------------------*/
+ 753          /* Name    :  void VariablesPreInit(void)
+ 754          /* Input  :  NO
+ 755          /* Output  :  NO
+ 756          /* Description:  ³õÊ¼»¯µç»ú²ÎÊý
+ 757          /*---------------------------------------------------------------------------*/
+ 758          void VariablesPreInit(void)
+ 759          {
+ 760   1        /***********±£»¤******************/
+ 761   1        memset(&mcFaultDect,0, sizeof(FaultVarible));                                  // FaultVarible±äÁ¿ÇåÁã
+ 762   1      
+ 763   1        /*****Íâ²¿¿ØÖÆ»·*******/
+ 764   1        memset(&mcFocCtrl,0, sizeof(FOCCTRL));                                        // mcFocCtrl±äÁ¿ÇåÁã
+ 765   1      
+ 766   1        /*****LEDµÆÏìÓ¦***/
+ 767   1        memset(&mcLedDisplay,0, sizeof(MCLedDisplay));                                // mcLedDisplay±äÁ¿ÇåÁã
+ 768   1        mcLedDisplay.Counttime            = 4999;
+ 769   1        
+ 770   1        memset(&User,0, sizeof(USER_TYPEDEF));  
+ 771   1        
+ 772   1        /*****µç»ú×´Ì¬»úÊ±Ðò±äÁ¿***********/
+ 773   1        McStaSet.SetMode                   = 0;
+ 774   1        /*****É²³µÊ×¿ªÕ¼¿Õ±È***/
+ 775   1        brakeduty = Brakeduty_F;
+ 776   1        
+ 777   1        KS.FlashWriteOnetimes = 0; //±ÜÃâÇ·Ñ¹ÖØÆô²»¼ÇÂ¼µµÎ»
+ 778   1        
+ 779   1        mcFocCtrl.TPCtrlDealy = 1000;                    //µç»úÕý³£ÔËÐÐ500msºóÔÙ¿ª·¢ÈÈË¿
+ 780   1      }
+ 781          /*---------------------------------------------------------------------------*/
+ 782          /* Name    :  void GetCurrentOffset(void)
+ 783          /* Input  :  NO
+ 784          /* Output  :  NO
+ 785          /* Description:  ÉÏµçÊ±£¬ÏÈ¶ÔÓ²¼þµçÂ·µÄµçÁ÷½øÐÐ²É¼¯£¬Ð´Èë¶ÔÓ¦µÄÐ£×¼¼Ä´æÆ÷ÖÐ¡£
+ 786                          µ÷ÊÔÊ±£¬Ðè¹Û²ìmcCurOffset½á¹¹ÌåÖÐ¶ÔÓ¦±äÁ¿ÊÇ·ñÔÚ·¶Î§ÄÚ¡£²É¼¯½áÊøºó£¬OffsetFlagÖÃ1¡£
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 14  
+
+ 787          /*---------------------------------------------------------------------------*/
+ 788          void GetCurrentOffset(void)
+ 789          {
+ 790   1        if(mcCurOffset.OffsetFlag==0)
+ 791   1        {      
+ 792   2          SetBit(ADC_CR, ADCBSY);                               // Ê¹ÄÜADC
+ 793   2          while(ReadBit(ADC_CR, ADCBSY));
+ 794   2          #if (Shunt_Resistor_Mode == Single_Resistor)             // 29.2ms µ¥µç×èÄ£Ê½£¬ÉÏµçÑéÖ¤Ó²¼þµçÂ·Ê±£¬Ðè¹
+             -Û²ìmcCurOffset.IbusOffsetÊÇ·ñÎª4096
+ 795   2          {
+ 796   3            mcCurOffset.Iw_busOffsetSum+=((ADC4_DR& 0x0fff) << 3);
+ 797   3            mcCurOffset.Iw_busOffset = mcCurOffset.Iw_busOffsetSum >> 4;
+ 798   3            mcCurOffset.Iw_busOffsetSum -= mcCurOffset.Iw_busOffset;
+ 799   3          }
+ 800   2          #elif (Shunt_Resistor_Mode == Double_Resistor)           //44ms Ë«µç×èÄ£Ê½£¬ÉÏµçÑéÖ¤Ó²¼þµçÂ·Ê±£¬Ðè¹Û²ì
+             -mcCurOffset.IaOffset¡¢mcCurOffset.IbOffsetÊÇ·ñÎª4096
+                  {
+                    mcCurOffset.IuOffsetSum+=((ADC0_DR& 0x0fff) << 3);
+                    mcCurOffset.IuOffset = mcCurOffset.IuOffsetSum >> 4;
+                    mcCurOffset.IuOffsetSum -= mcCurOffset.IuOffset;
+              
+                    mcCurOffset.IvOffsetSum+=((ADC1_DR& 0x0fff) << 3);
+                    mcCurOffset.IvOffset = mcCurOffset.IvOffsetSum >> 4;
+                    mcCurOffset.IvOffsetSum -= mcCurOffset.IvOffset;
+              
+                  }
+                  #elif (Shunt_Resistor_Mode == Three_Resistor)            //58.2ms Èýµç×èÄ£Ê½£¬ÉÏµçÑéÖ¤Ó²¼þµçÂ·Ê±£¬Ðè¹Û
+             -²ìmcCurOffset.IaOffset¡¢mcCurOffset.IbOffset¡¢mcCurOffset.IcOffsetÊÇ·ñÎª4096
+                  {
+                    mcCurOffset.IuOffsetSum+=((ADC0_DR& 0x0fff) << 3);
+                    mcCurOffset.IuOffset = mcCurOffset.IuOffsetSum >> 4;
+                    mcCurOffset.IuOffsetSum -= mcCurOffset.IuOffset;
+              
+                    mcCurOffset.IvOffsetSum+=((ADC1_DR& 0x0fff) << 3);
+                    mcCurOffset.IvOffset = mcCurOffset.IvOffsetSum >> 4;
+                    mcCurOffset.IvOffsetSum -= mcCurOffset.IvOffset;
+              
+                    mcCurOffset.Iw_busOffsetSum+=((ADC4_DR& 0x0fff) << 3);
+                    mcCurOffset.Iw_busOffset = mcCurOffset.Iw_busOffsetSum >> 4;
+                    mcCurOffset.Iw_busOffsetSum -= mcCurOffset.Iw_busOffset;
+                  }
+                  #endif
+ 826   2      
+ 827   2          mcCurOffset.OffsetCount++;
+ 828   2          if(mcCurOffset.OffsetCount>Calib_Time)
+ 829   2          {
+ 830   3            mcCurOffset.OffsetFlag=1;
+ 831   3          }
+ 832   2        }
+ 833   1      }
+ 834          /*---------------------------------------------------------------------------*/
+ 835          /* Name    :  void Motor_Ready(void)
+ 836          /* Input  :  NO
+ 837          /* Output  :  NO
+ 838          /* Description:  ÉÏµçÊ±£¬¹Ø±ÕÊä³ö£¬ÏÈ¶ÔÓ²¼þµçÂ·µÄµçÁ÷½øÐÐ²É¼¯£¬ÔÚFOC_InitÖÐÐ´Èë¶ÔÓ¦µÄÐ£×¼¼Ä´æÆ÷ÖÐ¡£
+ 839                          µ÷ÊÔÊ±£¬Ðè¹Û²ìmcCurOffset½á¹¹ÌåÖÐ¶ÔÓ¦±äÁ¿ÊÇ·ñÔÚ·¶Î§ÄÚ¡£
+ 840          /*---------------------------------------------------------------------------*/
+ 841          void Motor_Ready(void)
+ 842          {
+ 843   1         if(McStaSet.SetFlag.CalibFlag==0)
+ 844   1         {
+ 845   2           McStaSet.SetFlag.CalibFlag=1;
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 15  
+
+ 846   2           ClrBit(DRV_CR, FOCEN);      // ¹Ø±ÕFOC
+ 847   2           MOE      = 0;               // ¹Ø±ÕMOE
+ 848   2           SetBit(ADC_MASK_SYSC, CH7EN |CH4EN | CH3EN | CH2EN | CH1EN | CH0EN);// ¿ªÆôADC
+ 849   2           mcCurOffset.OffsetFlag=0;   // ¿ªÊ¼µçÁ÷²É¼¯
+ 850   2           mcCurOffset.OffsetCount = 0; //µçÁ÷²É¼¯´ÎÊýÇåÁã
+ 851   2         }
+ 852   1      }
+ 853          /*---------------------------------------------------------------------------*/
+ 854          /* Name    :  void Motor_Init(void)
+ 855          /* Input  :  NO
+ 856          /* Output  :  NO
+ 857          /* Description:  ¶Ôµç»úÏà¹Ø±äÁ¿¡¢PI½øÐÐ³õÊ¼»¯ÉèÖÃ
+ 858          /*---------------------------------------------------------------------------*/
+ 859          void Motor_Init(void)
+ 860          {
+ 861   1         ClrBit(ADC_MASK_SYSC, CH4EN | CH0EN);// ¹Ø±ÕÈí¼þµçÁ÷²ÉÑùµÄADC
+ 862   1         VariablesPreInit();                           // µç»úÏà¹Ø±äÁ¿³õÊ¼»¯
+ 863   1         PI_Init();                                     // PI³õÊ¼»¯
+ 864   1        
+ 865   1      //   LEDControl();                                    //·çÍ²ÉÏµçÏÈ¸ø×ªËÙºÍÎÂ¶ÈÖµ   ÒÆµ½ÕâÀï ±ÜÃâÖ±½Ó¿ª»úµ½
+             -Ëø¶¨µÆÃ»¿ª
+ 866   1      }
+ 867          #endif
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1840    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     23    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

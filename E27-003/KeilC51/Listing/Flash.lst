@@ -1,0 +1,173 @@
+C51 COMPILER V9.60.7.0   FLASH                                                             02/24/2024 10:00:31 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE FLASH
+OBJECT MODULE PLACED IN .\Output\Flash.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Function\Flash.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE(5,SP
+                    -EED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\Flash.lst) TABS(2) O
+                    -BJECT(.\Output\Flash.obj)
+
+line level    source
+
+   1          
+   2          /************************ (C) COPYRIGHT 2015 FT *******************************
+   3          * File Name          : 
+   4          * Author             : Application Team  Tom.wang 
+   5          * Version            : V2.0.0
+   6          * Date               : 06/15/2015
+   7          * Description        : 
+   8          ********************************************************************************
+   9          /*******************************************************************************
+  10          * All Rights Reserved
+  11          *******************************************************************************/
+  12          
+  13          /* Includes ------------------------------------------------------------------*/
+  14          #include <FU68xx_2.h>
+  15          #include <Myproject.h>
+  16          #include <Customer_Debug.h>
+  17          ROM_TypeDef xdata  Rom;
+  18          
+  19          uint8 idata FLASHUsingStatus=0;
+  20          void Write2Byte2Flash(uint8 xdata *BlockStartAddr,uint16 NewData2Flash)
+  21          {
+  22   1        uint8 xdata *FlashStartAddr = BlockStartAddr;
+  23   1        uint16 tempofFlashData=0;
+  24   1        uint16 tempofNewFlashData=0;
+  25   1        uint8 i;
+  26   1        
+  27   1        if(FLASHUsingStatus == 0)
+  28   1        {
+  29   2          FLASHUsingStatus=1;      //FLASH正在使用
+  30   2          tempofNewFlashData = NewData2Flash;
+  31   2          for(i=0;i<64;i++)
+  32   2          {
+  33   3            tempofFlashData = *(uint16 code *)(FlashStartAddr+2*i);
+  34   3            if(tempofFlashData==0)
+  35   3            {
+  36   4                tempofFlashData = tempofNewFlashData>>8;
+  37   4                Flash_Sector_Write((FlashStartAddr+2*i),(uint8)tempofFlashData);
+  38   4                _nop_();
+  39   4                tempofFlashData = tempofNewFlashData&0x00ff;
+  40   4                Flash_Sector_Write((FlashStartAddr+2*i+1),(uint8)tempofFlashData);
+  41   4                _nop_();      
+  42   4                break;
+  43   4            }
+  44   3            else
+  45   3            {
+  46   4                if(i==63)
+  47   4                {
+  48   5                    Flash_Sector_Erase(FlashStartAddr);
+  49   5                    _nop_();
+  50   5                    tempofFlashData = tempofNewFlashData>>8;
+  51   5                    Flash_Sector_Write(FlashStartAddr,(uint8)tempofFlashData);
+  52   5                    _nop_();
+  53   5                    tempofFlashData = tempofNewFlashData&0x00ff;
+C51 COMPILER V9.60.7.0   FLASH                                                             02/24/2024 10:00:31 PAGE 2   
+
+  54   5                    Flash_Sector_Write((FlashStartAddr+1),(uint8)tempofFlashData);
+  55   5                    _nop_();        
+  56   5                }
+  57   4            }
+  58   3          }
+  59   2          FLASHUsingStatus=0;      //FLASH空闲
+  60   2        }
+  61   1      }
+  62          
+  63          /*-------------------------------------------------------------------------------------------------
+  64            Function Name :  void Write1Byte2Flash(uint8 xdata *BlockStartAddr,uint8 NewData2Flash)
+  65            Description   :  写入1个字节到FLASH
+  66            Input         :  uint8 xdata *BlockStartAddr：目标FLASH地址  NewData2Flash：被写入数据
+  67            Output        :  无
+  68          -------------------------------------------------------------------------------------------------*/
+  69          void Write1Byte2Flash(uint8 xdata *BlockStartAddr,uint8 NewData2Flash)
+  70          {
+  71   1        uint8 xdata *FlashStartAddr = BlockStartAddr;
+  72   1        uint8 tempofNewFlashData;
+  73   1        uint8 tempofFlashData;
+  74   1        uint8 i;
+  75   1        
+  76   1        if(FLASHUsingStatus == 0)
+  77   1        {
+  78   2          FLASHUsingStatus=1;      //FLASH正在使用
+  79   2          tempofNewFlashData = NewData2Flash;
+  80   2          for(i=0;i<128;i++)
+  81   2          {
+  82   3            tempofFlashData = *(uint8 code *)(FlashStartAddr + i);
+  83   3            if(tempofFlashData==0)
+  84   3            {
+  85   4              Flash_Sector_Write((FlashStartAddr+i),(uint8)tempofNewFlashData);
+  86   4              _nop_();    
+  87   4              break;
+  88   4            }
+  89   3            else
+  90   3            {
+  91   4              if(i==127)
+  92   4              {
+  93   5                Flash_Sector_Erase(FlashStartAddr);
+  94   5                _nop_();
+  95   5                Flash_Sector_Write(FlashStartAddr,(uint8)tempofNewFlashData);
+  96   5                _nop_();    
+  97   5              }
+  98   4            }
+  99   3          }
+ 100   2          FLASHUsingStatus=0;      //FLASH空闲
+ 101   2        }
+ 102   1      }
+ 103          
+ 104          /*-------------------------------------------------------------------------------------------------
+ 105            Function Name :  uint8 Get1ByteFromFlash(uint8 xdata *BlockStartAddr)
+ 106            Description   :  从目标FLASH扇区读取1字节最新写入的数据
+ 107            Input         :  uint8 xdata *BlockStartAddr：目标FLASH扇区
+ 108            Output        :  读出的数据
+ 109          -------------------------------------------------------------------------------------------------*/
+ 110          uint8 Get1ByteFromFlash(uint8 xdata *BlockStartAddr)
+ 111          {
+ 112   1        uint8 xdata *FlashStartAddr = BlockStartAddr;
+ 113   1        uint8 i;
+ 114   1        uint8 tempofFlashData;
+ 115   1        
+C51 COMPILER V9.60.7.0   FLASH                                                             02/24/2024 10:00:31 PAGE 3   
+
+ 116   1        for(i=0;i<128;i++)
+ 117   1        {
+ 118   2          tempofFlashData = *(uint8 code *)(FlashStartAddr + i);
+ 119   2          if(tempofFlashData==0)
+ 120   2          {
+ 121   3            if(i!=0)
+ 122   3            {
+ 123   4              tempofFlashData = *(uint8 code *)(FlashStartAddr + (i-1));
+ 124   4              return tempofFlashData;
+ 125   4            }
+ 126   3            else
+ 127   3            {
+ 128   4              return 0;
+ 129   4            }
+ 130   3          }
+ 131   2          else
+ 132   2          {
+ 133   3            if(i==127)
+ 134   3            {
+ 135   4              return tempofFlashData;
+ 136   4            }
+ 137   3          }  
+ 138   2        }
+ 139   1        return 0;
+ 140   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    439    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      2      11
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =      1    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

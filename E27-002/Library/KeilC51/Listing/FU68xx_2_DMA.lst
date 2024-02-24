@@ -1,0 +1,15 @@
+C51 COMPILER V9.60.7.0   FU68XX_2_DMA                                                      02/24/2024 09:59:48 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE FU68XX_2_DMA
+OBJECT MODULE PLACED IN .\Output\FU68xx_2_DMA.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\Library\FU68xx_Hardware_Driver\Source\FU68xx_2_DMA.c LARGE OMF2 WARNI
+                    -NGLEVEL(0) OPTIMIZE(5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\List
+                    -ing\FU68xx_2_DMA.lst) TABS(2) OBJECT(.\Output\FU68xx_2_DMA.obj)
+
+line level    source
+
+*** ERROR C318 OF ..\Library\FU68xx_Hardware_Driver\Source\FU68xx_2_DMA.c: can't open file '..\Library\FU68xx_Hardware_D
+             -river\Source\FU68xx_2_DMA.c'
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

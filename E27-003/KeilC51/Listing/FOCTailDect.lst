@@ -1,0 +1,384 @@
+C51 COMPILER V9.60.7.0   FOCTAILDECT                                                       02/24/2024 10:00:30 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE FOCTAILDECT
+OBJECT MODULE PLACED IN .\Output\FOCTailDect.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Function\FOCTailDect.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZ
+                    -E(5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\FOCTailDect.ls
+                    -t) TABS(2) OBJECT(.\Output\FOCTailDect.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2017 Fortiortech shenzhen *****************************
+   2          * File Name          : FOCTailDect.c
+   3          * Author             : Fortiortech  Appliction Team
+   4          * Version            : V1.0
+   5          * Date               : 2017-12-26
+   6          * Description        : This file contains foc tailwind detection used for Motor Control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/
+  10          
+  11          
+  12          /* Includes -------------------------------------------------------------------------------------*/
+  13          #include <FU68xx_2.h>
+  14          #include <Myproject.h>
+  15          
+  16          /* Private typedef ------------------------------------------------------------------------------*/
+  17          /* Private define -------------------------------------------------------------------------------*/
+  18          /* Private macro --------------------------------------------------------------------------------*/
+  19          /* Private variables ----------------------------------------------------------------------------*/
+  20          
+  21          /* Private function prototypes ------------------------------------------------------------------*/
+  22          /* Private functions ----------------------------------------------------------------------------*/
+  23          MotorTailWindTypeDef xdata  TailWindDetect;
+  24          /*---------------------------------------------------------------------------*/
+  25          /* Name     :   void TailWindDetectInit(void)
+  26          /* Input    :   NO
+  27          /* Output   :   NO
+  28          /* Description: Ë³Äæ·ç²ÎÊý³õÊ¼»¯
+  29          /*---------------------------------------------------------------------------*/
+  30          void TailWindDetectInit(void)
+  31          {
+  32   1          TailWindDetect.MotorTailWindState     = NormalTailWind;                     //  ³õÊ¼×´Ì¬ÎªÕý³£µÄË³Äæ·ç
+             -×´Ì¬
+  33   1          TailWindDetect.TempThailWindSpeedBase = ThailWindSpeedBase;                 //  Ë³Äæ·ç¼ÆËãµÄspeedbase
+  34   1      
+  35   1          FOC_Init();                                                                 // FOCµÄ³õÊ¼»¯
+  36   1          FOC_DQKP    = DQKP_TailWind;                                                // Ë³Äæ·çµÄµçÁ÷»·KP
+  37   1          FOC_DQKI    = DQKI_TailWind;                                                // Ë³Äæ·çµÄµçÁ÷»·KI
+  38   1          FOC_EKP     = OBSW_KP_GAIN_WIND;                                            // Ë³Äæ·çËÙ¶È¹ÀËãµÄKP
+  39   1          FOC_EKI     = OBSW_KI_GAIN_WIND;                                            // Ë³Äæ·çËÙ¶È¹ÀËãµÄKI
+  40   1          FOC_OMEKLPF = SPEED_KLPF_WIND;                                              // Ë³Äæ·çÏÂµÄËÙ¶ÈÂË²¨ÏµÊý
+  41   1          SetBit(FOC_CR1, ANGM);                                                      // ¹ÀËãÄ£Ê½
+  42   1          // SetBit(DRV_CR, DRVEN);                                                   // Driver Êä³ö¼ÆÊýÆ÷Ê¹ÄÜ£¬
+             -0-½ûÖ¹£¬1-Ê¹ÄÜ
+  43   1          DRV_CMR   |= 0x3F;                                                          // U¡¢V¡¢WÏàÊä³ö
+  44   1          MOE       = 1;                                                              // ´ò¿ªMOE
+  45   1          FOC_IDREF = 0;                                                              // DÖá¸ø¶¨µçÁ÷
+  46   1          FOC_IQREF = 0;
+  47   1      }
+  48          /*---------------------------------------------------------------------------*/
+  49          /* Name     :   void TailWindSpeedDetect(void)
+  50          /* Input    :   NO
+  51          /* Output   :   NO
+C51 COMPILER V9.60.7.0   FOCTAILDECT                                                       02/24/2024 10:00:30 PAGE 2   
+
+  52          /* Description: Ë³Äæ·çËÙ¶È¼ì²â£¬¸ù¾Ý½Ç¶ÈµÄ±ä»¯Ç÷ÊÆÀ´ÅÐ¶Ï·½Ïò
+  53          /*---------------------------------------------------------------------------*/
+  54          void TailWindSpeedDetect(void)
+  55          {
+  56   1          static int16 LatestTheta;
+  57   1      
+  58   1          if(mcState == mcTailWind)
+  59   1          {
+  60   2              //Ë³·ç¼ì²â¹ý³ÌÓÉÓÚFOCÄÚ²¿¸ù¾ÝµçÁ÷¹ÀËã½Ç¶È£¬¹ÊÖ±½Ó¶ÔFOC_ETHETA½øÐÐ´¦Àí
+  61   2              if(TailWindDetect.MotorTailWindState == NormalTailWind)
+  62   2              {
+  63   3                  LatestTheta = FOC__ETHETA;
+  64   3      
+  65   3                  //Ðý×ª·½ÏòÅÐ¶ÏÔÚ <-170¶È   <10 >-10  >170¶ÈÈý¸ö×´Ì¬ÇÐ»»µÄÊ±¼ä
+  66   3                  if(LatestTheta < -30946)
+  67   3                  {
+  68   4                      //¼ÆÊýÆ÷Î´ÇåÁã»ò´Ó×´Ì¬3Ìøµ½×´Ì¬1Ê±ÇåÁã
+  69   4                      if((TailWindDetect.SpeedTimerClearStatus == 0) || (TailWindDetect.AngleState == 3))
+  70   4                      {
+  71   5                          TailWindDetect.SpeedCountTimer       = 0;
+  72   5                          TailWindDetect.SpeedTimerClearStatus = 1;
+  73   5                          if(TailWindDetect.AngleState == 3) TailWindDetect.ShakeTimes++;//À´»Ø1ºÍ3Ö®¼ä¶¶¶¯£¬¶¶¶
+             -¯´ÎÊý¼Ó1
+  74   5                      }
+  75   4                      //<-170¶È  Ê±ÉèÖÃ×´Ì¬Îª1£¬²¢ÇåÁãSpeedCountTimerÔÚTIM5ÖÐ¼ÆÊ±
+  76   4                      TailWindDetect.AngleState = 1;
+  77   4                  }
+  78   3                  else if((LatestTheta>-1820)&&(LatestTheta<1820)) //<10 >-10
+  79   3                  {
+  80   4                      //×´Ì¬1»ò×´Ì¬3ÇÐ»»µ½×´Ì¬2Ê±±£´æµ±Ç°×ªËÙÊ±¼äÖÁTailWindDetect.SpeedCount[SpeedStoreNum]
+  81   4                      if((TailWindDetect.AngleState==1)||(TailWindDetect.AngleState==3))
+  82   4                      {
+  83   5                          //¼ÆËãµ±Ç°×ªËÙ£¬RPM
+  84   5                          TailWindDetect.SpeedCountTimer += 1;//·ÀÖ¹Îª0
+  85   5                          TailWindDetect.TailWindSpeed   = MDU_DIV_XDATA_U32(&TailWindDetect.TempThailWindSpeedB
+             -ase, &TailWindDetect.SpeedCountTimer);//²â³öËÙ¶È
+  86   5                          TailWindDetect.SpeedStoreNum++;
+  87   5      
+  88   5                          //ÓÃÓÚSpeedCountTimerÇåÁã
+  89   5                          if(TailWindDetect.SpeedTimerClearStatus == 1) TailWindDetect.SpeedTimerClearStatus = 0
+             -;
+  90   5      
+  91   5                          //ÓÐ1×´Ì¬ÇÐ»»µ½2×´Ì¬ËµÃ÷½Ç¶ÈµÝÔöÐý×ª·½ÏòÎªCW£¬3->2ÔòÎªCCW
+  92   5                          if(TailWindDetect.AngleState == 1)      TailWindDetect.MotorDir = CW;
+  93   5                          else if(TailWindDetect.AngleState == 3) TailWindDetect.MotorDir = CCW;
+  94   5                          TailWindDetect.ShakeTimes = 0;//Çå³ýÀ´»Ø¶¶¶¯µÄ¼ÆÊý
+  95   5                      }
+  96   4                      TailWindDetect.AngleState = 2;
+  97   4      
+  98   4                  }
+  99   3                  //>170¶ÈÊ±
+ 100   3                  else if(LatestTheta>30946)
+ 101   3                  {
+ 102   4                      //¼ÆÊýÆ÷Î´ÇåÁã»ò´Ó×´Ì¬1Ìøµ½×´Ì¬3Ê±ÇåÁã
+ 103   4                      if((TailWindDetect.SpeedTimerClearStatus == 0) || (TailWindDetect.AngleState == 1))
+ 104   4                      {
+ 105   5                          TailWindDetect.SpeedCountTimer       = 0;
+ 106   5                          TailWindDetect.SpeedTimerClearStatus = 1;
+ 107   5                          if(TailWindDetect.AngleState==1) TailWindDetect.ShakeTimes++;//À´»Ø1ºÍ3Ö®¼ä¶¶¶¯
+ 108   5                      }
+ 109   4                      TailWindDetect.AngleState = 3;
+ 110   4                  }
+C51 COMPILER V9.60.7.0   FOCTAILDECT                                                       02/24/2024 10:00:30 PAGE 3   
+
+ 111   3              }
+ 112   2          }
+ 113   1      }
+ 114          /*---------------------------------------------------------------------------*/
+ 115          /* Name     :   void FOCCloseLoopStart(void)
+ 116          /* Input    :   NO
+ 117          /* Output   :   NO
+ 118          /* Description: Ë³·çÆô¶¯
+ 119          /*---------------------------------------------------------------------------*/
+ 120          void FOCCloseLoopStart(void)
+ 121          {
+ 122   1          //ÅäÖÃÆô¶¯µÄ²ÎÊý£¬OmegaÄ£Ê½
+ 123   1          FOC_EFREQACC    = Motor_Omega_Ramp_ACC;
+ 124   1          FOC_EFREQMIN    = Motor_Omega_Ramp_Min;
+ 125   1          FOC_EFREQHOLD = Motor_Omega_Ramp_End;
+ 126   1      
+ 127   1          SetBit(FOC_CR1,EFAE);                                                       // ¹ÀËãÆ÷Ç¿ÖÆÊä³ö
+ 128   1          ClrBit(FOC_CR1,RFAE);                                                       // ½ûÖ¹Ç¿À­
+ 129   1          SetBit(FOC_CR1,ANGM);                                                       // ¹ÀËãÄ£Ê½
+ 130   1      
+ 131   1          //µçÁ÷»·µÄPIºÍÊä³öÏÞ¸³Öµ
+ 132   1          FOC_DQKP = DQKP;
+ 133   1          FOC_DQKI = DQKI;
+ 134   1          FOC_DMAX = DOUTMAX;
+ 135   1          FOC_DMIN = DOUTMIN;
+ 136   1          FOC_QMAX = QOUTMAX;
+ 137   1          FOC_QMIN = QOUTMIN;
+ 138   1      
+ 139   1          /*********PLL»òSMO**********/
+ 140   1          #if (EstimateAlgorithm == SMO)
+ 141   1              //¸ù¾Ý²»Í¬×ªËÙÈ·Æô¶¯µÄATO_BWÖµ
+ 142   1              if(TailWindDetect.TailWindSpeed > 300)//300rpm/min
+ 143   1              {
+ 144   2                  FOC_EKP               = OBSW_KP_GAIN_RUN4;
+ 145   2                  FOC_EKI               = OBSW_KI_GAIN_RUN4;
+ 146   2                  mcFocCtrl.mcIqref     = IQ_RUN_CURRENT;
+ 147   2                  mcFocCtrl.State_Count = 10;
+ 148   2              }
+ 149   1              else if(TailWindDetect.TailWindSpeed > 100)//300rpm/min
+ 150   1              {
+ 151   2                  FOC_EKP               = OBSW_KP_GAIN_RUN3;
+ 152   2                  FOC_EKI               = OBSW_KI_GAIN_RUN3;
+ 153   2                  mcFocCtrl.mcIqref     = IQ_RUN_CURRENT;
+ 154   2                  mcFocCtrl.State_Count = 120;
+ 155   2              }
+ 156   1              else
+ 157   1              {
+ 158   2                  FOC_EKP               = OBSW_KP_GAIN_RUN;
+ 159   2                  FOC_EKI               = OBSW_KI_GAIN_RUN;
+ 160   2                  mcFocCtrl.mcIqref     = IQ_RUN_CURRENT;
+ 161   2                  mcFocCtrl.State_Count = 120;
+ 162   2              }
+ 163   1      
+ 164   1          #elif (EstimateAlgorithm == PLL)
+                       mcFocCtrl.mcIqref = IQ_RUN_CURRENT;
+              
+                  #endif //end    EstimateAlgorithm
+ 168   1      
+ 169   1      
+ 170   1          /*estimate parameter set*/
+ 171   1          FOC_OMEKLPF = SPEED_KLPF;
+ 172   1          FOC_IDREF   = ID_RUN_CURRENT;     // DÖáÆô¶¯µçÁ÷
+C51 COMPILER V9.60.7.0   FOCTAILDECT                                                       02/24/2024 10:00:30 PAGE 4   
+
+ 173   1          FOC_IQREF   = mcFocCtrl.mcIqref ;         // QÖáÆô¶¯µçÁ÷
+ 174   1          PI_UK       =   mcFocCtrl.mcIqref   ;
+ 175   1      
+ 176   1      
+ 177   1          mcState            = mcRun;
+ 178   1          mcFocCtrl.CtrlMode = 0;
+ 179   1      }
+ 180          
+ 181          /*---------------------------------------------------------------------------*/
+ 182          /* Name     :   void FOCTailWindTimeLimit(void)
+ 183          /* Input    :   NO
+ 184          /* Output   :   NO
+ 185          /* Description: FOCË³Äæ·ç¼ì²âµÄÊ±¼ä´¦Àí
+ 186          /*---------------------------------------------------------------------------*/
+ 187          void FOCTailWindTimeLimit(void)
+ 188          {
+ 189   1          if(mcState == mcTailWind)
+ 190   1          {
+ 191   2              //1Hz Min
+ 192   2              if(TailWindDetect.SpeedCountTimer < TailWind_Time)                      // SpeedCountTimer-¼ÆËãÊ±¼
+             -ä¼ä¸ô
+ 193   2              {
+ 194   3                  TailWindDetect.SpeedCountTimer++;
+ 195   3              }
+ 196   2              else
+ 197   2              {
+ 198   3                  TailWindDetect.TailWindSpeed       = 0;                             //ËÙ¶ÈÎª0
+ 199   3                  TailWindDetect.SpeedCountTimer     = 0;
+ 200   3                  TailWindDetect.SpeedOverFlowStatus = 1;                             // ×ªËÙ¼ÆÊýÒç³ö±êÖ¾
+ 201   3              }
+ 202   2          }
+ 203   1      }
+ 204           /*---------------------------------------------------------------------------*/
+ 205          /* Name     :   void TailWindDealwith(void)
+ 206          /* Input    :   NO
+ 207          /* Output   :   NO
+ 208          /* Description: Ë³·çÄæ·ç²ÎÊýÅäÖÃº¯Êý
+ 209          /*---------------------------------------------------------------------------*/
+ 210          void FOCTailWindDealwith(void)
+ 211          {
+ 212   1          /*********PLL»òSMO**********/
+ 213   1          #if (EstimateAlgorithm == SMO)
+ 214   1               SMO_TailWindDealwith();
+ 215   1      
+ 216   1          #elif (EstimateAlgorithm == PLL)
+                       PLL_TailWindDealwith();
+              
+                  #endif //end    EstimateAlgorithm
+ 220   1      }
+ 221          
+ 222          void SMO_TailWindDealwith(void)
+ 223          {
+ 224   1          //µç»ú×´Ì¬ÎªÕý×ªÇÒ×ªËÙ¼ÆÊýÒç³öÊ±£»»ò1-3×´Ì¬¶¶¶¯´ÎÊý´óÓÚ2´ÎÊ±£¬ÈÏÎª¾²Ö¹
+ 225   1          if(((TailWindDetect.MotorDir == CW) && (TailWindDetect.SpeedOverFlowStatus))||(TailWindDetect.ShakeTim
+             -es > 2))
+ 226   1          {
+ 227   2              MOE = 0;
+ 228   2              SetBit(DRV_CR, FOCEN, 0);   //¹Ø±ÕFOC
+ 229   2              mcState                           = mcPosiCheck;
+ 230   2              McStaSet.SetFlag.PosiCheckSetFlag = 0;
+ 231   2              mcFocCtrl.mcPosCheckAngle         = 0xffff;         // ½Ç¶È¸³³õÖµ
+ 232   2          }
+C51 COMPILER V9.60.7.0   FOCTAILDECT                                                       02/24/2024 10:00:30 PAGE 5   
+
+ 233   1          else if((TailWindDetect.MotorDir == CCW) && (TailWindDetect.SpeedStoreNum > 2))//||((TailWindDetect.Mo
+             -torDir == CW)&&(TailWindDetect.TailWindSpeed>TailWindStartMinSpeed)))
+ 234   1          {
+ 235   2              if(TailWindDetect.TailWindSpeed < 130)
+ 236   2              {
+ 237   3                  mcFocCtrl.mcIqref       = IQ_Start_CURRENT + I_Value(0.5);       // QÖáÆô¶¯µçÁ÷
+ 238   3                  TailWindDetect.AntiFlag = 1;
+ 239   3              }
+ 240   2              else if(TailWindDetect.TailWindSpeed < 300)
+ 241   2              {
+ 242   3                  mcFocCtrl.mcIqref       = IQ_Start_CURRENT + I_Value(1.2);       // QÖáÆô¶¯µçÁ÷
+ 243   3                  TailWindDetect.AntiFlag = 2;
+ 244   3              }
+ 245   2              else if(TailWindDetect.TailWindSpeed < 500)
+ 246   2              {
+ 247   3                  mcFocCtrl.mcIqref       = IQ_Start_CURRENT + I_Value(2.0);       // QÖáÆô¶¯µçÁ÷
+ 248   3                  TailWindDetect.AntiFlag = 3;
+ 249   3              }
+ 250   2              else
+ 251   2              {
+ 252   3                  mcFocCtrl.mcIqref       = IQ_Start_CURRENT + I_Value(2.0);       // QÖáÆô¶¯µçÁ÷
+ 253   3                  TailWindDetect.AntiFlag = 4;
+ 254   3              }
+ 255   2      
+ 256   2              FOC_DQKP              = DQKP;
+ 257   2              FOC_DQKI              = DQKI;
+ 258   2      
+ 259   2              FOC_DMAX              = DOUTMAX;
+ 260   2              FOC_DMIN              = DOUTMIN;
+ 261   2              FOC_QMAX              = QOUTMAX;
+ 262   2              FOC_QMIN              = QOUTMIN;
+ 263   2              FOC_EK2               = OBS_K2T_SMO;
+ 264   2      
+ 265   2              FOC_IQREF             = mcFocCtrl.mcIqref;
+ 266   2              mcFocCtrl.State_Count = 120;
+ 267   2              FOC_EKP               = OBSW_KP_GAIN;
+ 268   2              FOC_EKI               = OBSW_KI_GAIN;
+ 269   2      
+ 270   2              FOC_IDREF             = 0;
+ 271   2              mcState               = mcRun;
+ 272   2              mcFocCtrl.CtrlMode    = 0;
+ 273   2      
+ 274   2          }
+ 275   1          else if(TailWindDetect.MotorDir == CW)
+ 276   1          {
+ 277   2              //³¬¹ý¼ì²â´ÎÊýTailWindDetect.SpeedStoreNumÇÐ×ªËÙTailWindStartMinSpeedÒÔÉÏÊ±Ö±½ÓË³·çÆô¶¯
+ 278   2              if((TailWindDetect.TailWindSpeed > TailWindStartMinSpeed) && (TailWindDetect.SpeedStoreNum >= 2))
+ 279   2              {
+ 280   3                  FOCCloseLoopStart();
+ 281   3              }
+ 282   2          }
+ 283   1      }
+ 284          
+ 285          void PLL_TailWindDealwith(void)
+ 286          {
+ 287   1          //µç»ú×´Ì¬ÎªÕý×ªÇÒ×ªËÙ¼ÆÊýÒç³öÊ±£»»ò1-3×´Ì¬¶¶¶¯´ÎÊý´óÓÚ2´ÎÊ±£¬ÈÏÎª¾²Ö¹
+ 288   1          if(((TailWindDetect.MotorDir == CW) && (TailWindDetect.SpeedOverFlowStatus)) || (TailWindDetect.ShakeT
+             -imes > 2))
+ 289   1          {
+ 290   2              MOE = 0;
+ 291   2              SetBit(DRV_CR, FOCEN, 0);   //¹Ø±ÕFOC
+ 292   2              mcState                           = mcPosiCheck;
+C51 COMPILER V9.60.7.0   FOCTAILDECT                                                       02/24/2024 10:00:30 PAGE 6   
+
+ 293   2              McStaSet.SetFlag.PosiCheckSetFlag = 0;
+ 294   2              mcFocCtrl.mcPosCheckAngle         = 0xffff;         // ½Ç¶È¸³³õÖµ
+ 295   2      
+ 296   2          }
+ 297   1          else if((TailWindDetect.MotorDir == CCW) && (TailWindDetect.TailWindSpeed > 50) && (TailWindDetect.Spe
+             -edStoreNum >= 2))// µ±µç»ú·´×ªÊ±£¬¸ù¾Ý²»Í¬×ªËÙÉèÖÃµçÁ÷£¬²¢ÌøÈëmcPllTect×´Ì¬¡£
+ 298   1          {
+ 299   2              if(TailWindDetect.TailWindSpeed < 130)
+ 300   2              {
+ 301   3                  FOC_IQREF               = I_Value(-0.1);
+ 302   3                  mcFocCtrl.mcIqref       = IQ_Start_CURRENT + I_Value(0.5);         // QÖáÆô¶¯µçÁ÷
+ 303   3                  TailWindDetect.AntiFlag = 1;
+ 304   3              }
+ 305   2              else if(TailWindDetect.TailWindSpeed < 380)
+ 306   2              {
+ 307   3                  FOC_IQREF               = I_Value(-0.4);
+ 308   3                  mcFocCtrl.mcIqref       = IQ_Start_CURRENT + I_Value(0.5);         // QÖáÆô¶¯µçÁ÷
+ 309   3                  TailWindDetect.AntiFlag = 2;
+ 310   3              }
+ 311   2              else if(TailWindDetect.TailWindSpeed < 500)
+ 312   2              {
+ 313   3                  FOC_IQREF               = I_Value(-0.6);
+ 314   3                  mcFocCtrl.mcIqref       = IQ_Start_CURRENT + I_Value(0.8);         // QÖáÆô¶¯µçÁ÷
+ 315   3                  TailWindDetect.AntiFlag = 3;
+ 316   3              }
+ 317   2              else
+ 318   2              {
+ 319   3                      FOC_IQREF = I_Value(-0.7);
+ 320   3                      mcFocCtrl.mcIqref= IQ_Start_CURRENT + I_Value(0.8);         // QÖáÆô¶¯µçÁ÷
+ 321   3                      TailWindDetect.AntiFlag             = 4;
+ 322   3              }
+ 323   2              TailWindDetect.PLLFlag = 1;
+ 324   2              mcState                = mcPllTect;
+ 325   2          }
+ 326   1          else if(TailWindDetect.MotorDir == CW)//
+ 327   1          {
+ 328   2              //³¬¹ý¼ì²â´ÎÊýTailWindDetect.SpeedStoreNum,ÇÒ×ªËÙ´óÓÚTailWindStartMinSpeed£¬ÔòÖ±½ÓË³·çÆô¶¯
+ 329   2              if((TailWindDetect.TailWindSpeed > TailWindStartMinSpeed) && (TailWindDetect.SpeedStoreNum >= 2))
+ 330   2              {
+ 331   3                  FOCCloseLoopStart();
+ 332   3              }
+ 333   2          }
+ 334   1      
+ 335   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1332    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     25    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

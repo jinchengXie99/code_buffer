@@ -1,0 +1,1436 @@
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE ADDFUNCTION
+OBJECT MODULE PLACED IN .\Output\AddFunction.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Application\AddFunction.c LARGE OMF2 WARNINGLEVEL(0) OPTI
+                    -MIZE(5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\AddFunction
+                    -.lst) TABS(2) OBJECT(.\Output\AddFunction.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2017 Fortiortech shenzhen *****************************
+   2          * File Name          : AddFunction.c
+   3          * Author             : Fortiortech  Appliction Team
+   4          * Version            : V1.0
+   5          * Date               : 2017-12-26
+   6          * Description        : This file contains all the add function used for Motor Control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/
+  10          
+  11          
+  12          /* Includes -------------------------------------------------------------------------------------*/
+  13          // #include <AddFunction.h>
+  14          #include <FU68xx_2.h>
+  15          #include <Myproject.h>
+  16          
+  17          /* Private variables ---------------------------------------------------------*/
+  18          FaultStateType             mcFaultSource;
+  19          PWMINPUTCAL        xdata   mcPwmInput;
+  20          FaultVarible       xdata   mcFaultDect;
+  21          MotorRSDTypeDef    idata   RSDDetect;
+  22          CurrentVarible     idata   mcCurVarible;
+  23          ProtectVarible     idata   mcProtectTime;
+  24          
+  25          OUTLOOP            xdata   SpeedPICtrl;
+  26          FOCCTRL            xdata   mcFocCtrl;
+  27          ADCSample          xdata   AdcSampleValue;
+  28          ONVarible          xdata   ONOFFTest;
+  29          MCLedDisplay       xdata   mcLedDisplay;
+  30          MCRAMP             xdata   mcSpeedRamp;
+  31          SLEEPMODE          xdata   SleepSet;
+  32          MotorFRTypeDef     xdata   mcFRState;
+  33          int16              xdata   VSP;
+  34          
+  35          float brakeduty = Brakeduty_F;
+  36          uint16  POWER_VSP;
+  37          /*---------------------------------------------------------------------------*/
+  38          /* Name     :   void OutLoopParameterSet(void)
+  39          /* Input    :   NO
+  40          /* Output   :   NO
+  41          /* Description: 
+  42          /*---------------------------------------------------------------------------*/
+  43          void OutLoopParameterSet(void)
+  44          {
+  45   1        memset(&SpeedPICtrl,0, sizeof(OUTLOOP));                                // SpeedControl clear
+  46   1        #if (Motor_Speed_Control_Mode == SPEED_LOOP_CONTROL)
+  47   1        {              
+  48   2          mcSpeedRamp.IncValue    = SPEEDRAMPSTARTINC;
+  49   2          mcSpeedRamp.DecValue    = SPEEDRAMPSTARTDEC;
+  50   2        }
+  51   1        #elif (Motor_Speed_Control_Mode == POWER_LOOP_CONTROL)
+                {
+                  mcSpeedRamp.IncValue    = POWRAMPSTARTINC;
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 2   
+
+                  mcSpeedRamp.DecValue    = POWRAMPSTARTDEC;
+                }
+                #endif
+  57   1      
+  58   1      //  SpeedPICtrl.ExtKP       = SKP;
+  59   1      //  SpeedPICtrl.ExtKI       = SKI;
+  60   1      //  SpeedPICtrl.ExtOutMax   = SOUTMAX;
+  61   1      //  SpeedPICtrl.ExtOutMin   = SOUTMIN;
+  62   1      //  
+  63   1        PI_KP     = SKP;
+  64   1        PI_KI     = SKI;
+  65   1        PI_UKMAX   = SOUTMAX;
+  66   1        PI_UKMIN   = SOUTMIN;
+  67   1        
+  68   1        mcFocCtrl.mcIqref = FOC_IQREF;
+  69   1        PI_UK = mcFocCtrl.mcIqref;
+  70   1      //  PI_UK      = I_Value(0.7);
+  71   1      }
+  72          /*---------------------------------------------------------------------------*/
+  73          /* Name    :  int16 KLPF_VALUE(int16 INVlaue, int16 OutLastValue)
+  74          /* Input  :  INVlaue£¬OutLastValue
+  75          /* Output  :  int16µÄ±äÁ¿
+  76          /* Description:  ÂË²¨º¯Êý,ÓÃ³Ë·¨Æ÷×öµÄ
+  77          /*---------------------------------------------------------------------------*/
+  78          int16 KLPF_VALUE(int16 INVlaue, int16 OutLastValue)
+  79          {
+  80   1        int16 Result = 0;
+  81   1        MDU_MA = (INVlaue-OutLastValue);
+  82   1        MDU_MB = (int16)480;                     /*Ð´±»³ËÊýºÍ³ËÊý*/
+  83   1      
+  84   1        Result = MDU_MB;
+  85   1        Result += OutLastValue;
+  86   1        return(Result);
+  87   1      }
+  88          
+  89          /*---------------------------------------------------------------------------*/
+  90          /* Name    :  void FaultProcess(void)
+  91          /* Input  :  NO
+  92          /* Output  :  NO
+  93          /* Description:  ±£»¤´¦Àíº¯Êý£¬¹Ø±ÕFOCÊä³ö£¬Í¬Ê±½«×´Ì¬±äÎªmcFault
+  94          /*---------------------------------------------------------------------------*/
+  95          void FaultProcess(void)
+  96          {
+  97   1        MOE     = 0;
+  98   1        ClrBit(DRV_CR, FOCEN);  //¹Ø±ÕFOC
+  99   1        mcState = mcFault;                
+ 100   1        HW1 = HWOFF;
+ 101   1        HW2 = HWOFF;
+ 102   1      }
+ 103          
+ 104          /*---------------------------------------------------------------------------*/
+ 105          /* Name    :  int16 Abs_F16(int16 value)
+ 106          /* Input  :  value
+ 107          /* Output  :  int16
+ 108          /* Description:  ¶Ô±äÁ¿È¡16Î»µÄ¾ø¶ÔÖµ
+ 109          /*---------------------------------------------------------------------------*/
+ 110          uint16 Abs_F16(int16 value)
+ 111          {
+ 112   1        if(value < 0)
+ 113   1        {
+ 114   2          return (- value);
+ 115   2        }
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 3   
+
+ 116   1        else
+ 117   1        {
+ 118   2          return (value);
+ 119   2        }
+ 120   1      }
+ 121          /*---------------------------------------------------------------------------*/
+ 122          /* Name    :  int32 Abs_F32(int32 value)
+ 123          /* Input  :  value
+ 124          /* Output  :  int16
+ 125          /* Description:  ¶Ô±äÁ¿È¡16Î»µÄ¾ø¶ÔÖµ
+ 126          /*---------------------------------------------------------------------------*/
+ 127          uint32 Abs_F32(int32 value)
+ 128          {
+ 129   1        if(value < 0)
+ 130   1        {
+ 131   2          return (- value);
+ 132   2        }
+ 133   1        else
+ 134   1        {
+ 135   2          return (value);
+ 136   2        }
+ 137   1      }
+ 138          /*---------------------------------------------------------------------------*/
+ 139          /* Name    :  void APP_DIV(void)
+ 140          /* Input  :  void
+ 141          /* Output  :  void
+ 142          /* Description:  ½«ËùÓÐÓÃµ½³ý·¨µÄµØ·½£¬·ÅÔÚÍ¬Ò»¸öÖÐ¶Ï£¬ÒÔ±ÜÃâÖÐ¶Ï´®ÈÅ
+ 143          /*---------------------------------------------------------------------------*/
+ 144          void APP_DIV(void)
+ 145          {
+ 146   1          if( mcPwmInput.PWMDivFlag==1)  //Æô¶¯³ý·¨Æ÷£¬±ÜÃâÓë¹ýµ÷ÖµÖÐµÄ³ý·¨³åÍ»
+ 147   1          {
+ 148   2             mcPwmInput.PWMDuty = MDU_DIV_IDATA_U32(&mcPwmInput.pwm.PWMCompareAMP, &mcPwmInput.PWMARRUpdate);
+ 149   2             mcPwmInput.PWMDivFlag=0;
+ 150   2          }
+ 151   1          if( mcFocCtrl.ESDIVFlag==1)  //Æô¶¯³ý·¨Æ÷£¬±ÜÃâÓë¹ýµ÷ÖµÖÐµÄ³ý·¨³åÍ»
+ 152   1          {
+ 153   2             mcFocCtrl.SQUSpeedDIVEs = MDU_DIV_XDATA_U32(&mcFocCtrl.SQUSysSpeed,&mcFocCtrl.EsValue);
+ 154   2             mcFocCtrl.ESDIVFlag=0;
+ 155   2          }
+ 156   1      }
+ 157          /*---------------------------------------------------------------------------*/
+ 158          /* Name    :  void PWMInputCapture(void)
+ 159          /* Input  :  NO
+ 160          /* Output  :  NO
+ 161          /* Description:  ÊäÈëPWM´¦Àí
+ 162          /*---------------------------------------------------------------------------*/
+ 163          void PWMInputCapture(void)
+ 164          {
+ 165   1        uint16 MotorControlVSP;
+ 166   1      
+ 167   1         if(mcPwmInput.PWMUpdateFlag==1)  // ÓÐÐÂµÄduty¸üÐÂ
+ 168   1         {
+ 169   2            if((Abs_F32(mcPwmInput.PWMCompare-mcPwmInput.PWMCompareOld)<50)// Á½´Î±È½ÏÖµÏà½ü£¬¼õÉÙ¶Á´íÂÊ
+ 170   2              &&(Abs_F32(mcPwmInput.PWMARROld-mcPwmInput.PWMARR)<50)// Á½´ÎÖÜÆÚÖµÏà½ü£¬¼õÉÙ¶Á´íÂÊ
+ 171   2      //        &&((100<mcPwmInput.PWMARR)&&(mcPwmInput.PWMARR<6000))// ÖÜÆÚÖµÔÚÒ»¶¨·¶Î§ÄÚ²ÅÈÏÎªÓÐÐ§£¬¼´Ò»¶¨ÆµÂÊ
+             -·¶Î§
+ 172   2              &&(mcPwmInput.PWMDivFlag==0))
+ 173   2              {
+ 174   3                mcPwmInput.PWMFlag=1;                               // PWMFlagÖÃ1ÆÚ¼ä£¬²»¶ÁÈ¡TIM3__DRºÍTIM3__ARR
+             -;£¬·ÀÖ¹³ö´í
+ 175   3                mcPwmInput.pwm.PWMCompareUpdate[0]=(mcPwmInput.PWMCompare>>1);// ¶ÔÆä³ËÒÔ32768
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 4   
+
+ 176   3                mcPwmInput.PWMARRUpdate=mcPwmInput.PWMARR;
+ 177   3                mcPwmInput.PWMDivFlag=1;                            // Æô¶¯³ý·¨
+ 178   3                mcPwmInput.PWMFlag=0;
+ 179   3              }
+ 180   2             if(mcPwmInput.PWMDivFlag==0)
+ 181   2              {
+ 182   3                if(mcPwmInput.PWMcnt<3)//2´ÎÇóÆ½¾ùÖµ
+ 183   3                {
+ 184   4                  mcPwmInput.PWMcnt++;
+ 185   4                  mcPwmInput.PWMVSum +=mcPwmInput.PWMDuty;
+ 186   4                }
+ 187   3                else
+ 188   3                {
+ 189   4                  MotorControlVSP= (mcPwmInput.PWMVSum >>1);//×¢ÒâÆäÓÐÒ»¸öÓÒÒÆÓëÇ°ÃæµÄ±È½ÏÖµ±êçÛ»¯ÓÐ¹Ø
+ 190   4                  mcPwmInput.PWMVSum=0;
+ 191   4                  mcPwmInput.PWMcnt =0;
+ 192   4                }
+ 193   3                 MotorControlVSP=mcPwmInput.PWMDuty;
+ 194   3               if((MotorControlVSP > ONPWMDuty)&&(MotorControlVSP <=(OFFPWMDutyHigh+1)))
+ 195   3                {
+ 196   4                  mcSpeedRamp.FlagONOFF = 1;
+ 197   4                }
+ 198   3               else if(MotorControlVSP < OFFPWMDuty)//||(MotorControlVSP >= OFFPWMDutyHigh))
+ 199   3                {
+ 200   4                  mcSpeedRamp.FlagONOFF = 0;
+ 201   4                }
+ 202   3      
+ 203   3                //×ªËÙÇúÏß¼ÆËã
+ 204   3                if(mcSpeedRamp.FlagONOFF==1)
+ 205   3                {
+ 206   4                  if(MotorControlVSP <= MINPWMDuty)
+ 207   4                  {
+ 208   5                    mcSpeedRamp.TargetValue = Motor_Min_Speed;
+ 209   5                  }
+ 210   4                  else if(MotorControlVSP < MAXPWMDuty)
+ 211   4                  {
+ 212   5                    mcSpeedRamp.TargetValue = Motor_Min_Speed + SPEED_K*(MotorControlVSP-MINPWMDuty);
+ 213   5                  }
+ 214   4                  else
+ 215   4                  {
+ 216   5                    mcSpeedRamp.TargetValue  =  Motor_Max_Speed;
+ 217   5                  }
+ 218   4                }
+ 219   3                else
+ 220   3                {
+ 221   4                  mcSpeedRamp.TargetValue =0;
+ 222   4                }
+ 223   3              }
+ 224   2      
+ 225   2            mcPwmInput.PWMUpdateFlag =0;
+ 226   2            mcPwmInput.PWMCompareOld=mcPwmInput.PWMCompare;//½«´Ë´Î±È½ÏÖµ¸³Öµ¸øÉÏ´Î±È½ÏÖµ
+ 227   2            mcPwmInput.PWMARROld=mcPwmInput.PWMARR;//½«´Ë´ÎÖÜÆÚÖµ¸³Öµ¸øÉÏ´ÎÖÜÆÚÖµ
+ 228   2          }
+ 229   1      }
+ 230          /*****************************************************************************
+ 231           * Function:     void  Fault_OverVoltage(mcFaultVarible *h_Fault)
+ 232           * Description:   ¹ýÑ¹Ç·Ñ¹±£»¤º¯Êý£º³ÌÐòÃ¿5msÅÐ¶ÏÒ»´Î£¬Ä¸ÏßµçÑ¹´óÓÚ¹ýÑ¹±£»¤ÖµÊ±£¬¼ÆÊýÆ÷¼ÓÒ»£¬¼ÆÊýÆ÷Öµ³¬¹ý2
+             -0´Î£¬ÅÐ¶ÏÎª¹ýÑ¹±£»¤£¬¹Ø±ÕÊä³ö;·´Ö®£¬¼ÆÊýÆ÷ÂýÂý¼õ
+ 233                           Í¬Àí£¬Ç·Ñ¹±£»¤¡£
+ 234                           µç»ú¹ýÇ·Ñ¹±£»¤×´Ì¬ÏÂ£¬Ä¸ÏßµçÑ¹»Ö¸´µ½Ç·Ñ¹»Ö¸´ÖµÒÔÉÏ£¬¹ýÑ¹»Ö¸´ÖµÒÔÏÂÊ±£¬¼ÆÊýÆ÷¼ÓÒ»£¬³¬¹ý200
+             -´Îºó£¬»Ö¸´¡£¸ù¾ÝµµÎ»ÐÅÏ¢À´¾ö¶¨»Ö¸´µ½ÄÄ¸ö×´Ì¬¡£
+ 235           * Parameter:     mcFaultVarible *h_Fault
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 5   
+
+ 236           * Return:       no
+ 237           *****************************************************************************/
+ 238          void Fault_OverUnderVoltage(FaultVarible *h_Fault)
+ 239          {
+ 240   1        //¹ýÑ¹±£»¤
+ 241   1          if(mcFaultSource == FaultNoSource)//³ÌÐòÎÞÆäËû±£»¤ÏÂ
+ 242   1          {
+ 243   2              if(mcFocCtrl.mcDcbusFlt > OVER_PROTECT_VALUE)   //Ä¸ÏßµçÑ¹´óÓÚ¹ýÑ¹±£»¤ÖµÊ±£¬¼ÆÊý£¬³¬¹ý20´Î£¬ÅÐ¶ÏÎª
+             -¹ýÑ¹±£»¤£¬¹Ø±ÕÊä³ö;·´Ö®£¬¼ÆÊýÆ÷ÂýÂý¼õ
+ 244   2              {
+ 245   3                h_Fault->OverVoltDetecCnt++;
+ 246   3                if(h_Fault->OverVoltDetecCnt > 20)//¼ì²â100ms
+ 247   3                {
+ 248   4                  h_Fault->OverVoltDetecCnt = 0;
+ 249   4                  mcFaultSource=FaultOverVoltage;
+ 250   4                  FaultProcess();
+ 251   4                }
+ 252   3              }
+ 253   2              else
+ 254   2              {
+ 255   3                if(h_Fault->OverVoltDetecCnt>0)
+ 256   3                {
+ 257   4                  h_Fault->OverVoltDetecCnt--;
+ 258   4                }
+ 259   3              }
+ 260   2      
+ 261   2            //Ç·Ñ¹±£»¤
+ 262   2              if((mcFocCtrl.mcDcbusFlt< UNDER_PROTECT_VALUE)&&(mcFaultDect.VoltDetecExternCnt < 30))
+ 263   2              {
+ 264   3                h_Fault->UnderVoltDetecCnt++;
+ 265   3      
+ 266   3                if(h_Fault->UnderVoltDetecCnt > 20)//¼ì²â100ms
+ 267   3                {
+ 268   4                  h_Fault->UnderVoltDetecCnt = 0;
+ 269   4                  h_Fault->VoltDetecBraketCount = 150;
+ 270   4                  mcFaultSource=FaultUnderVoltage;
+ 271   4                  FaultProcess();
+ 272   4                  
+ 273   4                  if(KS.FlashWriteOnetimes == 0)
+ 274   4                  {
+ 275   5                    Rom.WriteValue = (KS.KeyValuetotal&0x7f);//È¥³ýÒ»¼üÀä·çÐÅÏ¢
+ 276   5                    Rom.ReadValue = Get1ByteFromFlash(STARTPAGEROMADDRESS);
+ 277   5                    if(Rom.ReadValue != Rom.WriteValue)
+ 278   5                    {
+ 279   6                      Write1Byte2Flash(STARTPAGEROMADDRESS,Rom.WriteValue);
+ 280   6                    }
+ 281   5                    KS.FlashWriteOnetimes = 1;
+ 282   5                  }
+ 283   4                }
+ 284   3              }
+ 285   2              else
+ 286   2              {
+ 287   3                if(h_Fault->UnderVoltDetecCnt>0)
+ 288   3                {
+ 289   4                  h_Fault->UnderVoltDetecCnt--;
+ 290   4                }
+ 291   3              }
+ 292   2          }
+ 293   1          if(((mcFaultSource==FaultOverVoltage)||(mcFaultSource==FaultUnderVoltage))&&(h_Fault->VoltDetecBraketC
+             -ount >0))
+ 294   1          {  
+ 295   2            if(h_Fault->VoltDetecBraketCount > 0)
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 6   
+
+ 296   2            {h_Fault->VoltDetecBraketCount--;}
+ 297   2            
+ 298   2            if((h_Fault->VoltDetecBraketCount >= 20)&&(h_Fault->VoltDetecBraketCount <= 110))
+ 299   2            {
+ 300   3                DRV_DR  = DRV_ARR*brakeduty;
+ 301   3                DRV_CMR &= 0xFFC0;
+ 302   3                DRV_CMR |= 0x015;                                                // ÈýÏàÏÂÇÅ±ÛÍ¨£¬É²³µ
+ 303   3                ClrBit(DRV_CR, OCS);                                             // OCS = 0, DRV_COMR;OCS = 1, F
+             -OC/SVPWM/SPWM
+ 304   3                MOE = 1;
+ 305   3              
+ 306   3                if(brakeduty < 1.0)
+ 307   3                brakeduty += 0.02;
+ 308   3            }
+ 309   2            else if((h_Fault->VoltDetecBraketCount <= 10))
+ 310   2            {
+ 311   3              MOE = 0;
+ 312   3              DRV_OUT = 0x00;
+ 313   3              FaultProcess();
+ 314   3              D1 = LEDOFF;
+ 315   3              D2 = LEDOFF;
+ 316   3              D3 = LEDOFF;
+ 317   3              D4 = LEDOFF;                               
+ 318   3              D5 = LEDOFF;
+ 319   3              D6 = LEDOFF;      
+ 320   3            }
+ 321   2          }
+ 322   1      
+ 323   1          /*******¹ýÑ¹Ç·Ñ¹±£»¤»Ö¸´*********/
+ 324   1          if((mcState == mcFault) &&((mcFaultSource==FaultUnderVoltage)||(mcFaultSource==FaultOverVoltage))
+ 325   1             &&(h_Fault->VoltDetecBraketCount == 0))
+ 326   1          {
+ 327   2            if((mcFocCtrl.mcDcbusFlt< OVER_RECOVER_VALUE)&&(mcFocCtrl.mcDcbusFlt> UNDER_RECOVER_VALUE))
+ 328   2            {
+ 329   3              h_Fault->VoltRecoverCnt++;
+ 330   3              if(h_Fault->VoltRecoverCnt>100)//Á¬Ðø¼ì²â200ms£¬ÈôÕý³£Ôò»Ö¸´
+ 331   3              {
+ 332   4                mcState = mcReady;
+ 333   4                mcFaultSource=FaultNoSource;
+ 334   4                h_Fault->VoltRecoverCnt = 0;
+ 335   4              }
+ 336   3            }
+ 337   2            else
+ 338   2            {
+ 339   3              h_Fault->VoltRecoverCnt = 0;
+ 340   3            }
+ 341   2         }
+ 342   1      }
+ 343          
+ 344          
+ 345          /*****************************************************************************
+ 346           * Function:     void  Fault_Power(mcFaultVarible *h_Fault)
+ 347           * Description:   ¹¦ÂÊ±£»¤º¯Êý
+ 348           * Parameter:     mcFaultVarible *h_Fault
+ 349           * Return:       no
+ 350           *****************************************************************************/
+ 351          void Fault_Power(FaultVarible *h_Fault)
+ 352          {
+ 353   1      
+ 354   1          if(mcFaultSource == FaultNoSource)//³ÌÐòÎÞÆäËû±£»¤ÏÂ
+ 355   1          {
+ 356   2              if(mcFocCtrl.Powerlpf > PowerLimit)   //¹¦ÂÊ´óÓÚ±£»¤ÖµÊ±¼ÆÊý£¬³¬¹ý20´Î£¬ÅÐ¶ÏÎª¹ýÔØ±£»¤£¬¹Ø±ÕÊä³ö;·
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 7   
+
+             -´Ö®£¬¼ÆÊýÆ÷ÂýÂý¼õ
+ 357   2              {
+ 358   3                h_Fault->OverPowerDetecCnt++;
+ 359   3                if(h_Fault->OverPowerDetecCnt > 20)
+ 360   3                {
+ 361   4                  h_Fault->OverPowerDetecCnt = 0;
+ 362   4                  mcFaultSource=FaultOverPower;
+ 363   4                  FaultProcess();
+ 364   4                }
+ 365   3              }
+ 366   2              else
+ 367   2              {
+ 368   3                if(h_Fault->OverPowerDetecCnt>0)
+ 369   3                {
+ 370   4                  h_Fault->OverPowerDetecCnt--;
+ 371   4                }
+ 372   3              }
+ 373   2          }
+ 374   1      
+ 375   1        }
+ 376            
+ 377          void Fault_Temperature(FaultVarible *h_Fault)
+ 378          {
+ 379   1        /*******·¢ÈÈË¿ÎÂ¶È±£»¤********/
+ 380   1        if(mcFaultSource == FaultNoSource)//³ÌÐòÎÞÆäËû±£»¤ÏÂ
+ 381   1        {
+ 382   2          if(User.Temperature < TemperatureProtectvalue)
+ 383   2          {
+ 384   3            h_Fault->Temperaturecnt++;
+ 385   3            if(h_Fault->Temperaturecnt >= 200)  //1S
+ 386   3            {
+ 387   4              h_Fault->Temperaturecnt = 0;
+ 388   4              mcFaultSource=FaultNtcTemperature;
+ 389   4              FaultProcess();
+ 390   4            } 
+ 391   3          }
+ 392   2          else
+ 393   2          {
+ 394   3            if(h_Fault->Temperaturecnt > 0)
+ 395   3            {h_Fault->Temperaturecnt--;}
+ 396   3          }
+ 397   2          
+ 398   2        }
+ 399   1        
+ 400   1        //·¢ÈÈË¿ÎÂ¶È±£»¤»Ö¸´
+ 401   1         if((mcFaultSource==FaultNtcTemperature)&&(mcState == mcFault))
+ 402   1         {
+ 403   2            if(User.Temperature > TemperatureRecovervalue)
+ 404   2            {
+ 405   3              mcFaultDect.TemperatureRecCount++;
+ 406   3              if(mcFaultDect.TemperatureRecCount >= 200)
+ 407   3              {
+ 408   4                mcFaultDect.TemperatureRecCount = 0;
+ 409   4                mcFaultSource=FaultNoSource;
+ 410   4                mcState = mcReady;
+ 411   4              }
+ 412   3            }
+ 413   2            else
+ 414   2            {
+ 415   3              if(mcFaultDect.TemperatureRecCount > 0)
+ 416   3              {mcFaultDect.TemperatureRecCount--;}
+ 417   3            }   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 8   
+
+ 418   2         }
+ 419   1         
+ 420   1         /**¿ØÖÆ°åÎÂ¶È±£»¤**/
+ 421   1        if(mcFocCtrl.mcADCTemperature < OVER_Temperature)
+ 422   1        {
+ 423   2          h_Fault->TemperCnt++;
+ 424   2          if(h_Fault->TemperCnt > 500)
+ 425   2          {  
+ 426   3            h_Fault->TemperCnt = 0;
+ 427   3            h_Fault->TemperRecover = 0;
+ 428   3            mcFaultSource = FaultOverTemperature;
+ 429   3            FaultProcess();
+ 430   3          }
+ 431   2        }
+ 432   1        else
+ 433   1        {
+ 434   2          h_Fault->TemperCnt = 0;
+ 435   2        }
+ 436   1        /***¿ØÖÆ°åÎÂ¶È±£»¤»Ö¸´**/
+ 437   1        if((mcState == mcFault)&&(mcFaultSource == FaultOverTemperature))
+ 438   1        {              
+ 439   2           if(h_Fault->TemperRecover < OverTemperRecoverTime)                
+ 440   2           {
+ 441   3             h_Fault->TemperRecover++; 
+ 442   3           }
+ 443   2           else
+ 444   2           {
+ 445   3            if(mcFocCtrl.mcADCTemperature > UNDER_Temperature)  
+ 446   3            {  
+ 447   4              h_Fault->TemperRecover = 0;          
+ 448   4              mcState = mcReady;
+ 449   4              mcFaultSource=FaultNoSource;
+ 450   4            }         
+ 451   3           }     
+ 452   2         }
+ 453   1      }  
+ 454          
+ 455          /*****************************************************************************
+ 456           * Function:     void Fault_Overcurrent(CurrentVarible *h_Cur)
+ 457           * Description:   µç»úÔËÐÐ»òÕßÆô¶¯Ê±£¬µ±ÈýÏàÖÐÄ³Ò»Ïà×î´óÖµ´óÓÚOverCurrentValue£¬ÔòOverCurCnt¼Ó1¡£
+ 458                           Á¬ÐøÀÛ¼Ó3´Î£¬ÅÐ¶ÏÎªÈí¼þ¹ýÁ÷±£»¤¡£Ö´ÐÐÊ±¼äÔ¼30.4us¡£
+ 459           * Parameter:     mcFaultVarible *h_Fault
+ 460           * Return:       no
+ 461           *****************************************************************************/
+ 462          void Fault_Overcurrent(CurrentVarible *h_Cur)
+ 463          {
+ 464   1        if((mcState == mcRun)||(mcState == mcStart))            // check over current in rum and open mode
+ 465   1        {
+ 466   2          h_Cur->Abs_ia = Abs_F16(FOC__IA);
+ 467   2          h_Cur->Abs_ib = Abs_F16(FOC__IB);
+ 468   2          h_Cur->Abs_ic = Abs_F16(FOC__IC);
+ 469   2          if(h_Cur->Abs_ia> h_Cur->Max_ia)                      // ´Ë²¿·Ö¼ÈÓÃÓÚÈí¼þ¹ýÁ÷±£»¤£¬ÓÖÓÃÓÚÈ±Ïà±£»¤
+ 470   2          {
+ 471   3             h_Cur->Max_ia = h_Cur->Abs_ia;
+ 472   3          }
+ 473   2          if(h_Cur->Abs_ib > h_Cur->Max_ib)
+ 474   2          {
+ 475   3             h_Cur->Max_ib = h_Cur->Abs_ib;
+ 476   3          }
+ 477   2          if(h_Cur->Abs_ic > h_Cur->Max_ic)
+ 478   2          {
+ 479   3             h_Cur->Max_ic = h_Cur->Abs_ic;
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 9   
+
+ 480   3          }
+ 481   2      
+ 482   2          if((h_Cur->Max_ia>=OverSoftCurrentValue)||(h_Cur->Max_ib>=OverSoftCurrentValue)||(h_Cur->Max_ic>=OverS
+             -oftCurrentValue))
+ 483   2          {
+ 484   3            h_Cur->OverCurCnt++;
+ 485   3            if(h_Cur->OverCurCnt>=3)
+ 486   3            {
+ 487   4              h_Cur->Max_ia=0;
+ 488   4              h_Cur->Max_ib=0;
+ 489   4              h_Cur->Max_ic=0;
+ 490   4              h_Cur->OverCurCnt=0;
+ 491   4              mcFaultSource=FaultSoftOVCurrent;
+ 492   4              FaultProcess();
+ 493   4            }
+ 494   3          }
+ 495   2          else
+ 496   2          {
+ 497   3            if(h_Cur->OverCurCnt>0)
+ 498   3            {
+ 499   4              h_Cur->OverCurCnt--;
+ 500   4            }
+ 501   3          }
+ 502   2        }
+ 503   1      }
+ 504          
+ 505          /*****************************************************************************
+ 506           * Function:     void  Fault_OverCurrentRecover(mcFaultVarible *h_Fault)
+ 507           * Description:   ÈíÓ²¼þ¹ýÁ÷±£»¤»Ö¸´
+ 508           * Parameter:     mcFaultVarible *h_Fault
+ 509           * Return:       no
+ 510           *****************************************************************************/
+ 511          void Fault_OverCurrentRecover(FaultVarible *h_Fault)
+ 512          {
+ 513   1        if((mcState == mcFault)&&((mcFaultSource==FaultSoftOVCurrent)||(mcFaultSource==FaultHardOVCurrent))&&(mc
+             -ProtectTime.CurrentPretectTimes<5))
+ 514   1        {
+ 515   2          h_Fault->CurrentRecoverCnt++;
+ 516   2          if(h_Fault->CurrentRecoverCnt>=OverCurrentRecoverTime)//1000*5=5s
+ 517   2          {
+ 518   3            h_Fault->CurrentRecoverCnt=0;
+ 519   3            mcProtectTime.CurrentPretectTimes++;
+ 520   3            mcState = mcReady;
+ 521   3            mcFaultSource=FaultNoSource;
+ 522   3          }
+ 523   2        }
+ 524   1      }
+ 525          
+ 526          /*****************************************************************************
+ 527           * Function:     void  Fault_OverPowerRecover(mcFaultVarible *h_Fault)
+ 528           * Description:   ¹¦ÂÊ±£»¤»Ö¸´º¯Êý
+ 529           * Parameter:     mcFaultVarible *h_Fault
+ 530           * Return:       no
+ 531           *****************************************************************************/
+ 532          void Fault_OverPowerRecover(FaultVarible *h_Fault)
+ 533          {
+ 534   1        if((mcState == mcFault)&&(mcFaultSource==FaultOverPower)&&(mcProtectTime.PowerPretectTimes<5))
+ 535   1        {
+ 536   2          h_Fault->OverPowerDetecCnt++;
+ 537   2          if(h_Fault->OverPowerDetecCnt>=OverPowerRecoverTime)
+ 538   2          {
+ 539   3            h_Fault->OverPowerDetecCnt=0;
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 10  
+
+ 540   3            mcProtectTime.PowerPretectTimes++;
+ 541   3            mcState = mcReady;
+ 542   3            mcFaultSource=FaultNoSource;
+ 543   3          }
+ 544   2        }
+ 545   1      }
+ 546          
+ 547          /*****************************************************************************
+ 548           * Function:     void  Fault_Start(mcFaultVarible *h_Fault)
+ 549           * Description:   Æô¶¯±£»¤º¯Êý£¬µç»úÔËÐÐ×´Ì¬ÏÂ£¬µç»úÔÚÇ°5s¹ÀËã×ªËÙ´ïµ½¶Â×ª±£»¤Öµ»òÕß5sºó·´µç¶¯ÊÆÖµÌ«µÍ(´Ë·
+             -½·¨Î´ÑéÖ¤)
+ 550                            »ò4sÄÚ»¹ÔÚCtrlMode×´Ì¬£¬¼´ËÙ¶ÈµÍÓÚMOTOR_LOOP_RPM£¬³ÌÐòÅÐ¶ÏÎªÆô¶¯Ê§°Ü£¬µç»úÍ£»ú¡£
+ 551                            µ±³ÌÐòÅÐ¶ÏÎªÆô¶¯Ê§°Üºó£¬ÈôÖØÆô´ÎÊýÉÙÓÚ»òµÈÓÚ5´Î£¬³ÌÐòÁ¢¼´½øÈëÐ£×¼×´Ì¬£¬µÈ´ýÖØÆô¡£
+ 552           * Parameter:     mcFaultVarible *h_Fault
+ 553           * Return:       no
+ 554           *****************************************************************************/
+ 555            void Fault_Start(FaultVarible *h_Fault)
+ 556            {
+ 557   1          /*******Æô¶¯±£»¤»Ö¸´*********/
+ 558   1          if(mcState == mcRun)
+ 559   1          {
+ 560   2            //·½·¨Ò»£¬5sÄÚËÙ¶È´óÓÚ×î´óËÙ¶È£¬Í¬Ê±·´µç¶¯ÊÆÖµµÍÓÚÒ»¶¨Öµ
+ 561   2      //      if(h_Fault->StartSpeedCnt<=1000)
+ 562   2      //      {
+ 563   2      //        h_Fault->StartSpeedCnt++;
+ 564   2      //        if((mcFocCtrl.SpeedFlt > Motor_Max_Speed)&&(mcFocCtrl.EsValue<20))
+ 565   2      //        {
+ 566   2      //          h_Fault->StartSpeedCnt = 0;
+ 567   2      //          mcFaultSource=FaultStart;
+ 568   2      //          FaultProcess();
+ 569   2      //          mcProtectTime.SecondStartTimes++;
+ 570   2      //          mcProtectTime.StartFlag  =  1;
+ 571   2      //        }
+ 572   2      //      }
+ 573   2           //·½·¨¶þ
+ 574   2            if(h_Fault->StartEsCnt<=1200)//Ç°6s£¬µÈ´ý1sºó£¬¿ªÊ¼ÅÐ¶ÏES£¬Èç¹û³¬¹ýÒ»¶¨´ÎÊý£¬ÔòÊ§°Ü
+ 575   2            {
+ 576   3              h_Fault->StartEsCnt++;
+ 577   3              h_Fault->StartDelay++;  
+ 578   3              if(h_Fault->StartDelay>=75)        // 0.15S
+ 579   3              {
+ 580   4                 h_Fault->StartDelay=75;
+ 581   4                 if((mcFocCtrl.EsValue <100))//&&(mcFocCtrl.CtrlMode==0))
+ 582   4                  {
+ 583   5                    h_Fault->StartESCount++;
+ 584   5                    if(h_Fault->StartESCount>=15)
+ 585   5                    {
+ 586   6                      mcFaultSource=FaultStart;
+ 587   6                      FaultProcess();
+ 588   6                      mcProtectTime.SecondStartTimes++;
+ 589   6                      h_Fault->StartDelay=0;
+ 590   6                      h_Fault->StartESCount=0;
+ 591   6                      mcProtectTime.StartFlag  =  2;
+ 592   6                    }
+ 593   5                  }
+ 594   4                  else
+ 595   4                  {
+ 596   5                    if(h_Fault->StartESCount>0)
+ 597   5                      h_Fault->StartESCount--;
+ 598   5                  }
+ 599   4             }
+ 600   3           }
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 11  
+
+ 601   2           else
+ 602   2           {
+ 603   3             h_Fault->StartESCount=0;
+ 604   3           }
+ 605   2             //·½·¨Èý£¬³¤Ê±¼äÔÚCtrlMode=0×´Ì¬
+ 606   2            if(mcFocCtrl.CtrlMode==0)         //
+ 607   2            {
+ 608   3              h_Fault->StartFocmode++;
+ 609   3              if(h_Fault->StartFocmode>=40)
+ 610   3              {
+ 611   4                h_Fault->StartFocmode=0;
+ 612   4                mcFaultSource=FaultStart;
+ 613   4                FaultProcess();
+ 614   4                mcProtectTime.SecondStartTimes++;
+ 615   4                mcProtectTime.StartFlag  =  3;
+ 616   4              }
+ 617   3            }
+ 618   2          }
+ 619   1          #if (!StartONOFF_Enable)
+ 620   1          {
+ 621   2           if((mcFaultSource==FaultStart)&&(mcState == mcFault)&&(mcProtectTime.SecondStartTimes<=StartProtectRe
+             -startTimes))
+ 622   2           {
+ 623   3             mcFaultSource=FaultNoSource;
+ 624   3             mcState = mcReady;
+ 625   3           }
+ 626   2          }
+ 627   1         #endif
+ 628   1        }
+ 629           
+ 630           /*****************************************************************************
+ 631           * Function:     void  Fault_Stall(mcFaultVarible *h_Fault)
+ 632           * Description:   ¶Â×ª±£»¤º¯Êý£¬ÓÐÈýÖÖ±£»¤·½Ê½£¬
+ 633                           µÚÒ»ÖÖ£¬
+ 634                           µÚ¶þÖÖ£¬µç»úÔËÐÐ×´Ì¬ÏÂ£¬ÑÓ³Ù4sÅÐ¶Ï£¬¹ÀËãËÙ¶È¾ø¶ÔÖµ³¬¹ý¶Â×ªËÙ¶ÈÁ¬Ðø5´Î£»
+ 635                           µÚÈýÖÖ£¬µç»úÔËÐÐ×´Ì¬ÏÂ£¬µ±U,VÁ½ÏàµçÁ÷¾ø¶ÔÖµ´óÓÚ¶Â×ªµçÁ÷±£»¤ÖµÁ¬Ðø6´Î£»
+ 636                           µ±ÒÔÉÏÈýÖÖµÄÈÎºÎÒ»ÖÖ±£»¤´¥·¢Ê±£¬µç»úÍ£»ú£¬³ÌÐòÅÐ¶ÏÎª¶Â×ª±£»¤£»
+ 637                           µ±¶Â×ª±£»¤×´Ì¬ÏÂ£¬UÏà²É¼¯ÖµµÍÓÚ¶Â×ª»Ö¸´ÖµÊ±£¬Èô¶Â×ª´ÎÊýÐ¡ÓÚ»òµÈÓÚ¶Â×ªÖØÆô´ÎÊý8´Î£¬
+ 638                           ³ÌÐòÑÓ³ÙmcStallRecoverÖØÐÂÆô¶¯£¬½øÐÐÐ£×¼×´Ì¬¡£
+ 639           * Parameter:     mcFaultVarible *h_Fault
+ 640           * Return:       no
+ 641           *****************************************************************************/
+ 642          //¶Â×ª±£»¤
+ 643          void Fault_Stall(FaultVarible *h_Fault,CurrentVarible *h_Cur)
+ 644          {
+ 645   1      //  h_Fault->mcEsValue = FOC__ESQU;
+ 646   1        if(mcState == mcRun)
+ 647   1        {
+ 648   2          if(h_Fault->StallDelayCnt <=1000)// Æô¶¯ºóÑÓÊ±5sÅÐ¶ÏÊÇ·ñ¶Â×ª±£»¤
+ 649   2          {
+ 650   3            h_Fault->StallDelayCnt ++;
+ 651   3          }
+ 652   2          else
+ 653   2          {
+ 654   3            //method 1£¬µ±·´µç¶¯ÊÆÌ«Ð¡ 
+ 655   3            if(mcFocCtrl.EsValue< 70)
+ 656   3            {
+ 657   4              h_Fault->StallDectEs++;
+ 658   4              if(h_Fault->StallDectEs >= 30)   //ÅÐ¶ÏÂú×ãÌõ¼þ´ïµ½ÉèÖÃ´ÎÊý£¬±£»¤¶¯×÷
+ 659   4              {
+ 660   5                h_Fault->StallDectEs=0;
+ 661   5                mcFaultSource=FaultStall;
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 12  
+
+ 662   5                mcProtectTime.StallTimes++;        //¶Â×ª´ÎÊý+1
+ 663   5                FaultProcess();
+ 664   5                h_Fault->StallDelayCnt = 0;        //±£»¤ºóÖØÆô¿ªÊ¼ÖØÐÂ¼ÆÊý£¬±£³Ö5SÑÓ³Ù
+ 665   5                mcProtectTime.StallFlag  =  1;
+ 666   5              }
+ 667   4            }
+ 668   3            else
+ 669   3            {
+ 670   4              if(  h_Fault->StallDectEs>0)
+ 671   4                h_Fault->StallDectEs--;
+ 672   4            }
+ 673   3            
+ 674   3            //method 2£¬ÅÐ¶ÏËÙ¶ÈµÍÓÚ¶Â×ª×îÐ¡Öµ»òÕß³¬¹ý¶Â×ª×î´óÖµ
+ 675   3            if((mcFocCtrl.SpeedFlt<Motor_Stall_Min_Speed)||(mcFocCtrl.SpeedFlt > Motor_Stall_Max_Speed))
+ 676   3            {
+ 677   4              h_Fault->StallDectSpeed++;
+ 678   4              if(h_Fault->StallDectSpeed >= 100)   //ÅÐ¶ÏÂú×ãÌõ¼þ´ïµ½ÉèÖÃ´ÎÊý£¬±£»¤¶¯×÷
+ 679   4              {
+ 680   5                h_Fault->StallDectSpeed=0;
+ 681   5                mcFaultSource=FaultStall;
+ 682   5                mcProtectTime.StallTimes++;        //¶Â×ª´ÎÊý+1
+ 683   5                FaultProcess();
+ 684   5      //          h_Fault->StallDelayCnt = 0;       //±£»¤ºóÖØÆô¿ªÊ¼ÖØÐÂ¼ÆÊý£¬±£³Ö5SÑÓ³Ù
+ 685   5                 mcProtectTime.StallFlag =2;
+ 686   5              }
+ 687   4            }
+ 688   3            else
+ 689   3            {
+ 690   4              if(h_Fault->StallDectSpeed>0)
+ 691   4              h_Fault->StallDectSpeed--;
+ 692   4            }
+ 693   3            
+ 694   3            //method 3      A/B/CÈýÏàÈÎÒâÒ»ÏàÏàµçÁ÷´óÓÚ¶Â×ªµçÁ÷£¬¶Â×ª±£»¤
+ 695   3      //    if((h_Cur->Max_ia >= StallCurrentValue)||
+ 696   3      //       (h_Cur->Max_ib >= StallCurrentValue)||
+ 697   3      //       (h_Cur->Max_ic >= StallCurrentValue))
+ 698   3      //    {       
+ 699   3      //      h_Fault->mcStallDeCurrent++;              
+ 700   3      //      if(h_Fault->mcStallDeCurrent >= 20)          //ÅÐ¶ÏÂú×ãÌõ¼þ´ïµ½ÉèÖÃ´ÎÊý£¬±£»¤¶¯×÷
+ 701   3      //      {
+ 702   3      //        h_Fault->mcStallDeCurrent=0;
+ 703   3      //        mcFaultSource=FaultStall;  
+ 704   3      //        mcProtectTime.StallTimes++;
+ 705   3      //        FaultProcess();    
+ 706   3      //        h_Fault->StallDelayCnt = 0;       //±£»¤ºóÖØÆô¿ªÊ¼ÖØÐÂ¼ÆÊý£¬±£³Ö5SÑÓ³Ù
+ 707   3      //        mcProtectTime.StallFlag  =  3;
+ 708   3      //      }             
+ 709   3      //    }  
+ 710   3      //    else
+ 711   3      //      {
+ 712   3      //        if(h_Fault->mcStallDeCurrent>0)
+ 713   3      //        h_Fault->mcStallDeCurrent--;
+ 714   3      //      }
+ 715   3        }
+ 716   2      }
+ 717   1      
+ 718   1       #if (!StartONOFF_Enable)
+ 719   1      {
+ 720   2           /*******¶Â×ª±£»¤»Ö¸´*********/
+ 721   2      //        if((mcFaultSource==FaultStall)&&(mcState == mcFault)&&(mcProtectTime.StallTimes<=4))  //¶Â×ªÖØÆô
+             -´ÎÊý
+ 722   2      //        {
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 13  
+
+ 723   2      //          h_Fault->StallReCount++;
+ 724   2      //          if(h_Fault->StallReCount>=StallRecoverTime)
+ 725   2      //          {
+ 726   2      //            h_Fault->StallReCount=0;        //16000
+ 727   2      //            mcFaultSource=FaultNoSource;
+ 728   2      //            mcState =   mcReady;
+ 729   2      //          }
+ 730   2      //        }
+ 731   2      //        else
+ 732   2      //        {
+ 733   2      //          h_Fault->StallReCount=0;
+ 734   2      //        }
+ 735   2      }
+ 736   1      #endif
+ 737   1      }
+ 738              
+ 739           /*****************************************************************************
+ 740           * Function:     void  Fault_phaseloss(mcFaultVarible *h_Fault)
+ 741           * Description:   È±Ïà±£»¤º¯Êý£¬µ±µç»úÔËÐÐ×´Ì¬ÏÂ£¬10msÈ¡ÈýÏàµçÁ÷µÄ×î´óÖµ£¬
+ 742                           1.5sÅÐ¶Ï¸÷ÏàµçÁ÷×î´óÖµ£¬Èô´æÔÚÁ½ÏàµçÁ÷Öµ´óÓÚÒ»¶¨Öµ£¬¶øµÚÈýÏàµçÁ÷ÖµÈ´·Ç³£Ð¡£¬ÔòÅÐ¶ÏÎªÈ±Ïà±
+             -£»¤£¬µç»úÍ£»ú£»
+ 743           * Parameter:     mcFaultVarible *h_Fault
+ 744           * Return:       no
+ 745           *****************************************************************************/
+ 746          void Fault_phaseloss(FaultVarible *h_Fault)
+ 747          {
+ 748   1        if(mcState == mcRun)
+ 749   1        {
+ 750   2          h_Fault->Lphasecnt++;
+ 751   2          if(h_Fault->Lphasecnt>8)
+ 752   2          {
+ 753   3             h_Fault->Lphasecnt=0;
+ 754   3             if(((mcCurVarible.Max_ia>(mcCurVarible.Max_ib*2))||(mcCurVarible.Max_ia>(mcCurVarible.Max_ic*2)))&&
+             -(mcCurVarible.Max_ia>PhaseLossCurrentValue))
+ 755   3             {
+ 756   4                h_Fault->AOpencnt++;
+ 757   4             }
+ 758   3             else
+ 759   3             {
+ 760   4              if(h_Fault->AOpencnt>0)
+ 761   4                h_Fault->AOpencnt --;
+ 762   4             }
+ 763   3             if(((mcCurVarible.Max_ib >(mcCurVarible.Max_ia*2))||(mcCurVarible.Max_ib >(mcCurVarible.Max_ic*2)))
+             -&&(mcCurVarible.Max_ib >PhaseLossCurrentValue))
+ 764   3             {
+ 765   4               h_Fault->BOpencnt++;
+ 766   4             }
+ 767   3            else
+ 768   3             {
+ 769   4               if(h_Fault->BOpencnt>0)
+ 770   4                h_Fault->BOpencnt --;
+ 771   4             }
+ 772   3             if(((mcCurVarible.Max_ic >(mcCurVarible.Max_ia*3))||(mcCurVarible.Max_ic >(mcCurVarible.Max_ib*3)))
+             -&&(mcCurVarible.Max_ic >PhaseLossCurrentValue))
+ 773   3             {
+ 774   4               h_Fault->COpencnt++;
+ 775   4             }
+ 776   3            else
+ 777   3             {
+ 778   4               if(h_Fault->COpencnt>0)
+ 779   4                h_Fault->COpencnt --;
+ 780   4             }
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 14  
+
+ 781   3              mcCurVarible.Max_ia = 0;
+ 782   3              mcCurVarible.Max_ib = 0;
+ 783   3              mcCurVarible.Max_ic = 0;
+ 784   3            if(h_Fault->AOpencnt > 10|| h_Fault->BOpencnt > 10 || h_Fault->COpencnt > 10)
+ 785   3             {
+ 786   4                mcProtectTime.LossPHTimes++;
+ 787   4                mcFaultSource=FaultLossPhase;
+ 788   4                FaultProcess();
+ 789   4             }
+ 790   3          }
+ 791   2        }
+ 792   1      
+ 793   1        /*******È±Ïà±£»¤»Ö¸´*********/
+ 794   1        #if (!StartONOFF_Enable)           //ÆðÍ£²âÊÔÊ±ÆÁ±ÎÈ±Ïà±£»¤»Ö¸´
+ 795   1        {
+ 796   2          if((mcFaultSource==FaultLossPhase)&&(mcState == mcFault)&&(mcProtectTime.LossPHTimes<5))//¿ÉÖØÆô5´Î
+ 797   2          {
+ 798   3            h_Fault->mcLossPHRecCount++;
+ 799   3            if(h_Fault->mcLossPHRecCount>=PhaseLossRecoverTime)
+ 800   3            {
+ 801   4              h_Fault->AOpencnt=0;
+ 802   4              h_Fault->BOpencnt=0;
+ 803   4              h_Fault->COpencnt=0;
+ 804   4              mcState = mcReady;
+ 805   4              mcFaultSource=FaultNoSource;
+ 806   4            }
+ 807   3          }
+ 808   2          else
+ 809   2          {
+ 810   3            h_Fault->mcLossPHRecCount=0;
+ 811   3          }
+ 812   2        }
+ 813   1        #endif
+ 814   1      }
+ 815          
+ 816          /*---------------------------------------------------------------------------*/
+ 817          /* Name    :  void Fault_Detection(void)
+ 818          /* Input  :  NO
+ 819          /* Output  :  NO
+ 820          /* Description:  ±£»¤º¯Êý£¬Òò±£»¤µÄÊ±¼äÏìÓ¦²»»áºÜ¸ß£¬²ÉÓÃ·Ö¶Î´¦Àí£¬Ã¿5¸ö¶¨Ê±Æ÷ÖÐ¶ÏÖ´ÐÐÒ»´Î¶ÔÓ¦µÄ±£»¤
+ 821                          ³£¼û±£»¤ÓÐ¹ýÇ·Ñ¹¡¢¹ýÎÂ¡¢¶Â×ª¡¢Æô¶¯¡¢È±ÏàµÈ±£»¤£¬µ÷ÊÔÊ±£¬¿É¸ù¾ÝÐèÇó£¬Ò»¸ö¸öµÄµ÷ÊÔ¼ÓÈë¡£
+ 822          /*---------------------------------------------------------------------------*/
+ 823          void Fault_Detection(void)
+ 824          {
+ 825   1        mcFaultDect.segment++;
+ 826   1        if(mcFaultDect.segment>=5)
+ 827   1        {
+ 828   2          mcFaultDect.segment=0;
+ 829   2        }
+ 830   1        if(mcFaultDect.segment==0)
+ 831   1        {
+ 832   2          if(CurrentRecoverEnable)//¹ýÁ÷±£»¤»Ö¸´Ê¹ÄÜ
+ 833   2          {
+ 834   3            Fault_OverCurrentRecover(&mcFaultDect);
+ 835   3          }
+ 836   2          if(PowerRecoverEnable) //¹¦ÂÊ±£»¤»Ö¸´Ê¹ÄÜ
+ 837   2          {
+ 838   3            Fault_OverPowerRecover(&mcFaultDect);
+ 839   3          }
+ 840   2          
+ 841   2          if(TemperatureProtectEnable) //ÎÂ¶È±£»¤
+ 842   2          {
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 15  
+
+ 843   3            Fault_Temperature(&mcFaultDect);
+ 844   3          }    
+ 845   2        }
+ 846   1        else if(mcFaultDect.segment==1)
+ 847   1        {
+ 848   2          if(VoltageProtectEnable==1)//¹ýÑ¹±£»¤Ê¹ÄÜ
+ 849   2          {
+ 850   3            Fault_OverUnderVoltage(&mcFaultDect);
+ 851   3          }
+ 852   2          
+ 853   2          if(OverPowerProtectEnable==1); //¹¦ÂÊ±£»¤Ê¹ÄÜ
+ 854   2          {
+ 855   3            Fault_Power(&mcFaultDect);
+ 856   3          }        
+ 857   2        }
+ 858   1        else if(mcFaultDect.segment==2)
+ 859   1        {
+ 860   2          if(StartProtectEnable==1)//Æô¶¯±£»¤Ê¹ÄÜ
+ 861   2          {
+ 862   3            Fault_Start(&mcFaultDect);
+ 863   3          }
+ 864   2        }
+ 865   1        else if(mcFaultDect.segment==3)
+ 866   1        {
+ 867   2          if(StallProtectEnable==1)//¶Â×ª±£»¤Ê¹ÄÜ
+ 868   2          {
+ 869   3            Fault_Stall(&mcFaultDect,&mcCurVarible);
+ 870   3          }
+ 871   2        }
+ 872   1        else if(mcFaultDect.segment==4)
+ 873   1        {
+ 874   2          if(PhaseLossProtectEnable==1)//È±Ïà±£»¤Ê¹ÄÜ
+ 875   2          {
+ 876   3            Fault_phaseloss(&mcFaultDect);
+ 877   3          }
+ 878   2        }
+ 879   1        else
+ 880   1        {
+ 881   2      
+ 882   2        }
+ 883   1      }
+ 884          
+ 885          /*---------------------------------------------------------------------------*/
+ 886          /* Name    :  void ONOFF_Starttest(void)
+ 887          /* Input  :  NO
+ 888          /* Output  :  NO
+ 889          /* Description:  Æô¶¯²âÊÔ
+ 890          /*---------------------------------------------------------------------------*/
+ 891          void ONOFF_Starttest(ONVarible  *h_test)
+ 892          {
+ 893   1        if(h_test->ONOFF_Flag==1)
+ 894   1        {
+ 895   2           h_test->ON_Count++;
+ 896   2          if(h_test->ON_Count>StartON_Time)
+ 897   2          {
+ 898   3            h_test->ON_Count=0;
+ 899   3            h_test->ONOFF_Times++;
+ 900   3            h_test->ONOFF_Flag=0;
+ 901   3            mcSpeedRamp.FlagONOFF = 0;
+ 902   3      //      mcSpeedRamp.TargetValue = 0;
+ 903   3          }
+ 904   2        }
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 16  
+
+ 905   1        else
+ 906   1        {
+ 907   2          if(mcState!=mcFault)
+ 908   2          {
+ 909   3            h_test->OFF_Count++;
+ 910   3            if(h_test->OFF_Count>StartOFF_Time)
+ 911   3            {
+ 912   4              h_test->OFF_Count=0;
+ 913   4              h_test->ONOFF_Flag=1;
+ 914   4              mcSpeedRamp.FlagONOFF = 1;
+ 915   4      //        mcSpeedRamp.TargetValue = Motor_Test_Speed;
+ 916   4            }
+ 917   3          }
+ 918   2        }
+ 919   1      }
+ 920          
+ 921          /*---------------------------------------------------------------------------*/
+ 922          /* Name    :  void Speed_response(void)
+ 923          /* Input  :  NO
+ 924          /* Output  :  NO
+ 925          /* Description:  ËÙ¶ÈÏìÓ¦º¯Êý£¬¿É¸ù¾ÝÐèÇó¼ÓÈë¿ØÖÆ»·£¬Èçºã×ª¾Ø¿ØÖÆ¡¢ºã×ªËÙ¿ØÖÆ¡¢ºã¹¦ÂÊ¿ØÖÆ
+ 926          /*---------------------------------------------------------------------------*/
+ 927          
+ 928          void Speed_response(void)
+ 929          {
+ 930   1      //    uint16  UqMinTemp = 0;     //UQÏÞ·ù×îÐ¡Öµ»º´æ±äÁ¿
+ 931   1        if((mcState ==mcRun)||(mcState ==mcStop))
+ 932   1        {      
+ 933   2          switch(mcFocCtrl.CtrlMode)
+ 934   2          {
+ 935   3            case 0:
+ 936   3            {
+ 937   4                if(FOC__EOME > Motor_Loop_Speed)
+ 938   4                {
+ 939   5                  mcFocCtrl.CtrlMode = 1;
+ 940   5                  FOC_DQKP = DQKP;
+ 941   5                  FOC_DQKI = DQKI;
+ 942   5      //              #if (Motor_Speed_Control_Mode == SPEED_LOOP_CONTROL)
+ 943   5      //              {
+ 944   5      //                mcSpeedRamp.ActualValue = _Q15(75000 / MOTOR_SPEED_BASE);
+ 945   5      //              }
+ 946   5                  
+ 947   5      //              #endif
+ 948   5                    
+ 949   5                  OutLoopParameterSet();       //»·Â·»ù±¾²ÎÊýÉèÖÃ
+ 950   5                  
+ 951   5                  mcFocCtrl.SpeedRamp = 2;
+ 952   5                  mcFocCtrl.SpeedLoop = 5;
+ 953   5                }
+ 954   4              }
+ 955   3              break;
+ 956   3              case 1:
+ 957   3              {
+ 958   4                #if (OUTLoop_Mode== OUTLoop_Disable)
+                        {
+                          mcFocCtrl.TorqueLoopTime++;
+                          if(mcFocCtrl.TorqueLoopTime>SPEED_LOOP_TIME)
+                          {
+                            mcFocCtrl.TorqueLoopTime=0;
+                            mcFocCtrl.mcIqref = FOC_IQREF;
+                            if (FOC_IQREF < QOUTVALUE)
+                            {
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 17  
+
+                                mcFocCtrl.mcIqref += QOUTINC;
+                                if (mcFocCtrl.mcIqref > QOUTVALUE) mcFocCtrl.mcIqref = QOUTVALUE;
+                                FOC_IQREF = mcFocCtrl.mcIqref;
+                            }
+                            else if (FOC_IQREF > QOUTVALUE)
+                            {
+                                mcFocCtrl.mcIqref -= QOUTINC;
+                                if (mcFocCtrl.mcIqref < QOUTVALUE) mcFocCtrl.mcIqref = QOUTVALUE;
+                                FOC_IQREF = mcFocCtrl.mcIqref;
+                            }
+                          }
+                        }
+              
+                        #elif (OUTLoop_Mode== OUTLoop_Enable)
+ 981   4                {
+ 982   5                  mcFocCtrl.SpeedRampTime++;
+ 983   5                  if(mcFocCtrl.SpeedRampTime > mcFocCtrl.SpeedRamp)
+ 984   5                  {
+ 985   6                      mcFocCtrl.SpeedRampTime = 0;
+ 986   6                      mc_ramp(&mcSpeedRamp);       //Íâ»·ËÙ¶ÈÅÀÆÂ»ò¼õËÙ¡£Ã¿SpeedRampTimeÖ´ÐÐÒ»´Î
+ 987   6                  }
+ 988   5                  
+ 989   5                  mcFocCtrl.SpeedLoopTime++;
+ 990   5                  if(mcFocCtrl.SpeedLoopTime > mcFocCtrl.SpeedLoop)  //Íâ»·µ÷½ÚÖÜÆÚ
+ 991   5                  {
+ 992   6                      mcFocCtrl.SpeedLoopTime=0;
+ 993   6                      #if (Motor_Speed_Control_Mode == SPEED_LOOP_CONTROL)
+ 994   6                      {
+ 995   7      //                      SpeedPICtrl.ExtRef = mcSpeedRamp.ActualValue;
+ 996   7      //                      SpeedPICtrl.ExtFed = mcFocCtrl.SpeedFlt;
+ 997   7      //
+ 998   7      //                      if(mcFocCtrl.SpeedFlt > (_Q15(80000 / MOTOR_SPEED_BASE)))
+ 999   7      //                      {
+1000   7      //                        mcFocCtrl.loopchdelay++;
+1001   7      //                        if(mcFocCtrl.loopchdelay > 500)
+1002   7      //                        {
+1003   7      //                          mcFocCtrl.loopchdelay = 0;
+1004   7      //                          PI_KP    = SKPH;
+1005   7      //                          PI_KI    = SKIH;
+1006   7      ////                          FOC_DQKP = DQKPH;
+1007   7      ////                          FOC_DQKI = DQKIH;
+1008   7      //                          mcFocCtrl.SpeedLoop = 2;
+1009   7      //                          mcFocCtrl.SpeedRamp = 8;
+1010   7      //                        }
+1011   7      //
+1012   7      //                      }
+1013   7      //                      else if(mcFocCtrl.SpeedFlt < (_Q15(60000 / MOTOR_SPEED_BASE)))
+1014   7      //                      {
+1015   7      //                        PI_KP      = SKP;
+1016   7      //                        PI_KI      = SKI;
+1017   7      //                        FOC_DQKP   = DQKP;
+1018   7      //                        FOC_DQKI   = DQKI;
+1019   7      //                        SetBit(FOC_CR2,F5SEG);
+1020   7      //                      }
+1021   7      //                      
+1022   7      //                      HW_PI_Control(&SpeedPICtrl);
+1023   7      //                      FOC_IQREF = SpeedPICtrl.ExtOut;
+1024   7                        }
+1025   6                        #elif (Motor_Speed_Control_Mode == POWER_LOOP_CONTROL)
+                                {
+                                  if(mcFocCtrl.SpeedFlt > (_Q15(100000 / MOTOR_SPEED_BASE)))
+                                  {
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 18  
+
+                                      FOC_DQKP  = DQKPH;
+                                      FOC_DQKI  = DQKIH;
+                                      PI_KP     = SKPH;
+                                      PI_KI     = SKIH;
+                                  }
+                                  else if(mcFocCtrl.SpeedFlt < (_Q15(80000 / MOTOR_SPEED_BASE)))
+                                  { 
+                                      FOC_DQKP  = DQKP;
+                                      FOC_DQKI  = DQKI;
+                                      PI_KP     = SKP;
+                                      PI_KI     = SKI;
+                                  }
+                                  
+                                  FOC_IQREF = HW_One_PI(POWER_VSP- mcFocCtrl.mcSysPower);
+                                }
+                                #endif
+1045   6                    }
+1046   5      //           // ÅÐ¶ÏFOC_QMINÖµ»Ö¸´µ½Õý³£Öµ
+1047   5      //           UqMinTemp = FOC_QMIN;
+1048   5      //           if(UqMinTemp > QOUTMIN)
+1049   5      //           {
+1050   5      //             UqMinTemp -- ;
+1051   5      //             FOC_QMIN = UqMinTemp;
+1052   5      //           }
+1053   5                 }
+1054   4               #endif //END OUTLoop_Mode
+1055   4      
+1056   4               if(FOC_EK2 < OBS_K2T_Actual-10)
+1057   4               {
+1058   5                 mcFocCtrl.Smo_EK2=FOC_EK2;
+1059   5                 mcFocCtrl.Smo_EK2+=10;
+1060   5                 FOC_EK2=mcFocCtrl.Smo_EK2;
+1061   5               }
+1062   4               else if(FOC_EK2 > OBS_K2T_Actual+10)
+1063   4               {
+1064   5                 mcFocCtrl.Smo_EK2=FOC_EK2;
+1065   5                 mcFocCtrl.Smo_EK2-=10;
+1066   5                 FOC_EK2=mcFocCtrl.Smo_EK2;
+1067   5               }
+1068   4               else
+1069   4               {
+1070   5                 FOC_EK2=OBS_K2T_Actual;
+1071   5               }
+1072   4            }
+1073   3            break;
+1074   3          }
+1075   2        }
+1076   1      }
+1077          
+1078          /*---------------------------------------------------------------------------*/
+1079          /* Name       :  void FGOutput(void)
+1080          /* Input      :  NO
+1081          /* Output     :  NO
+1082          /* Description:  FGÐÅºÅÊä³ö
+1083          /*---------------------------------------------------------------------------*/
+1084          void FGOutput(void)
+1085          {//FG¿ÉÓÃÖÐ¶ÏFGIF½øÐÐÅÐ¶Ï
+1086   1        if(mcState==mcRun)
+1087   1        {
+1088   2          if((FOC__THETA>=0)&&(FOC__THETA<32768))//0-180
+1089   2          {
+1090   3            ResetFGPin;
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 19  
+
+1091   3          }
+1092   2          else if((FOC__THETA>=32768)&&(FOC__THETA<65536))//180-360
+1093   2          {
+1094   3            SetFGPin;
+1095   3          }
+1096   2        }
+1097   1        else if(mcState == mcFault)
+1098   1        {
+1099   2            SetFGPin;
+1100   2        }
+1101   1        else
+1102   1        {
+1103   2            ResetFGPin;
+1104   2        }
+1105   1      }
+1106          /*---------------------------------------------------------------------------*/
+1107          /* Name       :   uint16 SoftLPF(uint16 Xn1, uint16 Xn0, uint16 K)
+1108          /* Input      :  uint16 Xn1, uint16 Xn0, uint16 K
+1109          /* Output     :  uint16
+1110          /* Description:  Èí¼þµÍÍ¨ÂË²¨
+1111          /*---------------------------------------------------------------------------*/
+1112           int16 SoftLPF(int16 Xn1, int16 Xn0, int16 K)
+1113           {
+1114   1          int16 Temp16 = 0;
+1115   1          int32 Temp32 = 0;
+1116   1      
+1117   1          Temp32 = (((int32)Xn1 - (int32)Xn0) * (int32)K) >> 15;
+1118   1          Temp16 = Xn0 + (int16)Temp32;
+1119   1          return Temp16;
+1120   1       }
+1121          
+1122          /*---------------------------------------------------------------------------*/
+1123          /* Name    :  void LED_Display(void)
+1124          /* Input  :  NO
+1125          /* Output  :  NO
+1126          /* Description:  LEDµÆÏÔÊ¾
+1127          /*---------------------------------------------------------------------------*/
+1128          void LED_Display(void)
+1129          {
+1130   1        switch(mcFaultSource)
+1131   1        {
+1132   2          case FaultNoSource:
+1133   2          SetLEDPin;                          //µÍµçÆ½µãÁÁ£¬¸ßµçÆ½Ãð
+1134   2            break;
+1135   2          case FaultHardOVCurrent:             //Ó²¼þ¹ýÁ÷±£»¤ÉÁË¸10´Î           
+1136   2              Led_OnOff(&mcLedDisplay,10);
+1137   2            break;
+1138   2          case FaultSoftOVCurrent:            //Èí¼þ¹ýÁ÷±£»¤ÉÁË¸4´Î           
+1139   2              Led_OnOff(&mcLedDisplay,4);
+1140   2            break;
+1141   2          case FaultUnderVoltage:              //Ç·Ñ¹±£»¤ÉÁË¸2´Î
+1142   2              Led_OnOff(&mcLedDisplay,2);
+1143   2            break;
+1144   2          case FaultOverVoltage:                //¹ýÑ¹±£»¤ÉÁË¸3´Î
+1145   2              Led_OnOff(&mcLedDisplay,3);
+1146   2            break;
+1147   2          case FaultLossPhase:                  //È±Ïà±£»¤ÉÁË¸8´Î
+1148   2              Led_OnOff(&mcLedDisplay,5);
+1149   2            break;
+1150   2          case FaultStall:                     //¶Â×ª±£»¤ÉÁË¸6´Î
+1151   2              Led_OnOff(&mcLedDisplay,6);
+1152   2            break;
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 20  
+
+1153   2          case  FaultOverPower:               //¹¦ÂÊ±£»¤ÉÁË¸7´Î
+1154   2              Led_OnOff(&mcLedDisplay,7);
+1155   2            break;
+1156   2      
+1157   2          default:
+1158   2            break;
+1159   2        }
+1160   1      }
+1161          
+1162          //LEDµÆµÄÉÁË¸
+1163          void Led_OnOff(MCLedDisplay *hLedDisplay,uint8 htime)
+1164          {
+1165   1        hLedDisplay->LedCount++;
+1166   1        if(hLedDisplay->LedCount<hLedDisplay->Counttime)
+1167   1         {
+1168   2            if(hLedDisplay->Count<200)
+1169   2            {
+1170   3             hLedDisplay->Count++;
+1171   3      
+1172   3            }
+1173   2            else if((hLedDisplay->Count>=200)&&(hLedDisplay->Count<201))
+1174   2            {
+1175   3              hLedDisplay->Count=0;
+1176   3              LEDPinONOFF;
+1177   3              hLedDisplay->LedTimCot++;
+1178   3            }
+1179   2            else
+1180   2              ;
+1181   2            if(hLedDisplay->LedTimCot>=2*htime)
+1182   2            {
+1183   3              hLedDisplay->Count=202;
+1184   3              SetLEDPin;
+1185   3            }
+1186   2          }
+1187   1          else if(hLedDisplay->LedCount>=hLedDisplay->Counttime)
+1188   1          {
+1189   2           hLedDisplay->LedCount=0;
+1190   2           hLedDisplay->LedTimCot=0;
+1191   2           hLedDisplay->Count=0;
+1192   2          }
+1193   1      }
+1194          
+1195          /*---------------------------------------------------------------------------*/
+1196          /* Name    :  void mc_ramp(void)
+1197          /* Input  :  hTarget,MC_RAMP *hSpeedramp
+1198          /* Output  :  NO
+1199          /* Description:
+1200          /*---------------------------------------------------------------------------*/
+1201          void mc_ramp(MCRAMP *hSpeedramp)
+1202          {
+1203   1        if (hSpeedramp->ActualValue < hSpeedramp->TargetValue)
+1204   1        {
+1205   2            if(hSpeedramp->ActualValue + hSpeedramp->IncValue < hSpeedramp->TargetValue)
+1206   2            {
+1207   3                hSpeedramp->ActualValue += hSpeedramp->IncValue;
+1208   3            }
+1209   2            else
+1210   2            {
+1211   3                hSpeedramp->ActualValue = hSpeedramp->TargetValue;
+1212   3            }
+1213   2        }
+1214   1        else
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 21  
+
+1215   1        {
+1216   2            if(hSpeedramp->ActualValue - hSpeedramp->DecValue > hSpeedramp->TargetValue)
+1217   2            {
+1218   3      
+1219   3                hSpeedramp->ActualValue -= hSpeedramp->DecValue;
+1220   3            }
+1221   2            else
+1222   2            {
+1223   3                hSpeedramp->ActualValue = hSpeedramp->TargetValue;
+1224   3            }
+1225   2        }
+1226   1      }
+1227          
+1228          /*-------------------------------------------------------------------------------------------------
+1229            Function Name :  int16 HW_One_PI(int16 Xn1, int16 Yn0, int16 Xn2)
+1230            Description   :  PI¿ØÖÆ
+1231            Input         :  Xn1--E(K)
+1232            Output      :  PI_UK--µ±Ç°PIÊä³öÖµ,Ö´ÐÐÊ±¼äus
+1233          -------------------------------------------------------------------------------------------------*/
+1234          int16 HW_One_PI(int16 Xn1)
+1235          {
+1236   1           PI_EK =  Xn1;        //ÌîÈëEK
+1237   1          PI_LPF_CR |= 0x02;    // Start PI
+1238   1          _nop_();  _nop_();  _nop_();  _nop_();  _nop_();
+1239   1          PI_UK+=(SKP/4096 +1);
+1240   1          return PI_UK;
+1241   1      }
+1242          
+1243          void HW_PI_Control(OUTLOOP *PIPara)
+1244          {    
+1245   1          PI_EK =  PIPara->ExtErr;                                                    //ÌîÈë±¾´ÎEK Îó²îÖµ
+1246   1          SetBit(PI_LPF_CR,PISTA);                                                    // Start PI
+1247   1          _nop_();  _nop_();  _nop_();  _nop_();  _nop_();
+1248   1        
+1249   1          PI_UK      = PIPara->ExtOutL;
+1250   1          PI_UKMAX   = SOUTMAX;
+1251   1          PI_UKMIN   = SOUTMIN;
+1252   1          PIPara->ExtErr = PIPara->ExtRef - PIPara->ExtFed;
+1253   1          PI_EK =  PIPara->ExtErr;
+1254   1        
+1255   1          SetBit(PI_LPF_CR,PISTA);                                                    // Start PI
+1256   1          _nop_();  _nop_();  _nop_();  _nop_();  _nop_();
+1257   1          PIPara->ExtOut = PI_UK + 1;                                                  // ²¹³¥PIÊä³öÎó²î
+1258   1          PIPara->ExtOutL= PIPara->ExtOut;
+1259   1          
+1260   1      }
+1261          
+1262          /*-------------------------------------------------------------------------------------------------
+1263            Function Name :  int16 LPF(int16 Xn1, int16 Xn0, int8 K)
+1264            Description   :  LFP¿ØÖÆ  Y(k) = Y(k-1) + LPF_K*(X(k) ¨C Y(k-1))
+1265            Input         :  Xn1--µ±Ç°ÊäÈëÖµ
+1266                             Xn0--ÉÏÒ»´ÎÂË²¨Êä³öÖµ
+1267                             K--LPFÂË²¨ÏµÊý
+1268            Output        :  LPF_Y--µ±Ç°ÂË²¨Êä³öÖµ£¬Ö´ÐÐÊ±¼äÎª4us¡£
+1269          -------------------------------------------------------------------------------------------------*/
+1270          int16 LPFFunction(int16 Xn1, int16 Xn0, int8 K)
+1271          {
+1272   1        LPF_K = K;
+1273   1        LPF_X = Xn1;
+1274   1        LPF_Y = Xn0;
+1275   1        SetBit(PI_LPF_CR, LPFSTA);
+1276   1        _nop_();_nop_();_nop_();_nop_();_nop_();
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 22  
+
+1277   1        return LPF_Y;
+1278   1      }
+1279          
+1280          /*---------------------------------------------------------------------------*/
+1281          /* Name    :  void VSPSample(void)
+1282          /* Input  :  NO
+1283          /* Output  :  NO
+1284          /* Description:  VSP²ÉÑù
+1285          /*---------------------------------------------------------------------------*/
+1286          
+1287          /*---------------------------------------------------------------------------*/
+1288          /* Name    :  void Sleepmode(void)
+1289          /* Input  :  NO
+1290          /* Output  :  NO
+1291          /* Description:  Ë¯ÃßÄ£Ê½²âÊÔ
+1292          /*---------------------------------------------------------------------------*/
+1293          void Sleepmode(void)
+1294          {
+1295   1         SleepSet.SleepDelayCout++;
+1296   1        if(SleepSet.SleepDelayCout>=20000)//×î´ó65530£¬ÈôÒªÔÙ´ó£¬Ðè¸ÄÊý¾ÝÀàÐÍ
+1297   1        {
+1298   2      //    FOC_EFREQMIN  = -Motor_Omega_Ramp_Min;
+1299   2      //    FOC_EFREQHOLD = -Motor_Omega_Ramp_End;
+1300   2          mcSpeedRamp.TargetValue = 0;
+1301   2          MOE = 0;
+1302   2          ClrBit(DRV_CR, FOCEN);  //¹Ø±ÕFOC
+1303   2          SleepSet.SleepDelayCout = 0;
+1304   2          SleepSet.SleepFlag = 1;
+1305   2          SetBit(P1_IE, P11);   // config P11 as the source of EXTI1
+1306   2          SetBit(PCON, STOP);
+1307   2        }
+1308   1      }
+1309          /*---------------------------------------------------------------------------*/
+1310          /* Name    :  void StarRampDealwith(void)
+1311          /* Input  :  NO
+1312          /* Output  :  NO
+1313          /* Description:
+1314          /*---------------------------------------------------------------------------*/
+1315          void StarRampDealwith(void)
+1316          {
+1317   1        if((mcState == mcRun))
+1318   1        {
+1319   2          if(mcFocCtrl.State_Count == 300)//2300
+1320   2          {
+1321   3            FOC_EKP = OBSW_KP_GAIN_RUN;                            // ¹ÀËãÆ÷ÀïµÄPIµÄKP
+1322   3            FOC_EKI = OBSW_KI_GAIN_RUN;                            // ¹ÀËãÆ÷ÀïµÄPIµÄKI
+1323   3          }
+1324   2          else if(mcFocCtrl.State_Count == 200)//2000
+1325   2          {
+1326   3            FOC_EKP = OBSW_KP_GAIN_RUN1;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKP
+1327   3            FOC_EKI = OBSW_KI_GAIN_RUN1;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKI
+1328   3          }
+1329   2          else if(mcFocCtrl.State_Count == 150)//1600
+1330   2          {
+1331   3            FOC_EKP = OBSW_KP_GAIN_RUN2;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKP
+1332   3            FOC_EKI = OBSW_KI_GAIN_RUN2;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKI
+1333   3          }
+1334   2          else if(mcFocCtrl.State_Count == 100)//1200
+1335   2          {
+1336   3            FOC_EKP = OBSW_KP_GAIN_RUN3;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKP
+1337   3            FOC_EKI = OBSW_KI_GAIN_RUN3;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKI
+1338   3          }
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 23  
+
+1339   2          else if(mcFocCtrl.State_Count == 50)
+1340   2          {
+1341   3            FOC_EKP = OBSW_KP_GAIN_RUN4;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKP
+1342   3            FOC_EKI = OBSW_KI_GAIN_RUN4;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKI
+1343   3          }
+1344   2          else;
+1345   2        }
+1346   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   5599    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =    232      43
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =     55    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

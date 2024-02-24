@@ -1,0 +1,14 @@
+C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 09:59:46 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERFRAME
+OBJECT MODULE PLACED IN .\Output\UserFrame.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\UserFiles\UserFrame.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE
+                    -(5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\UserFrame.lst) 
+                    -TABS(2) OBJECT(.\Output\UserFrame.obj)
+
+line level    source
+
+*** ERROR C318 OF ..\User\Source\UserFiles\UserFrame.c: can't open file '..\User\Source\UserFiles\UserFrame.c'
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  1 ERROR(S)

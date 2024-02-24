@@ -1,0 +1,420 @@
+C51 COMPILER V9.60.7.0   INTERRUPT                                                         02/24/2024 10:00:28 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE INTERRUPT
+OBJECT MODULE PLACED IN .\Output\Interrupt.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Application\Interrupt.c LARGE OMF2 WARNINGLEVEL(0) OPTIMI
+                    -ZE(5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\Interrupt.lst
+                    -) TABS(2) OBJECT(.\Output\Interrupt.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2017 Fortiortech shenzhen *****************************
+   2          * File Name          : Interrupt.c
+   3          * Author             : Fortiortech  Appliction Team
+   4          * Version            : V1.0
+   5          * Date               : 2017-12-26
+   6          * Description        : This file contains all the interrupt function used for Motor Control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/
+  10          
+  11          
+  12          /* Includes -------------------------------------------------------------------------------------*/
+  13          #include <FU68xx_2.h>
+  14          #include <Myproject.h>
+  15          
+  16          uint16 xdata spidebug[4] = { 0 };
+  17          extern uint16 KeyCount_Long;
+  18          uint16  Power_Currt;
+  19          
+  20          /*-------------------------------------------------------------------------------------------------
+  21              Function Name : void FO_INT(void)
+  22              Description   : FO_INT interrupt£¬Ó²¼þFO¹ýÁ÷±£»¤£¬¹Ø¶ÏÊä³ö£¬ÖÐ¶ÏÓÅÏÈ¼¶×î¸ß
+  23              Input         : ÎÞ
+  24              Output        : ÎÞ
+  25          -------------------------------------------------------------------------------------------------*/
+  26          //void FO_INT(void) interrupt 1                                                   // Ó²¼þFO¹ýÁ÷ÖÐ¶Ï£¬¹Ø±ÕÊ
+             -ä³ö
+  27          //{
+  28          //    FaultProcess();                                                             // ¹Ø±ÕÊä³ö
+  29          //    mcFaultSource = FaultHardOVCurrent;                                         // Ó²¼þ¹ýÁ÷±£»¤
+  30          //    mcState       = mcFault;                                                    // ×´Ì¬ÎªmcFault
+  31          //    IF0           = 0;                                                          // clear P00 interrupt f
+             -lag
+  32          //}
+  33              
+  34          /*---------------------------------------------------------------------------*/
+  35          /* Name     :   void EXTERN_INT(void) interrupt 2
+  36          /* Input    :   NO
+  37          /* Output   :   NO
+  38          /* Description: ¹ýÁãµã¼ì²â
+  39          /*---------------------------------------------------------------------------*/
+  40          //void EXTERN_INT(void) interrupt 2
+  41          //{
+  42          //  mcFaultDect.VoltDetecExternCnt = 50;
+  43          //  if((mcFocCtrl.TPCtrlDealy ==0)&&(mcState == mcRun))
+  44          //  {
+  45          ////    TempAverage();                    //ÎÂ¶ÈÇóÆ½¾ùÖµ
+  46          ////    TemperaturePID();                 //ÎÂ¶Èµ÷½ÚPID
+  47          ////    
+  48          ////    TIM3__ARR = User.ScrOnAngleTimeDatum;
+  49          ////    TIM3__ARR = 20000;
+  50          ////    TIM3__DR  = TIM3__ARR - 400;  
+  51          ////    TIM3__CNTR = 0;
+C51 COMPILER V9.60.7.0   INTERRUPT                                                         02/24/2024 10:00:28 PAGE 2   
+
+  52          ////    SetBit(TIM3_CR1, T3EN);            //¿ªÆô¼ÆÊýÆ÷
+  53          //    
+  54          ////  mcFocCtrl.HW_Gcd =  Get_Gcd(mcFocCtrl.HW_ZeroT, mcFocCtrl.HW_ZeroZ);
+  55          ////  mcFocCtrl.HW_ZeroZ = mcFocCtrl.HW_ZeroZ / mcFocCtrl.HW_Gcd;
+  56          ////  mcFocCtrl.HW_ZeroT = mcFocCtrl.HW_ZeroT / mcFocCtrl.HW_Gcd;
+  57          //    
+  58          //    
+  59          ////    mcFocCtrl.HW_ZeroZ = HW_Gear[Temp_LOW][1];
+  60          ////    mcFocCtrl.HW_ZeroT = HW_Gear[Temp_LOW][0];
+  61          
+  62          //    if(mcFocCtrl.HW_ZeroCount < mcFocCtrl.HW_ZeroZ)
+  63          //    {
+  64          //      mcFocCtrl.HW_ZeroCount++;
+  65          //    }
+  66          //    else
+  67          //    {
+  68          //      mcFocCtrl.HW_ZeroCount = 1;
+  69          //    }
+  70          //    
+  71          //    if(mcFocCtrl.HW_ZeroCount <= mcFocCtrl.HW_ZeroT)
+  72          //    {
+  73          ////      HW1 = HWON;
+  74          ////      HW2 = HWON;
+  75          //    }
+  76          //    else
+  77          //    {
+  78          //      HW1 = HWOFF;
+  79          //      HW2 = HWOFF;
+  80          //    }
+  81          
+  82          //  }
+  83          //  else
+  84          //  {
+  85          //    HW1 = HWOFF;
+  86          //    HW2 = HWOFF;
+  87          //  }
+  88          //  ClrBit(P2_IF, P20);                                                          // ÇåÁãP20±êÖ¾Î»
+  89          //}
+  90          
+  91          /*---------------------------------------------------------------------------*/
+  92          /* Name     :   void FOC_INT(void) interrupt 3
+  93          /* Input    :   NO
+  94          /* Output   :   NO
+  95          /* Description: FOCÖÐ¶Ï(DrvÖÐ¶Ï),Ã¿¸öÔØ²¨ÖÜÆÚÖ´ÐÐÒ»´Î£¬ÓÃÓÚ´¦ÀíÏìÓ¦½Ï¸ßµÄ³ÌÐò£¬ÖÐ¶ÏÓÅÏÈ¼¶µÚ¶þ¡£DCEN¿ªÁË¾Í»
+             -á²úÉúÖÐ¶Ï¡£
+  96          /*---------------------------------------------------------------------------*/
+  97          //void FOC_INT(void) interrupt 3
+  98          //{
+  99          //    if(ReadBit(DRV_SR, DCIF))                                                   // ±È½ÏÖÐ¶Ï
+ 100          //    {
+ 101          //        APP_DIV();                                                               //Æô¶¯³ý·¨Æ÷£¬±ÜÃâÓë¹ýµ
+             -÷ÖµÖÐµÄ³ý·¨³åÍ»
+ 102          
+ 103          //        Fault_Overcurrent(&mcCurVarible);                                       // Èí¼þ¹ýÁ÷±£»¤.Ô¼30us
+ 104          
+ 105          //        #if ((FRDetectMethod == FOCMethod) && (TailWind_Mode == TailWind))
+ 106          //            TailWindSpeedDetect();                                              //Ë³Äæ·ç¼ì²â
+ 107          //        #endif
+ 108          
+ 109          //        #if defined (SPI_DBG_SW)                                                //Èí¼þµ÷ÊÔÄ£Ê½
+ 110          //            spidebug[0] = mcFocCtrl.mcDcbusFlt<<1;                              //SPIDATA0;
+ 111          //            spidebug[1] = FOC__IA;                                              //SPIDATA1;
+C51 COMPILER V9.60.7.0   INTERRUPT                                                         02/24/2024 10:00:28 PAGE 3   
+
+ 112          //            spidebug[2] = FOC__IB;                                              //SPIDATA2;
+ 113          //            spidebug[3] = FOC__THETA;                                            //SPIDATA3;
+ 114          //        #endif
+ 115          
+ 116          //        ClrBit(DRV_SR, DCIF);
+ 117          //    }
+ 118          //}
+ 119          
+ 120          /*---------------------------------------------------------------------------*/
+ 121          /* Name     :   void TIM2_INT(void) interrupt 4
+ 122          /* Input    :   NO
+ 123          /* Output   :   NO
+ 124          /* Description:  Õý·´×ª¼ì²â(RSD)
+ 125          /*---------------------------------------------------------------------------*/
+ 126          void TIM2_INT(void) interrupt 4
+ 127          {
+ 128   1          if(ReadBit(TIM2_CR1, T2IR))
+ 129   1          {
+ 130   2              ClrBit(TIM2_CR1, T2IR);
+ 131   2          }
+ 132   1          if(ReadBit(TIM2_CR1, T2IP))
+ 133   1          {
+ 134   2              #if (FRDetectMethod == RSDMethod)
+                          RSDFRDetect();                                                      //RSDÕý·´×ª¼ì²â
+                      #endif
+ 137   2      
+ 138   2              ClrBit(TIM2_CR1, T2IP);
+ 139   2          }
+ 140   1          if(ReadBit(TIM2_CR1, T2IF))                                                 //Òç³öÖÐ¶Ï,ÓÃÓÚÅÐ¶Ï¾²Ö¹,Ê±
+             -¼äÎª349ms¡£
+ 141   1          {
+ 142   2              #if (FRDetectMethod == RSDMethod)
+                          RSDDetect.RSDState=Static;
+                          RSDDetect.RSDFlag=1;
+                      #endif
+ 146   2            
+ 147   2              ClrBit(TIM2_CR1, T2IF);
+ 148   2          }
+ 149   1      }
+ 150          
+ 151          /*-------------------------------------------------------------------------------------------------
+ 152              Function Name : void CMP_ISR(void)
+ 153              Description   : CMP3£ºÓ²¼þ±È½ÏÆ÷¹ýÁ÷±£»¤£¬¹Ø¶ÏÊä³ö£¬ÖÐ¶ÏÓÅÏÈ¼¶×î¸ß
+ 154                              CMP0/1/2£ºË³Äæ·çÅÐ¶Ï
+ 155              Input         : ÎÞ
+ 156              Output        : ÎÞ
+ 157          -------------------------------------------------------------------------------------------------*/
+ 158          //void CMP_ISR(void) interrupt 7
+ 159          //{
+ 160          //    if(ReadBit(CMP_SR, CMP3IF))
+ 161          //    {
+ 162          //        if(mcState!=mcPosiCheck)
+ 163          //        {
+ 164          //            FaultProcess();                                                     // ¹Ø±ÕÊä³ö
+ 165          //            mcFaultSource=FaultHardOVCurrent;                                   // Ó²¼þ¹ýÁ÷±£»¤
+ 166          //            mcState = mcFault;                                                  // ×´Ì¬ÎªmcFault
+ 167          //        }
+ 168          //        else
+ 169          //        {
+ 170          //            MOE     = 0;                                                                        // ¹Ø±ÕM
+             -OE
+ 171          //            RPDPara.InsetCount[RPDPara.injecttimes]  = TIM2__CNTR;                              // ½«¶¨Ê
+C51 COMPILER V9.60.7.0   INTERRUPT                                                         02/24/2024 10:00:28 PAGE 4   
+
+             -±Æ÷2µÄ¼ÆÊýÖµ¸³Öµ¸øÊý×é
+ 172          //            RPDPara.DetectCount[RPDPara.injecttimes] = RPDPara.InsetCount[RPDPara.injecttimes]; // Á½×éÊ
+             -ý¾Ý£¬Ò»×éÓÃÓÚ¹Û²ìÔ­Ê¼Êý¾Ý£¬Ò»×éÓÃÓÚ´¦ÀíÊý¾Ý
+ 173          //            TIM2__CNTR                               = 0;                                       // TIM2¼
+             -ÆÊýÆ÷ÖµÇåÁã
+ 174          //            RPDPara.injecttimes++;                                                              // RPD×¢
+             -ÈëÅÄÊýÀÛ¼Ó
+ 175          //        }
+ 176          //        ClrBit(CMP_SR, CMP3IF);
+ 177          //    }
+ 178          
+ 179          //    #if (FRDetectMethod == BEMFMethod)
+ 180          //        //Í¨¹ýBEMF×öË³·çÆô¶¯¹¦ÄÜ
+ 181          //        BEMFDetectFunc();
+ 182          //    #endif
+ 183          //}
+ 184          
+ 185          /*---------------------------------------------------------------------------*/
+ 186          /* Name     :   void TIM23_INT(void) interrupt 9
+ 187          /* Input    :   NO
+ 188          /* Output   :   NO
+ 189          /* Description: Capture PWM £¬ÖÐ¶ÏÓÅÏÈ¼¶µÚ¶þ£¬¸ßÓÚFOCÖÐ¶Ï£¬ÓÃÓÚPWMµ÷ËÙ
+ 190          /*---------------------------------------------------------------------------*/
+ 191          void TIM3_INT(void) interrupt 9
+ 192          {
+ 193   1          if(ReadBit(TIM3_CR1, T3IR))
+ 194   1          {
+ 195   2            ClrBit(TIM3_CR1, T3IR);
+ 196   2          }
+ 197   1          if(ReadBit(TIM3_CR1, T3IP))                                                  //ÖÜÆÚÖÐ¶Ï
+ 198   1          {
+ 199   2             ClrBit(TIM3_CR1, T3IP);
+ 200   2          }
+ 201   1          if(ReadBit(TIM3_CR1, T3IF))
+ 202   1          {
+ 203   2             ClrBit(TIM3_CR1, T3EN);            //¹Ø±Õ¼ÆÊýÆ÷      
+ 204   2             ClrBit(TIM3_CR1, T3IF);
+ 205   2          }
+ 206   1      }
+ 207          
+ 208          /*---------------------------------------------------------------------------*/
+ 209          /* Name     :   void TIM_1MS_INT(void) interrupt 10
+ 210          /* Input    :   NO
+ 211          /* Output   :   NO
+ 212          /* Description: 1ms¶¨Ê±Æ÷ÖÐ¶Ï£¨SYS TICKÖÐ¶Ï£©£¬ÓÃÓÚ´¦Àí¸½¼Ó¹¦ÄÜ£¬Èç¿ØÖÆ»·Â·ÏìÓ¦¡¢¸÷ÖÖ±£»¤µÈ¡£ÖÐ¶ÏÓÅÏÈ¼¶µÍÓ
+             -ÚFOÖÐ¶ÏºÍFOCÖÐ¶Ï¡£
+ 213          /*---------------------------------------------------------------------------*/
+ 214          //void TIM_1MS_INT(void) interrupt 10
+ 215          //{
+ 216          //    if(ReadBit(DRV_SR, SYSTIF))                                                  // SYS TICKÖÐ¶Ï
+ 217          //    {    
+ 218          //        SetBit(ADC_CR, ADCBSY);                                                  //Ê¹ÄÜADCµÄDCBUS²ÉÑù
+ 219          //        /****¹¦ÂÊÂË²¨*****/
+ 220          //        if(mcState == mcRun)
+ 221          //        {
+ 222          //            mcFocCtrl.CurrentPower = FOC__POW << 1;
+ 223          //            mcFocCtrl.Powerlpf     = LPFFunction(mcFocCtrl.CurrentPower,mcFocCtrl.Powerlpf,20);      //×
+             -¢ÒâµÍÍ¨ÂË²¨Æ÷ÏµÊý·¶Î§Îª0---127
+ 224          //        }
+ 225          
+ 226          //        /****ËÙ¶ÈÂË²¨¡¢·´µç¶¯ÊÆÂË²¨*****/
+ 227          //        if((mcState != mcInit) && (mcState != mcReady))
+C51 COMPILER V9.60.7.0   INTERRUPT                                                         02/24/2024 10:00:28 PAGE 5   
+
+ 228          //        {
+ 229          //            mcFocCtrl.SpeedFlt = LPFFunction(FOC__EOME, mcFocCtrl.SpeedFlt, 30);              //100     
+             - //×¢ÒâµÍÍ¨ÂË²¨Æ÷ÏµÊý·¶Î§Îª0---127
+ 230          //            mcFocCtrl.EsValue  = LPFFunction(FOC__ESQU,mcFocCtrl.EsValue,10);
+ 231          //        }
+ 232          //        else
+ 233          //        {
+ 234          //            mcFocCtrl.SpeedFlt = 0;
+ 235          //        }
+ 236          //        Power_Currt = (ADC3_DR<<3);
+ 237          //        if(Power_Currt > mcCurOffset.Iw_busOffset)
+ 238          //        {
+ 239          //         Power_Currt   = Power_Currt - mcCurOffset.Iw_busOffset;
+ 240          //        }
+ 241          //        else  
+ 242          //        {
+ 243          //          Power_Currt   = 0;
+ 244          //        }
+ 245          //        
+ 246          //        mcFocCtrl.mcADCCurrentbus  = LPFFunction(Power_Currt,mcFocCtrl.mcADCCurrentbus,100);
+ 247          //        /****UQµçÑ¹ÖµÂË²¨****/
+ 248          //        mcFocCtrl.UqFlt = LPFFunction(FOC__UQ,mcFocCtrl.UqFlt,10);              // UQÖµ
+ 249          //        mcFocCtrl.UdFlt = LPFFunction(FOC__UD,mcFocCtrl.UdFlt,10);              // UDÖµ
+ 250          
+ 251          //        Motor_EN();
+ 252          //        
+ 253          ////        KEYControl();
+ 254          //        
+ 255          //        Speed_response();                                                        //»·Â·ÏìÓ¦£¬ÈçËÙ¶È»·¡¢×
+             -ª¾Ø»·¡¢¹¦ÂÊ»·µÈ            
+ 256          //        
+ 257          //        #if (StartONOFF_Enable)
+ 258          //            ONOFF_Starttest(&ONOFFTest);
+ 259          //        #endif
+ 260          
+ 261          //        /*****DCbusµÄ²ÉÑù»ñÈ¡Öµ²¢ÂË²¨******/
+ 262          //        AdcSampleValue.ADCDcbus = ADC2_DR<<3;
+ 263          //        mcFocCtrl.mcDcbusFlt    = LPFFunction(AdcSampleValue.ADCDcbus,mcFocCtrl.mcDcbusFlt,100);
+ 264          //        
+ 265          //        /***********·¢ÈÈË¿ÎÂ¶È²É¼¯***********/
+ 266          //        AdcSampleValue.ADCTemp  = ADC1_DR<<3 ;
+ 267          //        User.Temperature = LPFFunction(AdcSampleValue.ADCTemp ,User.Temperature,20);  
+ 268          //       /*********¿ØÖÆ°åÎÂ¶È²É¼¯*********/
+ 269          //        mcFocCtrl.mcADCTemperature = LPFFunction((ADC7_DR<<3),mcFocCtrl.mcADCTemperature,10);        
+ 270          
+ 271          //        /*****¹ÊÕÏ±£»¤º¯Êý¹¦ÄÜ£¬Èç¹ýÇ·Ñ¹±£»¤¡¢Æô¶¯±£»¤¡¢È±Ïà¡¢¶Â×ªµÈ********/
+ 272          //        Fault_Detection();
+ 273          
+ 274          ////        LED_Display();//LEDµÆÏÔÊ¾
+ 275          
+ 276          //        /********Ë¯ÃßÄ£Ê½*******/
+ 277          ////        Sleepmode();
+ 278          
+ 279          //        /*****µç»ú×´Ì¬»úµÄÊ±Ðò´¦Àí*****/
+ 280          //        if(mcFocCtrl.State_Count > 0)          mcFocCtrl.State_Count--;
+ 281          //        if(BEMFDetect.BEMFTimeCount > 0)       BEMFDetect.BEMFTimeCount--;
+ 282          //        if(RSDDetect.RSDCCWSBRCnt > 0)         RSDDetect.RSDCCWSBRCnt--;
+ 283          //        if(mcFaultDect.VoltDetecExternCnt > 0) mcFaultDect.VoltDetecExternCnt--;
+ 284          //        if(KS.KeyLongPressFlag==1)            KeyCount_Long++;
+ 285          ////        if(KeyCount_Long>=12000)
+ 286          ////        {
+ 287          ////          mcFocCtrl.HW_ZeroZ = HW_Gear[Temp_Off][1];
+C51 COMPILER V9.60.7.0   INTERRUPT                                                         02/24/2024 10:00:28 PAGE 6   
+
+ 288          ////          mcFocCtrl.HW_ZeroT = HW_Gear[Temp_Off][0];
+ 289          ////          mcSpeedRamp.FlagONOFF = 0;
+ 290          ////          mcSpeedRamp.TargetValue = 0;
+ 291          ////          KS.KeyLongPressFlag = 0;
+ 292          ////          KeyCount_Long = 0;
+ 293          ////        }
+ 294          //        
+ 295          //        if(mcState == mcRun)
+ 296          //        {
+ 297          //          if(mcFocCtrl.TPCtrlDealy > 0)         mcFocCtrl.TPCtrlDealy--;
+ 298          //        }
+ 299          
+ 300          //        #if (FRDetectMethod==FOCMethod)
+ 301          //            FOCTailWindTimeLimit();
+ 302          //        #endif
+ 303          
+ 304          //        /*****µç»úÆô¶¯ÅÀÆÂº¯Êý´¦Àí*****/
+ 305          //        StarRampDealwith();
+ 306          
+ 307          //        ClrBit(DRV_SR, SYSTIF);                                                 // ÇåÁã±êÖ¾Î»
+ 308          //    }
+ 309          //    
+ 310          //    
+ 311          //    
+ 312          //    if(ReadBit(TIM4_CR1, T4IR))
+ 313          //    {
+ 314          //      ClrBit(TIM4_CR1, T4IR);
+ 315          //    }
+ 316          //    if(ReadBit(TIM4_CR1, T4IP))                                                  //ÖÜÆÚÖÐ¶Ï
+ 317          //    {
+ 318          //      ClrBit(TIM4_CR1, T4IP);
+ 319          //    }
+ 320          //    if(ReadBit(TIM4_CR1, T4IF))
+ 321          //    {
+ 322          //      ClrBit(TIM4_CR1, T4IF);
+ 323          //    }
+ 324          //}
+ 325          
+ 326          /*---------------------------------------------------------------------------*/
+ 327          /* Name     :   void USART_INT(void) interrupt 12
+ 328          /* Input    :   NO
+ 329          /* Output   :   NO
+ 330          /* Description: ´®¿ÚÖÐ¶Ï£¬ÖÐ¶ÏÓÅÏÈ¼¶×îµÍ£¬ÓÃÓÚ½ÓÊÕµ÷ËÙÐÅºÅ,ÎÞÖÐ¶Ï²åÈëÊ±8us
+ 331          /*---------------------------------------------------------------------------*/
+ 332          //void USART_INT(void)  interrupt 12
+ 333          //{
+ 334          //    if(RI == 1)
+ 335          //    {
+ 336          //        RI = 0;
+ 337          //        Uart.Uredata= UT_DR;                                                    //¶Á½ÓÊÕÊý¾Ý
+ 338          //    }
+ 339          //}
+ 340          
+ 341          /* Private variables ----------------------------------------------------------------------------*/
+ 342          void INT0(void) interrupt 0
+ 343          {
+ 344   1      }
+ 345          void INT5(void) interrupt 5
+ 346          {
+ 347   1      }
+ 348          void INT6(void) interrupt 6
+ 349          {
+C51 COMPILER V9.60.7.0   INTERRUPT                                                         02/24/2024 10:00:28 PAGE 7   
+
+ 350   1      }
+ 351          void INT8(void) interrupt 8
+ 352          {
+ 353   1      }
+ 354          void INT11(void) interrupt 11
+ 355          {
+ 356   1      }
+ 357          void INT13(void) interrupt 13
+ 358          {
+ 359   1      }
+ 360          void INT14(void) interrupt 14
+ 361          {
+ 362   1      }
+ 363          void INT15(void) interrupt 15
+ 364          {
+ 365   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     99    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =     10    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

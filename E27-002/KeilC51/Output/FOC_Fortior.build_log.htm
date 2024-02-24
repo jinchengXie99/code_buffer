@@ -1,0 +1,125 @@
+<html>
+<body>
+<pre>
+<h1>µVision Build Log</h1>
+<h2>Tool Versions:</h2>
+IDE-Version: ¦ÌVision V5.36.0.0
+Copyright (C) 2021 ARM Ltd and ARM Germany GmbH. All rights reserved.
+License Information: xie jincheng, cds, LIC=MPY9Q-KGPD6-99IDP-K9CZ2-7SS20-4FUWB
+ 
+Tool Versions:
+Toolchain:       PK51 Prof. Developers Kit: 3 user  Version: 9.60.7.0
+Toolchain Path:  C:\Keil_v5\C51\BIN
+C Compiler:      C51.exe V9.60.7.0
+Assembler:       A51.exe V8.2.7.0
+Linker/Locator:  LX51.exe V4.66.100.0
+Library Manager: LIBX51.exe V4.30.1.0
+Hex Converter:   OHX51.exe V1.47.0.0
+CPU DLL:         S8051.DLL V3.125.1.0
+Dialog DLL:      DCYG.DLL V2.75.1.0
+Target DLL:      Fice.dll V1.00
+Dialog DLL:      TCYG.DLL V2.72.1.0
+ 
+<h2>Project:</h2>
+D:\work\code_buffer\E27-002\KeilC51\FOC_Fortior.uvproj
+Project File Date:  02/24/2024
+
+<h2>Output:</h2>
+Build target 'FU68XX_FOC'
+compiling UserDryer.c...
+linking...
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  CalSpeedStepToCmd
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserDryer.obj (USERDRYER)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  LoopProPer1ms
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserFrame.obj (USERFRAME)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  CalHeatStepToCmd
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserDryer.obj (USERDRYER)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  DryerFlashInit
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserFlash.obj (USERFLASH)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  UserParas
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserFrame.obj (USERFRAME)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  Regulation
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  CommandPer10ms
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserFrame.obj (USERFRAME)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  CalCoolLvToCmd
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserDryer.obj (USERDRYER)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  FlashLoopPro
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserFlash.obj (USERFLASH)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  DryerPer1ms
+    MODULE:  .\Output\UserMain.obj (USERMAIN)
+   DEFINED:  .\Output\UserDryer.obj (USERDRYER)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  ShutPerform
+    MODULE:  .\Output\UserInterrupt.obj (USERINTERRUPT)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  SetFaultResatrt
+    MODULE:  .\Output\UserInterrupt.obj (USERINTERRUPT)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  CheckCurrent
+    MODULE:  .\Output\UserInterrupt.obj (USERINTERRUPT)
+   DEFINED:  .\Output\UserCalculate.obj (USERCALCULATE)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  ShutPerform
+    MODULE:  .\Output\UserFrame.obj (USERFRAME)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  SetFaultResatrt
+    MODULE:  .\Output\UserFrame.obj (USERFRAME)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  CancleResatrt
+    MODULE:  .\Output\UserFrame.obj (USERFRAME)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  CheckHeatTemper
+    MODULE:  .\Output\UserFrame.obj (USERFRAME)
+   DEFINED:  .\Output\UserCalculate.obj (USERCALCULATE)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  CheckStallFault
+    MODULE:  .\Output\UserFrame.obj (USERFRAME)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  CheckStartFault
+    MODULE:  .\Output\UserFrame.obj (USERFRAME)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  ShutPerform
+    MODULE:  .\Output\UserCalculate.obj (USERCALCULATE)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  SetFaultResatrt
+    MODULE:  .\Output\UserCalculate.obj (USERCALCULATE)
+   DEFINED:  .\Output\UserAddFunc.obj (USERADDFUNC)
+*** WARNING L25: DATA TYPES DIFFERENT
+    SYMBOL:  DryerKeysDefault
+    MODULE:  .\Output\UserFlash.obj (USERFLASH)
+   DEFINED:  .\Output\UserDryer.obj (USERDRYER)
+Program Size: data=198.7 xdata=704 const=0 code=13812
+creating hex file from ".\Output\FOC_Fortior"...
+".\Output\FOC_Fortior" - 0 Error(s), 22 Warning(s).
+Build Time Elapsed:  00:00:01
+</pre>
+</body>
+</html>

@@ -1,0 +1,159 @@
+C51 COMPILER V9.60.7.0   GPIOINIT                                                          02/24/2024 10:00:32 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE GPIOINIT
+OBJECT MODULE PLACED IN .\Output\GPIOInit.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Hardware\GPIOInit.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE(5
+                    -,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\GPIOInit.lst) TAB
+                    -S(2) OBJECT(.\Output\GPIOInit.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2017 Fortiortech shenzhen *****************************
+   2          * File Name          : GPIOInit.c
+   3          * Author             : Fortiortech  Appliction Team
+   4          * Version            : V1.0
+   5          * Date               : 010-Apr-2017
+   6          * Description        : This file contains GPIO initial function used for Motor Control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/
+  10          
+  11          /* Includes -------------------------------------------------------------------------------------*/
+  12          #include <FU68xx_2.h>
+  13          #include <Myproject.h>
+  14          
+  15          /*-------------------------------------------------------------------------------------------------
+  16            Function Name :  void GPIO_Default_Init(void)
+  17            Description   :  为提高芯片的抗干扰能力，降低芯片功耗，请在具体项目时，将不
+             -需要用的GPIO默认都配置为输入上拉。
+  18            Input         :  无
+  19            Output        :  无
+  20          -------------------------------------------------------------------------------------------------*/
+  21          void GPIO_Default_Init(void)//为提高芯片的抗干扰能力，降低芯片功耗，请在具体项目�
+             -��，将不需要用的GPIO默认都配置为输入上拉。
+  22          {
+  23   1        P2_OE = 0;
+  24   1        P2_PU = P21|P22|P23|P24|P25|P26|P27;      // 需确认这些端口能接受上拉
+  25   1        
+  26   1        P3_OE = 0;
+  27   1        P3_PU = P30|P31|P32|P33|P34|P35|P36|P37;  // 需确认这些端口能接受上拉
+  28   1        
+  29   1        P0_OE = 0;
+  30   1        P0_PU = P00|P01|P02|P03|P04|P05|P06|P07;  // 需确认这些端口能接受上拉
+  31   1        
+  32   1        P1_OE = 0;
+  33   1        P1_PU = P10|P11|P12|P13|P14|P15|P16|P17;  // 需确认这些端口能接受上拉
+  34   1        
+  35   1        P4_OE = 0;
+  36   1        P4_PU = P40|P41;                          // 使用步进电机时，P40，P41不能配置输入上拉�
+             -�上拉会导致直通
+  37   1        
+  38   1      }
+  39          
+  40          /*-------------------------------------------------------------------------------------------------
+  41            Function Name :  void GPIO_Init(void)
+  42            Description   :  GPIO初始化配置,可将I/O口配置成输入或输出模式，上拉还是不上拉�
+             -��模拟输出还是数字输出
+  43            Input         :  无
+  44            Output        :  无
+  45          -------------------------------------------------------------------------------------------------*/
+  46          void GPIO_Init(void)
+  47          {
+  48   1        SetBit(P0_PU, P05);            // LOCK
+  49   1        SetBit(P0_PU, P06);            // GO
+C51 COMPILER V9.60.7.0   GPIOINIT                                                          02/24/2024 10:00:32 PAGE 2   
+
+  50   1        
+  51   1        SetBit(P3_OE, P36);            // LED1
+  52   1        GP36 = 1;
+  53   1        SetBit(P3_OE, P37);            // LED2
+  54   1        GP37 = 1;
+  55   1        SetBit(P0_OE, P00);            // LED3
+  56   1        GP00 = 1;
+  57   1        SetBit(P0_OE, P01);            // LED4
+  58   1        GP01 = 1;
+  59   1        SetBit(P0_OE, P02);            // LED5
+  60   1        GP02 = 1;
+  61   1        SetBit(P0_OE, P03);            // LED6
+  62   1        GP03 = 1;
+  63   1        
+  64   1        SetBit(P1_OE, P10);            // 发热丝输出位 1
+  65   1        SetBit(P1_PU, P10);            // 
+  66   1        GP10 = 1;    
+  67   1        SetBit(P1_OE, P11);            // 发热丝输出位 2
+  68   1        SetBit(P1_PU, P11);            // 
+  69   1        GP11 = 1;   
+  70   1        
+  71   1        ClrBit(P1_OE, P17);            // SW1
+  72   1        SetBit(P1_PU, P17);            // 
+  73   1        ClrBit(P1_OE, P15);            // SW2
+  74   1        SetBit(P1_PU, P15);            // 
+  75   1        ClrBit(P1_OE, P13);            // SW3
+  76   1        SetBit(P1_PU, P13);            // 
+  77   1        
+  78   1        
+  79   1      //  SetBit(P3_OE, P36);            // 
+  80   1      //  SetBit(P3_PU, P36);            // LED1
+  81   1      //  GP36 = 1;
+  82   1      //  SetBit(P3_OE, P37);            // 
+  83   1      //  SetBit(P3_PU, P37);            // LED2
+  84   1      //  GP37 = 1;
+  85   1      //  SetBit(P0_OE, P00);            // 
+  86   1      //  SetBit(P0_PU, P00);            // LED3
+  87   1      //  GP00 = 1;
+  88   1      //  SetBit(P0_OE, P01);            // 
+  89   1      //  SetBit(P0_PU, P01);            // LED4
+  90   1      //  GP01 = 1;
+  91   1      //  SetBit(P0_OE, P02);            // 
+  92   1      //  SetBit(P0_PU, P02);            // LED5
+  93   1      //  GP02 = 1;
+  94   1      //  SetBit(P0_OE, P03);            // 
+  95   1      //  SetBit(P0_PU, P03);            // LED6
+  96   1      //  GP03 = 1;                      //LED初始化，先关断
+  97   1      //  
+  98   1      //  ClrBit(P0_OE, P06);            // 
+  99   1      //  SetBit(P0_PU, P06);            // 开机
+ 100   1      //  
+ 101   1      //  ClrBit(P0_OE, P05);            // 
+ 102   1      //  SetBit(P0_PU, P05);            // LOCK,锁定档位
+ 103   1      //  
+ 104   1      //  ClrBit(P1_OE, P10);            // 
+ 105   1      //  SetBit(P1_PU, P10);            // 
+ 106   1      //  GP10 = 1;    
+ 107   1      //  SetBit(P1_OE, P11);            // 
+ 108   1      //  SetBit(P1_PU, P11);            // 发热丝输出位
+ 109   1      //  GP11 = 1;   
+ 110   1      
+ 111   1      //  SetBit(P2_OE, P22);            // 
+C51 COMPILER V9.60.7.0   GPIOINIT                                                          02/24/2024 10:00:32 PAGE 3   
+
+ 112   1      //  SetBit(P2_PU, P22);            // 
+ 113   1      //  GP22 = 1;                      // FLZ
+ 114   1      
+ 115   1      //  ClrBit(P1_OE, P17);            // 
+ 116   1      //  SetBit(P1_PU, P17);            // SW1
+ 117   1      //  ClrBit(P1_OE, P15);            // 
+ 118   1      //  SetBit(P1_PU, P15);            // SW2
+ 119   1      //  ClrBit(P1_OE, P13);            // 
+ 120   1      //  SetBit(P1_PU, P13);            // SW3
+ 121   1      }
+ 122          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    124    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

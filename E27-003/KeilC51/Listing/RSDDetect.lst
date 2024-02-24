@@ -1,0 +1,422 @@
+C51 COMPILER V9.60.7.0   RSDDETECT                                                         02/24/2024 10:00:31 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE RSDDETECT
+OBJECT MODULE PLACED IN .\Output\RSDDetect.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Function\RSDDetect.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE(
+                    -5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\RSDDetect.lst) T
+                    -ABS(2) OBJECT(.\Output\RSDDetect.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2017 Fortiortech shenzhen *****************************
+   2          * File Name          : RSDDetect.c
+   3          * Author             : Fortiortech  Appliction Team
+   4          * Version            : V1.0
+   5          * Date               : 10-Apr-2017
+   6          * Description        : This file contains init speed detection used for Motor Control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/
+  10          
+  11          
+  12          /* Includes -------------------------------------------------------------------------------------*/
+  13          #include <FU68xx_2.h>
+  14          #include <Myproject.h>
+  15          
+  16          /* Private typedef ------------------------------------------------------------------------------*/
+  17          /* Private define -------------------------------------------------------------------------------*/
+  18          /* Private macro --------------------------------------------------------------------------------*/
+  19          /* Private variables ----------------------------------------------------------------------------*/
+  20          /* Private function prototypes ------------------------------------------------------------------*/
+  21          /* Private functions ----------------------------------------------------------------------------*/
+  22          
+  23          /*---------------------------------------------------------------------------*/
+  24          /* Name    :  void RSDDetectInit(void)
+  25          /* Input  :  NO
+  26          /* Output  :  NO
+  27          /* Description:  RSD³õÊ¼»¯
+  28          /*---------------------------------------------------------------------------*/
+  29          void RSDDetectInit(void)
+  30          {
+  31   1        MOE = 0;
+  32   1      
+  33   1        RSDDetect.RSDStepTime[0]= 0;
+  34   1        RSDDetect.RSDStepTime[1]= 0;
+  35   1        RSDDetect.RSDStepTime[2]= 0;
+  36   1        RSDDetect.RSDStepTime[3]= 0;
+  37   1        RSDDetect.RSDTimes   = 0;
+  38   1        RSDDetect.RSDPeriod  = 0;
+  39   1        RSDDetect.RSDCount   = 0;
+  40   1        RSDDetect.RSDState   = Static;
+  41   1        RSDDetect.RSDSpeed   = 0;
+  42   1        RSDDetect.RSDDIR     = 0;
+  43   1        RSDDetect.RSDFlag    = 0;
+  44   1        RSDDetect.RSDStep    = 0;
+  45   1        RSDDetect.RSDBRFlag  = 0;
+  46   1          
+  47   1        ClrBit(DRV_CR, FOCEN);  // ¹Ø±ÕFOC
+  48   1        
+  49   1        CMP_RSD_Init();
+  50   1        Time2_RSD_Init();       // RSDÓÃµÄÊÇTime2
+  51   1      }
+  52          /*---------------------------------------------------------------------------*/
+  53          /* Name    :  void CMP_RSD_Init(void)
+C51 COMPILER V9.60.7.0   RSDDETECT                                                         02/24/2024 10:00:31 PAGE 2   
+
+  54          /* Input  :  NO
+  55          /* Output  :  NO
+  56          /* Description:  RSD¶ÔCMPµÄ³õÊ¼»¯
+  57          /*---------------------------------------------------------------------------*/
+  58          void CMP_RSD_Init(void)
+  59          {
+  60   1      /*-------------------------------------------------------------------------------------------------
+  61   1        CMP Input Pin Mode
+  62   1         P1.4--CMP0_IN+, P1.6--CMP1_IN+, P2.1--CMP2_IN+
+  63   1         P1.5--CMP0_IN-, P1.7--CMP1_IN-, P2.2--CMP2_IN-
+  64   1         P1.3--CMP1P2
+  65   1      -------------------------------------------------------------------------------------------------*/
+  66   1        SetBit(P1_AN, P14 | P15 | HBMOD);                                   // 
+  67   1        ClrBit(P1_OE,P13);
+  68   1      /*-------------------------------------------------------------------------------------------------
+  69   1        CMP0_MOD£º
+  70   1        00£º  ÎÞÄÚÖÃÐéÄâÖÐÐÄµãµç×èµÄBEMFÄ£Ê½
+  71   1        01£º  ÄÚÖÃÐéÄâÖÐÐÄµãµç×èµÄBEMFÄ£Ê½
+  72   1        10£º  3²î·Ö±È½ÏÆ÷Ä£Ê½
+  73   1        11£º  2±È½ÏÆ÷Ä£Ê½RSD
+  74   1      -------------------------------------------------------------------------------------------------*/
+  75   1        SetReg(CMP_CR2, CMP0MOD0 | CMP0MOD1, CMP0MOD0 | CMP0MOD1);
+  76   1      
+  77   1      /*-------------------------------------------------------------------------------------------------
+  78   1        ±È½ÏÆ÷Êä³öÑ¡ÔñÅäÖÃ£¬ÓëCMP0_MODÅäºÏÊ¹ÓÃ
+  79   1        CMP0_SEL[1:0]=00£¬±È½ÏÆ÷0¹¤×÷ÔÚ2±È½ÏÆ÷ÂÖÑ¯Ä£Ê½£¬Õý¶ËÔÚCMP0P¡¢CMP1P2Ö®¼ä×Ô¶¯ÂÖÁ÷Ñ¡Ôñ£¬¸º¶Ë¹Ì¶¨½ÓCMP0M£¬
+  80   1                          ÆäÊä³ö½á¹û·Ö±ðËÍÖÁCMP0_OUT¡¢CMP1_OUT
+  81   1        CMP0_SEL[1:0]=01£¬±È½ÏÆ÷0Ñ¡ÔñCMP0¶ÔÓ¦µÄ¶Ë¿Ú×éºÏ£¬¼´Õý¶Ë½ÓCMP0P£¬¸º¶Ë½ÓCMP0M£¬Êä³ö½ÓCMP0_OUT
+  82   1        CMP0_SEL[1:0]=10£¬±È½ÏÆ÷0Ñ¡ÔñCMP1¶ÔÓ¦µÄ¶Ë¿Ú×éºÏ£¬¼´Õý¶Ë½ÓCMP1P2£¬¸º¶Ë½ÓCMP0M£¬Êä³ö½ÓCMP1_OUT
+  83   1      -----------------------------------------------------------------------------*/
+  84   1        SetReg(CMP_CR2, CMP0SEL0 | CMP0SEL1, 0x00);
+  85   1      
+  86   1      /*-------------------------------------------------------------------------------------------------
+  87   1        ±È½ÏÆ÷³ÙÖÍµçÑ¹Ñ¡Ôñ
+  88   1        000: ÎÞ³ÙÖÍ   001: ¡À2.5mV   010: -5mV   011: +5mV
+  89   1        100: +-5mV   101: -10mV   110: +10mV   111: +-10mV
+  90   1      -------------------------------------------------------------------------------------------------*/
+  91   1        SetReg(CMP_CR1, CMP0HYS0 | CMP0HYS1 | CMP0HYS2, CMP0HYS0 | CMP0HYS1 | CMP0HYS2 );
+  92   1      
+  93   1      /*-------------------------------------------------------------------------------------------------
+  94   1        CMP0µÄÂÖÑ¯Ê±¼äÉèÖÃ
+  95   1      -------------------------------------------------------------------------------------------------*/
+  96   1        SetReg(CMP_CR1, CMP0CSEL0 | CMP0CSEL1, 0x00);
+  97   1      
+  98   1        EA = 0;
+  99   1      
+ 100   1      /**------------------------------------------------------
+ 101   1      Ê¹ÄÜ±È½ÏÆ÷CMP0,CMP1,CMP2ºÍADCÔÚpwm on/off²ÉÑù¹¦ÄÜ
+ 102   1      
+ 103   1      00£ºÔÚonºÍoff¾ù²ÉÑù£¬Ã»ÓÐÑÓ³Ù²ÉÑù¿ªÆô
+ 104   1      01£ºÖ»ÔÚoff²ÉÑù£¬¸ù¾ÝCMP_SAMRÑÓ³Ù²ÉÑù¿ªÆô
+ 105   1      10£ºÖ»ÔÚon²ÉÑù£¬¸ù¾ÝCMP_SAMRÑÓ³Ù²ÉÑù¿ªÆô
+ 106   1      11£ºÔÚonºÍoff¾ù²ÉÑù£¬¸ù¾ÝCMP_SAMRÑÓ³Ù²ÉÑù¿ªÆô
+ 107   1      ---------------------------------------------------------**/
+ 108   1        SetReg(CMP_CR3, SAMSEL0 | SAMSEL1, 0);
+ 109   1      
+ 110   1        /**²ÉÑùÑÓ³ÙÉèÖÃ**/
+ 111   1        CMP_SAMR = 0x10;
+ 112   1      
+ 113   1        SetBit(CMP_CR2, CMP0EN);//Ê¹ÄÜ±È½ÏÆ÷
+ 114   1      }
+ 115          /*---------------------------------------------------------------------------*/
+C51 COMPILER V9.60.7.0   RSDDETECT                                                         02/24/2024 10:00:31 PAGE 3   
+
+ 116          /* Name    :  void Time2_RSD_Init(void)
+ 117          /* Input  :  NO
+ 118          /* Output  :  NO
+ 119          /* Description:  RSD¶ÔÓ¦Time2µÄ³õÊ¼»¯
+ 120          /*---------------------------------------------------------------------------*/
+ 121          void Time2_RSD_Init(void)
+ 122          {
+ 123   1        /*-------------------------------------------------------------------------------------------------
+ 124   1        ÏÈÍ£Ö¹¼ÆÊý£¬ÅäÖÃÍê¼Ä´æÆ÷ºó£¬×îºóÆô¶¯¼ÆÊý
+ 125   1      -------------------------------------------------------------------------------------------------*/
+ 126   1        ClrBit(TIM2_CR1, T2EN);                                 // 0£¬Í£Ö¹¼ÆÊý£»1,Ê¹ÄÜ¼ÆÊý
+ 127   1      
+ 128   1      /*-------------------------------------------------------------------------------------------------
+ 129   1        Ê±ÖÓ·ÖÆµÉèÖÃ(T2PSC)
+ 130   1        000:cpuclk(24MHz)      001:cpuclk/2^1(12MHz)  010:cpuclk/2^2(6MHz)  011:cpuclk/2^3(3MHz)
+ 131   1        100:cpuclk/2^4(1.5MHz)  101:cpuclk/2^5(750KHz)  110:cpuclk/2^6(375KHz)  111:cpuclk/2^7(187.5KHz)
+ 132   1      -------------------------------------------------------------------------------------------------*/
+ 133   1        SetReg(TIM2_CR0, T2PSC0 | T2PSC1 | T2PSC2, T2PSC0 | T2PSC1 | T2PSC2);
+ 134   1      
+ 135   1        /*-------------------------------------------------------------------------------------------------
+ 136   1        /Ä£Ê½Ñ¡Ôñ
+ 137   1        T2MODE1£¬T2MODE0
+ 138   1        00--ÊäÈëTimerÄ£Ê½£»01--Êä³öÄ£Ê½
+ 139   1        10--ÊäÈëCountÄ£Ê½£»11--QEP»òÕßRSDÄ£Ê½
+ 140   1      -------------------------------------------------------------------------------------------------*/
+ 141   1        SetReg(TIM2_CR0, T2MOD0 | T2MOD1, T2MOD0 | T2MOD1);
+ 142   1      
+ 143   1        SetBit(TIM2_CR1, T2FE);                               // ÂË²¨Ê¹ÄÜ
+ 144   1      /*-------------------------------------------------------------------------------------------------
+ 145   1        Çå³ýÖÐ¶Ï±êÖ¾Î»
+ 146   1        ½ûÖ¹PWMÖÜÆÚ¼ì²âÖÐ¶ÏÊ¹ÄÜ
+ 147   1        Ê¹ÄÜ¼ÆÊýÆ÷ÉÏÒçÖÐ¶ÏÊ¹ÄÜ
+ 148   1      -------------------------------------------------------------------------------------------------*/
+ 149   1        ClrBit(TIM2_CR1, T2IR | T2IF | T2IP);                       // Çå³ýÖÐ¶Ï±êÖ¾Î»
+ 150   1        ClrBit(TIM2_CR0, T2CES | T2IRE);                               // ÇåÁãÂö³å¼ÆÊýÆ÷²»Ê¹ÄÜ
+ 151   1        SetBit(TIM2_CR1, T2IPE | T2IFE);                               // ÊäÈëÓÐÐ§±ßÑØ±ä»¯ÖÐ¶ÏÊ¹ÄÜºÍ»ù±¾¼ÆÊýÆ÷ÉÏ
+             -ÒçÊ¹ÄÜ
+ 152   1        /*-------------------------------------------------------------------------------------------------
+ 153   1        ¶¨Ê±Æ÷2ÖÐ¶ÏÓÅÏÈ¼¶ÅäÖÃ¼°Ð¾Æ¬ÖÐ¶Ï×ÜÊ¹ÄÜ
+ 154   1        PTIM231-PTIM230£¬ÖÐ¶ÏÓÅÏÈ¼¶¿ØÖÆÖµ´Ó0-3ÒÀ´Î±íÊ¾ÓÅÏÈ¼¶´Ó×îµÍµ½×î¸ß£¬¹²4¼¶ÓÅ»¯¼¶¿ØÖÆ
+ 155   1        EA,Ð¾Æ¬ÖÐ¶Ï×ÜÊ¹ÄÜ
+ 156   1      -------------------------------------------------------------------------------------------------*/
+ 157   1        PTIM21 = 1;
+ 158   1        PTIM20 = 0;                                             // TIM2/2ÖÐ¶ÏÓÅÏÈ¼¶±ðÎª2
+ 159   1        EA = 1;
+ 160   1      /*-------------------------------------------------------------------------------------------------
+ 161   1        ÅäÖÃÖÜÆÚÖµ¡¢±È½ÏÖµ¡¢¼ÆÊýÖµ
+ 162   1      -------------------------------------------------------------------------------------------------*/
+ 163   1        TIM2__CNTR = 0;
+ 164   1        
+ 165   1      /*-----------Æô¶¯¼ÆÊý------------------------------------------------*/
+ 166   1        SetBit(TIM2_CR1, T2EN);                               //Æô¶¯¼ÆÊý
+ 167   1      }
+ 168          /*---------------------------------------------------------------------------*/
+ 169          /* Name    :  void RSDDetect(void)
+ 170          /* Input  :  NO
+ 171          /* Output  :  NO
+ 172          /* Description:  RSD¼ì²â£¬ÅÐ¶ÏÕý×ª»¹ÊÇ·´×ª
+ 173          /*---------------------------------------------------------------------------*/
+ 174          void RSDFRDetect(void)
+ 175          {
+ 176   1        RSDDetect.RSDCount=TIM2__CNTR;//×¢ÒâRSDCountÐèÎªIDATAÊý¾ÝÀàÐÍ
+C51 COMPILER V9.60.7.0   RSDDETECT                                                         02/24/2024 10:00:31 PAGE 4   
+
+ 177   1         if(RSDDetect.RSDCount < -7)//Õý×ª
+ 178   1         {
+ 179   2           RSDDetect.RSDPeriod=(RSDDetect.RSDStepTime[0]+RSDDetect.RSDStepTime[1]+RSDDetect.RSDStepTime[2]+RSDDe
+             -tect.RSDStepTime[3])>>2;
+ 180   2           RSDDetect.RSDDIR=ReadBit(TIM2_CR1,T2DIR);
+ 181   2           ClrBit(TIM2_CR1, T2EN);  //¹Øµô¶¨Ê±Æ÷2
+ 182   2           RSDDetect.RSDState=Forward;
+ 183   2           RSDDetect.RSDFlag=1;
+ 184   2         }
+ 185   1         else if(RSDDetect.RSDCount > 7)//·´×ª
+ 186   1         {
+ 187   2           RSDDetect.RSDPeriod=(RSDDetect.RSDStepTime[0]+RSDDetect.RSDStepTime[1]+RSDDetect.RSDStepTime[2]+RSDDe
+             -tect.RSDStepTime[3])>>2;
+ 188   2           RSDDetect.RSDDIR=ReadBit(TIM2_CR1,T2DIR);
+ 189   2           ClrBit(TIM2_CR1, T2EN);  //¹Øµô¶¨Ê±Æ÷2        
+ 190   2           RSDDetect.RSDState=Reverse;
+ 191   2           RSDDetect.RSDFlag=1;
+ 192   2         }
+ 193   1         else//¶à´ÎÅÐ¶Ï
+ 194   1         {
+ 195   2            RSDDetect.RSDStepTime[RSDDetect.RSDStep]=TIM2__ARR;//½«±È½ÏÆ÷µÄ¶ÁÖµ¸øRSDStep
+ 196   2            RSDDetect.RSDStep++;
+ 197   2            if(RSDDetect.RSDStep>3)
+ 198   2            {
+ 199   3              RSDDetect.RSDStep=0;
+ 200   3            }
+ 201   2         }
+ 202   1         RSDDetect.RSDTimes++;//¶à´ÎÖÐ¶Ï£¬µ«ÓÖÃ»ÓÐÌøÈëÕý·´×ª
+ 203   1         if(RSDDetect.RSDTimes>15)
+ 204   1         {
+ 205   2            RSDDetect.RSDState=Static;
+ 206   2            RSDDetect.RSDFlag=1;
+ 207   2         }
+ 208   1      }
+ 209          /*---------------------------------------------------------------------------*/
+ 210          /* Name    :  void RSDDealwith(void)
+ 211          /* Input  :  NO
+ 212          /* Output  :  NO
+ 213          /* Description:  RSD´¦Àí·½Ê½
+ 214          /*---------------------------------------------------------------------------*/
+ 215          void RSDDealwith(void)
+ 216          {
+ 217   1        if(RSDDetect.RSDFlag==1)
+ 218   1        {
+ 219   2          if(RSDDetect.RSDState != Static)//´¦ÀíËÙ¶È
+ 220   2          {
+ 221   3             RSDDetect.RSDSpeedBase=RSDSpeedBaseStep;
+ 222   3             RSDDetect.RSDPeriod+=1;
+ 223   3             RSDDetect.RSDSpeed  = MDU_DIV_IDATA_U32(&RSDDetect.RSDSpeedBase,&RSDDetect.RSDPeriod);//Q¸ñÊ½µÄËÙ¶È
+             -,´Ë´¦³ý·¨Æ÷Óë¹ýµ÷Öµ²»³åÍ»
+ 224   3          }
+ 225   2          if (((RSDDetect.RSDState==Reverse)&&(RSDDetect.RSDDIR==0x00))&&(RSDDetect.RSDSpeed>_Q15(80.0/MOTOR_SPE
+             -ED_BASE))&&(RSDDetect.RSDCCWTimes<4))//·´×ª³¬¹ýÒ»¶¨ËÙ¶È£¬ÇÒÉ²³µ´ÎÊýÐ¡ÓÚ4´ÎÊ±£¬½øÈë
+ 226   2          {
+ 227   3              mcFocCtrl.State_Count=1000;
+ 228   3              McStaSet.SetFlag.TailWindSetFlag=0;
+ 229   3              MOE = 0;
+ 230   3              DRV_DR = DRV_ARR+1;
+ 231   3              DRV_CMR &= 0xFFC0;
+ 232   3              DRV_CMR |= 0x015;                         // ÈýÏàÏÂÇÅ±ÛÍ¨£¬É²³µ
+ 233   3              ClrBit(DRV_CR, OCS);//OCS = 0, DRV_COMR;OCS = 1, FOC/SVPWM/SPWM
+ 234   3              MOE = 1;
+C51 COMPILER V9.60.7.0   RSDDETECT                                                         02/24/2024 10:00:31 PAGE 5   
+
+ 235   3              
+ 236   3              if(RSDDetect.RSDSpeed > _Q15(200.0/MOTOR_SPEED_BASE))//ËÙ¶È³¬¹ýÒ»¶¨ÖµÊ±£¬É²³µ£¬ÇÒÖÃ±êÖ¾Î»£¬ÔÚÆô¶¯Ê
+             -±£¬¸ù¾Ý²»Í¬ËÙ¶ÈÉèÖÃ²»Í¬Æô¶¯µçÁ÷
+ 237   3              {         
+ 238   4                mcFocCtrl.State_Count=1500;
+ 239   4                RSDDetect.RSDCCWFlag=1;
+ 240   4              }
+ 241   3              else
+ 242   3              {          
+ 243   4                mcFocCtrl.State_Count=800;
+ 244   4                if(RSDDetect.RSDCCWFlag==0)
+ 245   4                RSDDetect.RSDCCWFlag=2;
+ 246   4              }
+ 247   3             RSDDetect.RSDCCWTimes++;
+ 248   3             ClrBit(CMP_CR2, CMP0EN);                                //¹Ø±Õ±È½ÏÆ÷
+ 249   3             ClrBit(TIM2_CR1, T2EN);                                 // 0£¬Í£Ö¹¼ÆÊý£»1,Ê¹ÄÜ¼ÆÊý
+ 250   3          }
+ 251   2          else if ((RSDDetect.RSDState==Forward)&&(RSDDetect.RSDDIR==0x01))//Õý×ª
+ 252   2          {      
+ 253   3            RSDFOCCloseLoopStart();                              
+ 254   3            RSDCloseDeal();
+ 255   3      
+ 256   3            ClrBit(CMP_CR2, CMP0EN);                                 // ¹Ø±Õ±È½ÏÆ÷
+ 257   3            ClrBit(TIM2_CR1, T2EN);                                   // 0£¬Í£Ö¹¼ÆÊý£»1,Ê¹ÄÜ¼ÆÊý
+ 258   3          }
+ 259   2          else//ÆäËû£¬Èç¾²Ö¹
+ 260   2          {
+ 261   3            ClrBit(CMP_CR2, CMP0EN);                               // ¹Ø±Õ±È½ÏÆ÷
+ 262   3            ClrBit(TIM2_CR1, T2EN);                                 // 0£¬Í£Ö¹¼ÆÊý£»1,Ê¹ÄÜ¼ÆÊý
+ 263   3            if(RSDDetect.RSDCCWFlag!=0)
+ 264   3            {
+ 265   4               if(RSDDetect.RSDBRFlag==0)                          // É²³µ400ms£¬ÓÃÒÔÌá¸ßÄæ·çÇé¿öÏÂµÄ³É¹¦ÂÊ
+ 266   4               {
+ 267   5                RSDDetect.RSDCCWSBRCnt=400;
+ 268   5                MOE = 0;
+ 269   5                DRV_DR = DRV_ARR+1;
+ 270   5                DRV_CMR &= 0xFFC0;;
+ 271   5                DRV_CMR |= 0x015;                                  // ÈýÏàÏÂÇÅ±ÛÍ¨£¬É²³µ
+ 272   5                ClrBit(DRV_CR, OCS);                               // OCS = 0, DRV_COMR;OCS = 1, FOC/SVPWM/SPWM
+ 273   5                MOE = 1;
+ 274   5                RSDDetect.RSDBRFlag=1;
+ 275   5              }
+ 276   4            }
+ 277   3            if((RSDDetect.RSDCCWFlag==0)||(RSDDetect.RSDCCWSBRCnt==0))
+ 278   3            {        
+ 279   4              MOE = 0;
+ 280   4              mcState = mcPosiCheck;
+ 281   4              McStaSet.SetFlag.PosiCheckSetFlag  = 0;
+ 282   4              mcFocCtrl.mcPosCheckAngle          = 0xffff;      // ½Ç¶È¸³³õÖµ
+ 283   4            }    
+ 284   3          }
+ 285   2        }
+ 286   1      }
+ 287          
+ 288          /*---------------------------------------------------------------------------*/
+ 289          /* Name    :  void RSDFOCCloseLoopStart(void)
+ 290          /* Input  :  NO
+ 291          /* Output  :  NO
+ 292          /* Description:  ±Õ»·Æô¶¯
+ 293          /*---------------------------------------------------------------------------*/
+ 294          void RSDFOCCloseLoopStart(void)
+ 295          {
+C51 COMPILER V9.60.7.0   RSDDETECT                                                         02/24/2024 10:00:31 PAGE 6   
+
+ 296   1          /*FOC³õÊ¼»¯*/
+ 297   1          FOC_Init();
+ 298   1          /*Æô¶¯µçÁ÷¡¢KP¡¢KI*/
+ 299   1          FOC_IDREF = ID_Start_CURRENT;                         // DÖáÆô¶¯µçÁ÷
+ 300   1          mcFocCtrl.mcIqref= IQ_Start_CURRENT;                  // QÖáÆô¶¯µçÁ÷
+ 301   1          FOC_IQREF = mcFocCtrl.mcIqref;                        // QÖáÆô¶¯µçÁ÷
+ 302   1      
+ 303   1          FOC_DQKP = DQKP;
+ 304   1          FOC_DQKI = DQKI;
+ 305   1      
+ 306   1          FOC_EFREQACC   = Motor_Omega_Ramp_ACC;
+ 307   1          FOC_EFREQMIN   = Motor_Omega_Ramp_Min;
+ 308   1          FOC_EFREQHOLD = Motor_Omega_Ramp_End;
+ 309   1      
+ 310   1          SetBit(FOC_CR1,ANGM);                              // ¹ÀËãÄ£Ê½
+ 311   1          ClrBit(FOC_CR1,RFAE);                              // ½ûÖ¹Ç¿À­
+ 312   1          SetBit(FOC_CR1,EFAE);                              // ¹ÀËãÆ÷Ç¿ÖÆÊä³ö
+ 313   1      
+ 314   1          FOC__EOME=RSDDetect.RSDSpeed;
+ 315   1      
+ 316   1          if(RSDDetect.RSDSpeed>_Q15(2400.0/MOTOR_SPEED_BASE))
+ 317   1          {
+ 318   2            FOC__UQ=16000;//
+ 319   2          }  
+ 320   1          else if(RSDDetect.RSDSpeed>_Q15(1800.0/MOTOR_SPEED_BASE))
+ 321   1          {
+ 322   2            FOC__UQ=10000;//
+ 323   2          }  
+ 324   1          else if(RSDDetect.RSDSpeed>_Q15(1200.0/MOTOR_SPEED_BASE))
+ 325   1          {
+ 326   2            FOC__UQ=8000;//
+ 327   2          } 
+ 328   1          else if(RSDDetect.RSDSpeed>_Q15(200.0/MOTOR_SPEED_BASE))
+ 329   1          {
+ 330   2            FOC__UQ=4000;//
+ 331   2          }      
+ 332   1          FOC__UD=0;
+ 333   1          #if (EstimateAlgorithm == SMO)
+ 334   1          {
+ 335   2            //¸ù¾Ý²»Í¬×ªËÙÈ·Æô¶¯µÄATO_BWÖµ
+ 336   2            if(RSDDetect.RSDSpeed>_Q15(360.0/MOTOR_SPEED_BASE))
+ 337   2            {
+ 338   3              FOC_EKP                       = OBSW_KP_GAIN_RUN4;
+ 339   3              FOC_EKI                       = OBSW_KI_GAIN_RUN4;
+ 340   3              mcFocCtrl.mcIqref              = IQ_RUN_CURRENT;
+ 341   3              mcFocCtrl.State_Count         = 100;
+ 342   3            }
+ 343   2            else if(RSDDetect.RSDSpeed>_Q15(160.0/MOTOR_SPEED_BASE))
+ 344   2            {
+ 345   3              FOC_EKP                       = OBSW_KP_GAIN_RUN3;
+ 346   3              FOC_EKI                       = OBSW_KI_GAIN_RUN3;
+ 347   3              mcFocCtrl.mcIqref              = IQ_RUN_CURRENT;
+ 348   3              mcFocCtrl.State_Count         = 100;
+ 349   3            }
+ 350   2            else
+ 351   2            {
+ 352   3              FOC_EKP                        = OBSW_KP_GAIN_RUN2;
+ 353   3              FOC_EKI                       = OBSW_KI_GAIN_RUN2;
+ 354   3              mcFocCtrl.mcIqref              = IQ_RUN_CURRENT;
+ 355   3              mcFocCtrl.State_Count         = 100;
+ 356   3            }
+ 357   2          }
+C51 COMPILER V9.60.7.0   RSDDETECT                                                         02/24/2024 10:00:31 PAGE 7   
+
+ 358   1          #elif (EstimateAlgorithm == PLL)
+                  {
+                     FOC_EKP                          = OBSW_KP_GAIN_RUN4;
+                     FOC_EKI                         = OBSW_KI_GAIN_RUN4;
+                     mcFocCtrl.mcIqref              = IQ_RUN_CURRENT;
+                  }
+                  #endif //end   EstimateAlgorithm
+ 365   1          
+ 366   1          FOC_OMEKLPF                     = SPEED_KLPF;
+ 367   1          mcState                         = mcRun;
+ 368   1          mcFocCtrl.CtrlMode              = 0;
+ 369   1      
+ 370   1          /*Ê¹ÄÜÊä³ö*/
+ 371   1          DRV_CMR |= 0x3F;                         // U¡¢V¡¢WÏàÊä³ö
+ 372   1          MOE = 1;
+ 373   1          EA=1;
+ 374   1      }
+ 375          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =   1181    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
