@@ -26,9 +26,6 @@ del *.map /s
 del *.pmp /s
 del *.scvd /s
 del *.andrew /s
-del *.uvoptx* /s
-del *.uvguix.* /s
-del *.uvopt* /s
-del *.uvgui* /s
+
 
 exit
