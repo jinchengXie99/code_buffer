@@ -1,6 +1,6 @@
 .\obj\lks32mc03x_timer.o: LKS32MC03x_Periph_Driver\Source\lks32mc03x_timer.c
-.\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.0.9\Device\Include\lks32mc03x.h
-.\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.0.9\Device\Include\basic.h
+.\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h
+.\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\basic.h
 .\obj\lks32mc03x_timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdlib.h
 .\obj\lks32mc03x_timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\ctype.h
 .\obj\lks32mc03x_timer.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\stdio.h
@@ -12,8 +12,8 @@
 .\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\cmsis_armcc.h
 .\obj\lks32mc03x_timer.o: .\LKS32MC03x_Periph_Driver\include\lks32mc03x_timer.h
 .\obj\lks32mc03x_timer.o: .\LKS32MC03x_Periph_Driver\include\lks32mc03x_sys.h
-.\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.0.9\Device\Include\lks32mc03x.h
+.\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h
 .\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h
 .\obj\lks32mc03x_timer.o: .\LKS32MC03x_Periph_Driver\include\lks32mc03x_gpio.h
-.\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.0.9\Device\Include\lks32mc03x.h
+.\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h
 .\obj\lks32mc03x_timer.o: C:\Users\jincheng.xie\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h

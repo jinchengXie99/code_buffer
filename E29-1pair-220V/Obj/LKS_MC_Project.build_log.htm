@@ -17,17 +17,37 @@ Library Manager: ArmAr.exe V5.06 update 7 (build 960)
 Hex Converter:   FromElf.exe V5.06 update 7 (build 960)
 CPU DLL:         SARMCM3.DLL V5.36.0.0
 Dialog DLL:      DARMCM1.DLL V1.19.4.0
-Target DLL:      Segger\JL2CM3.dll V2.99.40.0
+Target DLL:      Segger\JL2CM3.dll V2.99.15.0
 Dialog DLL:      TARMCM1.DLL V1.14.4.0
  
 <h2>Project:</h2>
 D:\work\code_buffer\E29-1pair-220V\LK_StdPeriph.uvprojx
-Project File Date:  02/27/2024
+Project File Date:  02/28/2024
 
 <h2>Output:</h2>
 *** Using Compiler 'V5.06 update 7 (build 960)', folder: 'C:\Keil_v5\ARM\ARMCC\Bin'
 Build target 'Linko 03x Project'
-".\Obj\LKS_MC_Project.axf" - 0 Error(s), 0 Warning(s).
+compiling interrupt.c...
+compiling SignalChain_Sample.c...
+Kernal_Source\SignalChain_Sample.c(258): warning:  #177-D: variable "wAux"  was declared but never referenced
+      s32 wAux;
+Kernal_Source\SignalChain_Sample.c(259): warning:  #177-D: variable "hCurrC"  was declared but never referenced
+      s16 hCurrA = 0, hCurrB = 0, hCurrC = 0;
+Kernal_Source\SignalChain_Sample.c(261): warning:  #177-D: variable "bCurrASamp"  was declared but never referenced
+      u8 bCurrASamp = 0, bCurrBSamp = 0;
+Kernal_Source\SignalChain_Sample.c(261): warning:  #177-D: variable "bCurrBSamp"  was declared but never referenced
+      u8 bCurrASamp = 0, bCurrBSamp = 0;
+Kernal_Source\SignalChain_Sample.c: 4 warnings, 0 errors
+compiling main.c...
+compiling HeatControl.c...
+compiling fault_detection.c...
+compiling Task_Scheduler.c...
+compiling USER_APP.c...
+compiling state_machine.c...
+linking...
+Program Size: Code=23992 RO-data=3536 RW-data=300 ZI-data=3156  
+FromELF: creating hex file...
+".\Obj\LKS_MC_Project.axf" - 0 Error(s), 4 Warning(s).
 
 <h2>Software Packages used:</h2>
 
@@ -38,14 +58,14 @@ Package Vendor: ARM
    * Component: CORE Version: 5.5.0
 
 Package Vendor: Linko
-                https://www.lksmcu.com/index.php/LKS03Series/Linko.LKS03x.1.0.9.pack
-                Linko.LKS03x.1.0.9
+                https://www.lksmcu.com/index.php/LKS03Series/Linko.LKS03x.1.1.5.pack
+                Linko.LKS03x.1.1.5
                 LKS03 Device Family Pack
 
 <h2>Collection of Component include folders:</h2>
   .\RTE\_Linko_03x_Project
   C:\Users\jincheng.xie\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include
-  C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.0.9\Device\Include
+  C:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include
 
 <h2>Collection of Component Files used:</h2>
 
