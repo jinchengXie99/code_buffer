@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>LKS32MC038Y6P8</Device>
           <Vendor>Linko</Vendor>
-          <PackID>Linko.LKS03x.1.0.9</PackID>
+          <PackID>Linko.LKS03x.1.1.5</PackID>
           <PackURL>https://www.lksmcu.com/index.php/LKS03Series</PackURL>
           <Cpu>IRAM(0x20000000,0x1000) IROM(0x00000000,0x8000) CPUTYPE("Cortex-M0") CLOCK(12000000) ELITTLE</Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -133,7 +133,7 @@
             <UseExternalTool>0</UseExternalTool>
             <RunIndependent>0</RunIndependent>
             <UpdateFlashBeforeDebugging>1</UpdateFlashBeforeDebugging>
-            <Capability>0</Capability>
+            <Capability>1</Capability>
             <DriverSelection>4096</DriverSelection>
           </Flash1>
           <bUseTDR>1</bUseTDR>
@@ -186,6 +186,7 @@
             <RvdsVP>0</RvdsVP>
             <RvdsMve>0</RvdsMve>
             <RvdsCdeCp>0</RvdsCdeCp>
+            <nBranchProt>0</nBranchProt>
             <hadIRAM2>0</hadIRAM2>
             <hadIROM2>0</hadIROM2>
             <StupSel>8</StupSel>
