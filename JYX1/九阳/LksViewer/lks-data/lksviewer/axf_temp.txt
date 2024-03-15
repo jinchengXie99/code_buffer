@@ -1,0 +1,1015 @@
+
+========================================================================
+
+** ELF Header Information
+
+    File Name: F:/Progam/北钧/项目/杉川/主吸/产品程序/杉川硬件-V2.0/LKS03x_FOC_SensorLessV1.8_20220525_037demo_ds-0830/Obj/LKS_MC_Project.axf
+
+    Machine class: ELFCLASS32 (32-bit)
+    Data encoding: ELFDATA2LSB (Little endian)
+    Header version: EV_CURRENT (Current version)
+    Operating System ABI: none
+    ABI Version: 0
+    File Type: ET_EXEC (Executable) (2)
+    Machine: EM_ARM (ARM)
+
+    Image Entry point: 0x000000c1
+    Flags: EF_ARM_HASENTRY + EF_ARM_ABI_FLOAT_SOFT (0x05000202)
+
+    ARM ELF revision: 5 (ABI version 2)
+
+    Conforms to Soft float procedure-call standard
+
+    Built with
+    Component: ARM Compiler 5.06 update 7 (build 960) Tool: armasm [4d35fa]
+    Component: ARM Compiler 5.06 update 7 (build 960) Tool: armlink [4d3601]
+
+    Header size: 52 bytes (0x34)
+    Program header entry size: 32 bytes (0x20)
+    Section header entry size: 40 bytes (0x28)
+
+    Program header entries: 1
+    Section header entries: 16
+
+    Program header offset: 295164 (0x000480fc)
+    Section header offset: 295196 (0x0004811c)
+
+    Section header string table index: 15
+
+========================================================================
+
+** Program header #0 (PT_LOAD) [PF_X + PF_W + PF_R + PF_ARM_ENTRY]
+    Size : 26448 bytes (22864 bytes in file)
+    Virtual address: 0x00000000 (Alignment 8)
+
+
+========================================================================
+
+** Section #1 'ER_IROM1' (SHT_PROGBITS) [SHF_ALLOC + SHF_EXECINSTR]
+    Size   : 22680 bytes (alignment 4)
+    Address: 0x00000000
+
+
+** Section #2 'RW_IRAM1' (SHT_PROGBITS) [SHF_ALLOC + SHF_WRITE]
+    Size   : 184 bytes (alignment 4)
+    Address: 0x20000000
+
+
+** Section #3 'RW_IRAM1' (SHT_NOBITS) [SHF_ALLOC + SHF_WRITE]
+    Size   : 3584 bytes (alignment 8)
+    Address: 0x200000b8
+
+
+** Section #4 '.debug_abbrev' (SHT_PROGBITS)
+    Size   : 1476 bytes
+
+
+** Section #5 '.debug_frame' (SHT_PROGBITS)
+    Size   : 4780 bytes
+
+
+** Section #6 '.debug_info' (SHT_PROGBITS)
+    Size   : 107796 bytes
+
+
+** Section #7 '.debug_line' (SHT_PROGBITS)
+    Size   : 29636 bytes
+
+
+** Section #8 '.debug_loc' (SHT_PROGBITS)
+    Size   : 7592 bytes
+
+
+** Section #9 '.debug_macinfo' (SHT_PROGBITS)
+    Size   : 50744 bytes
+
+
+** Section #10 '.debug_pubnames' (SHT_PROGBITS)
+    Size   : 6982 bytes
+
+
+** Section #11 '.symtab' (SHT_SYMTAB)
+    Size   : 15840 bytes (alignment 4)
+    String table #12 '.strtab'
+    Last local symbol no. 640
+
+
+** Section #12 '.strtab' (SHT_STRTAB)
+    Size   : 12812 bytes
+
+
+** Section #13 '.note' (SHT_NOTE)
+    Size   : 28 bytes (alignment 4)
+
+
+** Section #14 '.comment' (SHT_PROGBITS)
+    Size   : 34404 bytes
+
+
+** Section #15 '.shstrtab' (SHT_STRTAB)
+    Size   : 156 bytes
+
+
+address     size       variable name                            type
+0x20000096  0x2        gBemfMeas                                INT16
+
+address     size       variable name                            type
+0x20000098  0x2        gFreqMsd                                 INT16
+
+address     size       variable name                            type
+0x00000000  0x2        gSetZero                                 INT16
+
+address     size       variable name                            type
+0x00000000  0x2        gSetZeroA                                INT16
+
+address     size       variable name                            type
+0x00000000  0x2        gSetZeroB                                INT16
+
+address     size       variable name                            type
+0x00000000  0x2        gSetZeroC                                INT16
+
+address     size       variable name                            type
+0x20000092  0x2        gVolMsdA                                 INT16
+
+address     size       variable name                            type
+0x20000094  0x2        gVolMsdB                                 INT16
+
+address     size       variable name                            type
+0x2000007a  0x2        g_AngleComp                              u16
+
+address     size       variable name                            type
+0x2000008e  0x2        g_nMotorSynEmf                           INT16
+
+address     size       variable name                            type
+0x20000090  0x2        g_nMotorSynEmfAngle                      u16
+
+address     size       variable name                            type
+0x200000ac  0x4        g_nMotorSynEmfFreq                       s32
+
+address     size       variable name                            type
+0x200000b0  0x6        struBemfVolt                             stru_VoltPhaseUVW
+0x200000b0  0x2        struBemfVolt.nPhaseU                     s16
+0x200000b2  0x2        struBemfVolt.nPhaseV                     s16
+0x200000b4  0x2        struBemfVolt.nPhaseW                     s16
+
+address     size       variable name                            type
+0x200007f8  0x1c       AEMFRM                                   stru_PIRegulator
+0x200007f8  0x4        AEMFRM.wUpperLimitOutput                 s32
+0x200007fc  0x4        AEMFRM.wLowerLimitOutput                 s32
+0x20000800  0x2        AEMFRM.KP                                u16
+0x20000802  0x2        AEMFRM.KI                                u16
+0x20000804  0x4        AEMFRM.wIntegral                         s32
+0x20000808  0x4        AEMFRM.wInError                          s32
+0x2000080c  0x4        AEMFRM.wLastError                        s32
+0x20000810  0x4        AEMFRM.wErrorC                           s32
+
+address     size       variable name                            type
+0x20000814  0x1c       AEMFRT                                   stru_PIRegulator
+0x20000814  0x4        AEMFRT.wUpperLimitOutput                 s32
+0x20000818  0x4        AEMFRT.wLowerLimitOutput                 s32
+0x2000081c  0x2        AEMFRT.KP                                u16
+0x2000081e  0x2        AEMFRT.KI                                u16
+0x20000820  0x4        AEMFRT.wIntegral                         s32
+0x20000824  0x4        AEMFRT.wInError                          s32
+0x20000828  0x4        AEMFRT.wLastError                        s32
+0x2000082c  0x4        AEMFRT.wErrorC                           s32
+
+address     size       variable name                            type
+0x20000830  0x14       AFWR                                     PIRegFieldW
+0x20000830  0x4        AFWR.LIM_H                               INT32
+0x20000834  0x4        AFWR.LIM_L                               INT32
+0x20000838  0x2        AFWR.KP                                  UINT16
+0x2000083a  0x2        AFWR.KI                                  UINT16
+0x2000083c  0x4        AFWR.INTEG                               INT32
+0x20000840  0x4        AFWR.inError                             INT32
+
+address     size       variable name                            type
+0x20000022  0x2        AFWR_KI                                  u16
+
+address     size       variable name                            type
+0x20000020  0x2        AFWR_KP                                  u16
+
+address     size       variable name                            type
+0x20000844  0x14       ATWR                                     PIRegFieldW
+0x20000844  0x4        ATWR.LIM_H                               INT32
+0x20000848  0x4        ATWR.LIM_L                               INT32
+0x2000084c  0x2        ATWR.KP                                  UINT16
+0x2000084e  0x2        ATWR.KI                                  UINT16
+0x20000850  0x4        ATWR.INTEG                               INT32
+0x20000854  0x4        ATWR.inError                             INT32
+
+address     size       variable name                            type
+0x20000026  0x2        ATWR_KI                                  u16
+
+address     size       variable name                            type
+0x20000024  0x2        ATWR_KP                                  u16
+
+address     size       variable name                            type
+0x2000005c  0x4        afo15                                    INT32
+
+address     size       variable name                            type
+0x20000034  0x2        afo15Sftn                                INT16
+
+address     size       variable name                            type
+0x2000001e  0x2        gCnt11111                                UINT16
+
+address     size       variable name                            type
+0x00000000  0x4        gKz                                      INT32
+
+address     size       variable name                            type
+0x20000054  0x4        gModCoef                                 INT32
+
+address     size       variable name                            type
+0x2000002a  0x2        gPmWeakId                                INT16
+
+address     size       variable name                            type
+0x2000002c  0x2        gPmWeakIq                                INT16
+
+address     size       variable name                            type
+0x20000050  0x4        gThetaComp                               INT32
+
+address     size       variable name                            type
+0x20000028  0x2        gUdcUtz                                  INT16
+
+address     size       variable name                            type
+0x20000018  0x2        g_FluxObsFreqSegSet                      INT16
+
+address     size       variable name                            type
+0x20000016  0x2        g_FluxObsMode                            u16
+
+address     size       variable name                            type
+0x20000044  0x2        g_nD_CurrLoopKIH                         INT16
+
+address     size       variable name                            type
+0x2000003c  0x2        g_nD_CurrLoopKIL                         INT16
+
+address     size       variable name                            type
+0x20000042  0x2        g_nD_CurrLoopKPH                         INT16
+
+address     size       variable name                            type
+0x2000003a  0x2        g_nD_CurrLoopKPL                         INT16
+
+address     size       variable name                            type
+0x20000048  0x2        g_nQ_CurrLoopKIH                         INT16
+
+address     size       variable name                            type
+0x20000040  0x2        g_nQ_CurrLoopKIL                         INT16
+
+address     size       variable name                            type
+0x20000046  0x2        g_nQ_CurrLoopKPH                         INT16
+
+address     size       variable name                            type
+0x2000003e  0x2        g_nQ_CurrLoopKPL                         INT16
+
+address     size       variable name                            type
+0x00000000  0x2        iEemfMEst                                s16
+
+address     size       variable name                            type
+0x00000000  0x2        iEemfMEstAvg                             s16
+
+address     size       variable name                            type
+0x00000000  0x2        iEemfTEst                                s16
+
+address     size       variable name                            type
+0x00000000  0x2        iEemfTEstAvg                             s16
+
+address     size       variable name                            type
+0x00000000  0x2        iMrasId                                  s16
+
+address     size       variable name                            type
+0x20000068  0x4        iMrasIdEstN_1_Fs                         s32
+
+address     size       variable name                            type
+0x00000000  0x2        iMrasIq                                  s16
+
+address     size       variable name                            type
+0x00000000  0x2        iMrasIqEstN                              s16
+
+address     size       variable name                            type
+0x2000006c  0x4        iMrasIqEstN_1_Fs                         s32
+
+address     size       variable name                            type
+0x00000000  0x2        iMrasUd                                  s16
+
+address     size       variable name                            type
+0x00000000  0x2        iMrasUq                                  s16
+
+address     size       variable name                            type
+0x00000000  0x4        iThetaErr1                               s32
+
+address     size       variable name                            type
+0x20000074  0x4        iThetaErr2                               s32
+
+address     size       variable name                            type
+0x00000000  0x4        iThetaErrAvg                             s32
+
+address     size       variable name                            type
+0x200007c0  0x38       m_FluxOBSPara                            stru_FluxOBS_Def
+0x200007c0  0x4        m_FluxOBSPara.wMotorSpeedEst             s32
+0x200007c4  0x8        m_FluxOBSPara.mRC_Obs                    stru_RC_Def
+0x200007c4  0x4        m_FluxOBSPara.mRC_Obs.yk_1               s32
+0x200007c8  0x2      * m_FluxOBSPara.mRC_Obs.coef               u16
+0x200007cc  0x2        m_FluxOBSPara.nObsFactor                 u16
+0x200007ce  0x1      * m_FluxOBSPara.bDivisor                   u8
+0x200007d0  0x4        m_FluxOBSPara.wIS2                       s32
+0x200007d4  0x1c       m_FluxOBSPara.mPI_Obs                    stru_PIRegulator
+0x200007d4  0x4        m_FluxOBSPara.mPI_Obs.wUpperLimitOutput  s32
+0x200007d8  0x4        m_FluxOBSPara.mPI_Obs.wLowerLimitOutput  s32
+0x200007dc  0x2        m_FluxOBSPara.mPI_Obs.KP                 u16
+0x200007de  0x2        m_FluxOBSPara.mPI_Obs.KI                 u16
+0x200007e0  0x4        m_FluxOBSPara.mPI_Obs.wIntegral          s32
+0x200007e4  0x4        m_FluxOBSPara.mPI_Obs.wInError           s32
+0x200007e8  0x4        m_FluxOBSPara.mPI_Obs.wLastError         s32
+0x200007ec  0x4        m_FluxOBSPara.mPI_Obs.wErrorC            s32
+0x200007f0  0x1      * m_FluxOBSPara.bMotorDir                  s8
+0x200007f2  0x2        m_FluxOBSPara.nObsCoef                   u16
+0x200007f4  0x2        m_FluxOBSPara.nMaxOutFreq                u16
+0x200007f6  0x2        m_FluxOBSPara.nMinOutFreq                u16
+
+address     size       variable name                            type
+0x20000036  0x2        s16UmRohRef                              s16
+
+address     size       variable name                            type
+0x20000038  0x2        s16UtRohRef                              s16
+
+address     size       variable name                            type
+0x2000004a  0x2        s16VolOutAvg                             s16
+
+address     size       variable name                            type
+0x20000064  0x4        s32VolOutAvg                             s32
+
+address     size       variable name                            type
+0x200007a0  0x20       struFluxOB_Var                           stru_FluxOB_VariableDef
+0x200007a0  0x4        struFluxOB_Var.wOb_F1                    s32
+0x200007a4  0x4        struFluxOB_Var.wOb_F2                    s32
+0x200007a8  0x4        struFluxOB_Var.wOb_F3                    s32
+0x200007ac  0x1        struFluxOB_Var.bSftN_F1                  s8
+0x200007ad  0x1        struFluxOB_Var.bSftN_F2                  s8
+0x200007ae  0x1      * struFluxOB_Var.bSftN_F3                  s8
+0x200007b0  0x4        struFluxOB_Var.wOBPllInteg               s32
+0x200007b4  0x2        struFluxOB_Var.nBemfLowPassFac           u16
+0x200007b6  0x2        struFluxOB_Var.nSpeedFiltFac             u16
+0x200007b8  0x2        struFluxOB_Var.nOpenLoopDppKp            u16
+0x200007ba  0x2        struFluxOB_Var.nProductPLL               u16
+0x200007bc  0x2        struFluxOB_Var.uBusVolt_PerUnit          u16
+
+address     size       variable name                            type
+0x20000070  0x4        synWeObsFilt                             s32
+
+address     size       variable name                            type
+0x2000001c  0x2        uFreq1msM                                UINT16
+
+address     size       variable name                            type
+0x2000004c  0x4        uMrasTheta_est                           u32
+
+address     size       variable name                            type
+0x2000001a  0x2        uPWM1msTick                              UINT16
+
+address     size       variable name                            type
+0x20000060  0x4        uPmRsPu                                  INT32
+
+address     size       variable name                            type
+0x00000000  0x4        vectorComponentsAfo                      stru_TrigComponents
+0x00000000  0x2        vectorComponentsAfo.hCos                 s16
+0x00000002  0x2        vectorComponentsAfo.hSin                 s16
+
+address     size       variable name                            type
+0x00000000  0x4        vectorComponentsDThe                     stru_TrigComponents
+0x00000000  0x2        vectorComponentsDThe.hCos                s16
+0x00000002  0x2        vectorComponentsDThe.hSin                s16
+
+address     size       variable name                            type
+0x00005598  0x220      atantab1                                 array[272] of const u16
+
+address     size       variable name                            type
+0x00000000  0x1        _ActiveTerminal                          char
+
+address     size       variable name                            type
+0x20000620  0xa8       _SEGGER_RTT                              SEGGER_RTT_CB
+0x20000620  0x10       _SEGGER_RTT.acID                         array[16] of char
+0x20000630  0x4        _SEGGER_RTT.MaxNumUpBuffers              int
+0x20000634  0x4        _SEGGER_RTT.MaxNumDownBuffers            int
+0x20000638  0x48       _SEGGER_RTT.aUp                          array[3] of SEGGER_RTT_BUFFER_UP
+0x20000680  0x48       _SEGGER_RTT.aDown                        array[3] of SEGGER_RTT_BUFFER_DOWN
+
+address     size       variable name                            type
+0x00000000  0x10       _aTerminalId                             array[16] of unsigned char
+
+address     size       variable name                            type
+0x20000790  0x10       _acDownBuffer                            array[16] of char
+
+address     size       variable name                            type
+0x200006c8  0xc8       _acUpBuffer                              array[200] of char
+
+address     size       variable name                            type
+0x20000554  0xca       bRttBuf                                  array[202] of unsigned char
+
+address     size       variable name                            type
+0x00005398  0x200      hSin_Cos_Table                           array[256] of const s16
+
+address     size       variable name                            type
+0x20000534  0x20       struPWMTime                              stru_PWMTime_t
+0x20000534  0x4        struPWMTime.wHighLevelTime               s32
+0x20000538  0x4        struPWMTime.wLowLevelTime                s32
+0x2000053c  0x4        struPWMTime.wPeriod                      s32
+0x20000540  0x2        struPWMTime.nDuty                        u16
+0x20000542  0x2        struPWMTime.nFlagPeriod                  u16
+0x20000544  0x4        struPWMTime.wPreTime                     s32
+0x20000548  0x2        struPWMTime.nHighCntr                    u16
+0x2000054a  0x2        struPWMTime.nLowCntr                     u16
+0x2000054c  0x4        struPWMTime.fPwmSpeedScale               float
+0x20000550  0x4        struPWMTime.wPwmSpeedMax                 s32
+
+address     size       variable name                            type
+0x20000528  0xc        PowerRamp                                stru_Ramp_t
+0x20000528  0x4        PowerRamp.wRef                           s32
+0x2000052c  0x4        PowerRamp.wSet                           s32
+0x20000530  0x2        PowerRamp.nACCStep                       s16
+0x20000532  0x2        PowerRamp.nDECStep                       s16
+
+address     size       variable name                            type
+0x200004c8  0x60       struPower                                stru_PowerBasic_t
+0x200004c8  0x4        struPower.wPowerValue                    s32
+0x200004cc  0x4        struPower.wTemp                          s32
+0x200004d0  0x18       struPower.struPowerLowPass               stru_LowPass_t
+0x200004d0  0x4        struPower.struPowerLowPass.wInput        s32
+0x200004d4  0x4        struPower.struPowerLowPass.wOutput       s32
+0x200004d8  0x2      * struPower.struPowerLowPass.nK1           s16
+0x200004e0  0x8        struPower.struPowerLowPass.lTemp         s64
+0x200004e8  0xc        struPower.struPowerRamp                  stru_Ramp_t
+0x200004e8  0x4        struPower.struPowerRamp.wRef             s32
+0x200004ec  0x4        struPower.struPowerRamp.wSet             s32
+0x200004f0  0x2        struPower.struPowerRamp.nACCStep         s16
+0x200004f2  0x2        struPower.struPowerRamp.nDECStep         s16
+0x200004f4  0x1c       struPower.struPowerPI                    stru_PIRegulator
+0x200004f4  0x4        struPower.struPowerPI.wUpperLimitOutput  s32
+0x200004f8  0x4        struPower.struPowerPI.wLowerLimitOutput  s32
+0x200004fc  0x2        struPower.struPowerPI.KP                 u16
+0x200004fe  0x2        struPower.struPowerPI.KI                 u16
+0x20000500  0x4        struPower.struPowerPI.wIntegral          s32
+0x20000504  0x4        struPower.struPowerPI.wInError           s32
+0x20000508  0x4        struPower.struPowerPI.wLastError         s32
+0x2000050c  0x4        struPower.struPowerPI.wErrorC            s32
+0x20000510  0x2      * struPower.nSpeedLimitCntr                s16
+0x20000514  0x4        struPower.wSpeedLimitValue               s32
+0x20000518  0x4        struPower.wSpeedLimitPowerSet            s32
+0x2000051c  0x4        struPower.wSpeedLimitPowerRef            s32
+0x20000520  0x4        struPower.wPowerRef                      s32
+0x20000524  0x4        struPower.wPowerSet                      s32
+
+address     size       variable name                            type
+0x2000043c  0x18       struCurrentAmplitude                     stru_CurrentAmplitude_t
+0x2000043c  0x1      * struCurrentAmplitude.bFlag               u8
+0x2000043e  0x2        struCurrentAmplitude.bTheta              u16
+0x20000440  0x4        struCurrentAmplitude.wPhATemp            u32
+0x20000444  0x4        struCurrentAmplitude.wPhBTemp            u32
+0x20000448  0x4        struCurrentAmplitude.wPhCTemp            u32
+0x2000044c  0x2        struCurrentAmplitude.nPhA                u16
+0x2000044e  0x2        struCurrentAmplitude.nPhB                u16
+0x20000450  0x2        struCurrentAmplitude.nPhC                u16
+
+address     size       variable name                            type
+0x2000049a  0xa        struFaultCurrentTime                     stru_FaultTime_t
+0x2000049a  0x2        struFaultCurrentTime.nCheckCnt1          s16
+0x2000049c  0x2        struFaultCurrentTime.nCheckCnt2          s16
+0x2000049e  0x2        struFaultCurrentTime.nRecoverCntr        s16
+0x200004a0  0x2        struFaultCurrentTime.nStartDelay         s16
+0x200004a2  0x2        struFaultCurrentTime.nRecoverTime        s16
+
+address     size       variable name                            type
+0x20000486  0xa        struFaultEmptyTime                       stru_FaultTime_t
+0x20000486  0x2        struFaultEmptyTime.nCheckCnt1            s16
+0x20000488  0x2        struFaultEmptyTime.nCheckCnt2            s16
+0x2000048a  0x2        struFaultEmptyTime.nRecoverCntr          s16
+0x2000048c  0x2        struFaultEmptyTime.nStartDelay           s16
+0x2000048e  0x2        struFaultEmptyTime.nRecoverTime          s16
+
+address     size       variable name                            type
+0x200004ae  0xa        struFaultPhaseTime                       stru_FaultTime_t
+0x200004ae  0x2        struFaultPhaseTime.nCheckCnt1            s16
+0x200004b0  0x2        struFaultPhaseTime.nCheckCnt2            s16
+0x200004b2  0x2        struFaultPhaseTime.nRecoverCntr          s16
+0x200004b4  0x2        struFaultPhaseTime.nStartDelay           s16
+0x200004b6  0x2        struFaultPhaseTime.nRecoverTime          s16
+
+address     size       variable name                            type
+0x20000490  0xa        struFaultStallTime                       stru_FaultTime_t
+0x20000490  0x2        struFaultStallTime.nCheckCnt1            s16
+0x20000492  0x2        struFaultStallTime.nCheckCnt2            s16
+0x20000494  0x2        struFaultStallTime.nRecoverCntr          s16
+0x20000496  0x2        struFaultStallTime.nStartDelay           s16
+0x20000498  0x2        struFaultStallTime.nRecoverTime          s16
+
+address     size       variable name                            type
+0x200004b8  0xa        struFaultStartTime                       stru_FaultTime_t
+0x200004b8  0x2        struFaultStartTime.nCheckCnt1            s16
+0x200004ba  0x2        struFaultStartTime.nCheckCnt2            s16
+0x200004bc  0x2        struFaultStartTime.nRecoverCntr          s16
+0x200004be  0x2        struFaultStartTime.nStartDelay           s16
+0x200004c0  0x2        struFaultStartTime.nRecoverTime          s16
+
+address     size       variable name                            type
+0x200004a4  0xa        struFaultTempTime                        stru_FaultTime_t
+0x200004a4  0x2        struFaultTempTime.nCheckCnt1             s16
+0x200004a6  0x2        struFaultTempTime.nCheckCnt2             s16
+0x200004a8  0x2        struFaultTempTime.nRecoverCntr           s16
+0x200004aa  0x2        struFaultTempTime.nStartDelay            s16
+0x200004ac  0x2        struFaultTempTime.nRecoverTime           s16
+
+address     size       variable name                            type
+0x2000047c  0xa        struFaultVoltTime                        stru_FaultTime_t
+0x2000047c  0x2        struFaultVoltTime.nCheckCnt1             s16
+0x2000047e  0x2        struFaultVoltTime.nCheckCnt2             s16
+0x20000480  0x2        struFaultVoltTime.nRecoverCntr           s16
+0x20000482  0x2        struFaultVoltTime.nStartDelay            s16
+0x20000484  0x2        struFaultVoltTime.nRecoverTime           s16
+
+address     size       variable name                            type
+0x20000008  0x6        struImaxCurrent                          stru_CurrPhaseUVW
+0x20000008  0x2        struImaxCurrent.nPhaseU                  s16
+0x2000000a  0x2        struImaxCurrent.nPhaseV                  s16
+0x2000000c  0x2        struImaxCurrent.nPhaseW                  s16
+
+address     size       variable name                            type
+0x20000454  0x28       stru_FaultValue                          stru_FaultVariable_t
+0x20000454  0x2        stru_FaultValue.nOverCurrent             s16
+0x20000456  0x2        stru_FaultValue.nOverVoltage             s16
+0x20000458  0x2        stru_FaultValue.nUnderVoltage            s16
+0x2000045a  0x2        stru_FaultValue.nOverVoltageRecover      s16
+0x2000045c  0x2        stru_FaultValue.nUnderVoltageRecover     s16
+0x2000045e  0x2        stru_FaultValue.nEmptyCurrent            s16
+0x20000460  0x4        stru_FaultValue.wEmptySpeed              s32
+0x20000464  0x2      * stru_FaultValue.nStallCurrent            s16
+0x20000468  0x4        stru_FaultValue.wStallSpeedMax           s32
+0x2000046c  0x4        stru_FaultValue.wStallSpeedMin           s32
+0x20000470  0x4        stru_FaultValue.wStallSpeed              s32
+0x20000474  0x2        stru_FaultValue.nStallCurrentIq          s16
+0x20000476  0x2        stru_FaultValue.nStallFlag               s16
+0x20000478  0x2        stru_FaultValue.nStartFlag               s16
+0x2000047a  0x2        stru_FaultValue.nPhaseLossFlag           s16
+
+address     size       variable name                            type
+0x2000000e  0x2        stru_Faults                              volatile stru_FaultStatus_t
+0x2000000e  0x2        stru_Faults.R                            u16
+0x2000000e  0x2        stru_Faults.B                            anonymous
+0x2000000e  0x2(15:1)  stru_Faults.B.SoftCurretError            u16
+0x2000000e  0x2(14:1)  stru_Faults.B.HardCurretError            u16
+0x2000000e  0x2(13:1)  stru_Faults.B.VoltOverError              u16
+0x2000000e  0x2(12:1)  stru_Faults.B.VoltUnderError             u16
+0x2000000e  0x2(11:1)  stru_Faults.B.StallError                 u16
+0x2000000e  0x2(10:1)  stru_Faults.B.EmptyError                 u16
+0x2000000e  0x2(9:1)   stru_Faults.B.PhaseLossError             u16
+0x2000000e  0x2(8:1)   stru_Faults.B.TempOverError              u16
+0x2000000e  0x2(7:1)   stru_Faults.B.OffsetError                u16
+0x2000000e  0x2(6:1)   stru_Faults.B.StartError                 u16
+0x2000000e  0x2(0:6)   stru_Faults.B.                           u16
+
+address     size       variable name                            type
+0x20000004  0x4        Iq_set                                   volatile float
+
+address     size       variable name                            type
+0x20000000  0x2        g_uDirCheckStep                          u16
+
+address     size       variable name                            type
+0x2000042c  0xe        struTime                                 stru_Time_t
+0x2000042c  0x2        struTime.nChargeTime                     s16
+0x2000042e  0x2        struTime.nAlignTime                      s16
+0x20000430  0x2        struTime.nDirCheckTime                   s16
+0x20000432  0x2        struTime.nLoopDelyTime                   s16
+0x20000434  0x2        struTime.nStopDelayTime                  s16
+0x20000436  0x2        struTime.nStopDelayCntr                  s16
+0x20000438  0x2        struTime.nOpenRunCntr                    s16
+
+address     size       variable name                            type
+0x20000420  0xc        Rttstru                                  anonymous
+0x20000420  0x2      * Rttstru.data0                            s16
+0x20000424  0x4        Rttstru.data1                            s32
+0x20000428  0x2        Rttstru.data2                            s16
+0x2000042a  0x2        Rttstru.data3                            s16
+
+address     size       variable name                            type
+0x20000400  0x20       mIPD_CtrProc                             stru_IPD_CtrProcDef
+0x20000400  0x4        mIPD_CtrProc.wIPD_PlusWidthSet           u32
+0x20000404  0x4        mIPD_CtrProc.wIPD_IdleWaitSet            u32
+0x20000408  0x2        mIPD_CtrProc.nPWM_PERIOD                 u16
+0x2000040a  0x1        mIPD_CtrProc.bIPD_State                  u8
+0x2000040b  0x1        mIPD_CtrProc.bIPD_StepFlg                u8
+0x2000040c  0x2        mIPD_CtrProc.IPD_Angle                   u16
+0x2000040e  0xe        mIPD_CtrProc.AdcSampCurr                 array[7] of s16
+0x2000041c  0x2        mIPD_CtrProc.hDriverPolarity             volatile u16
+0x2000041e  0x1        mIPD_CtrProc.bCurrentSampleType          u8
+
+address     size       variable name                            type
+0x20000260  0x24       mOnTheFlyDetect                          Stru_OnTheFlyDetect
+0x20000260  0x2        mOnTheFlyDetect.nElectAngle              u16
+0x20000262  0x2        mOnTheFlyDetect.nFreq                    s16
+0x20000264  0x2      * mOnTheFlyDetect.nFreqAvg                 s16
+0x20000268  0x4        mOnTheFlyDetect.wBemfFreq                s32
+0x2000026c  0x4        mOnTheFlyDetect.wVolMagAvg               s32
+0x20000270  0x2      * mOnTheFlyDetect.nMotorVolMag             s16
+0x20000274  0x4        mOnTheFlyDetect.wBEMF_DppValueAcc        s32
+0x20000278  0x4        mOnTheFlyDetect.wAngleDpp                volatile s32
+0x2000027c  0x2        mOnTheFlyDetect.nPWM1msTick              s16
+0x2000027e  0x1      * mOnTheFlyDetect.bMotorStopDecFlag        u8
+0x20000280  0x2        mOnTheFlyDetect.nMotorStopCurrentThd     s16
+0x20000282  0x2        mOnTheFlyDetect.nMotorStopCurDifThd      s16
+
+address     size       variable name                            type
+0x20000388  0x18       mOpenForceRun                            stru_OpenForceRunDef
+0x20000388  0x2        mOpenForceRun.nCurrentAccStep            s16
+0x2000038a  0x2        mOpenForceRun.nCurrentDecStep            s16
+0x2000038c  0x2        mOpenForceRun.nStartCurSet               s16
+0x2000038e  0x2        mOpenForceRun.nStartCurRef               s16
+0x20000390  0x4        mOpenForceRun.wStartCurRamp              s32
+0x20000394  0x4        mOpenForceRun.wOpen2CloseFreq            s32
+0x20000398  0x2        mOpenForceRun.nFreqAccStep               s16
+0x2000039a  0x2        mOpenForceRun.nFreqDecStep               s16
+0x2000039c  0x4        mOpenForceRun.wRampFreqRef               s32
+
+address     size       variable name                            type
+0x2000036c  0x1c       mSpeedPI                                 stru_PIRegulator
+0x2000036c  0x4        mSpeedPI.wUpperLimitOutput               s32
+0x20000370  0x4        mSpeedPI.wLowerLimitOutput               s32
+0x20000374  0x2        mSpeedPI.KP                              u16
+0x20000376  0x2        mSpeedPI.KI                              u16
+0x20000378  0x4        mSpeedPI.wIntegral                       s32
+0x2000037c  0x4        mSpeedPI.wInError                        s32
+0x20000380  0x4        mSpeedPI.wLastError                      s32
+0x20000384  0x4        mSpeedPI.wErrorC                         s32
+
+address     size       variable name                            type
+0x0000532c  0xa        sVersion                                 array[10] of const char
+
+address     size       variable name                            type
+0x200003e0  0x20       struApp2Core                             stru_TransCoef
+0x200003e0  0x2        struApp2Core.cur                         u16
+0x200003e2  0x2        struApp2Core.curShftNum                  s16
+0x200003e4  0x2        struApp2Core.vol                         u16
+0x200003e6  0x2        struApp2Core.volShftNum                  s16
+0x200003e8  0x2        struApp2Core.freq                        u16
+0x200003ea  0x2        struApp2Core.freqShftNum                 s16
+0x200003ec  0x2        struApp2Core.speed                       u16
+0x200003ee  0x2        struApp2Core.speedShftNum                s16
+0x200003f0  0x2        struApp2Core.power                       u16
+0x200003f2  0x2        struApp2Core.powerShftNum                s16
+0x200003f4  0x2        struApp2Core.torque                      u16
+0x200003f6  0x2        struApp2Core.torqueShftNum               s16
+0x200003f8  0x2        struApp2Core.angle                       u16
+0x200003fa  0x2        struApp2Core.angleShftNum                s16
+0x200003fc  0x2        struApp2Core.vDc                         u16
+0x200003fe  0x2        struApp2Core.vDcShftNum                  s16
+
+address     size       variable name                            type
+0x200001c8  0x44       struAppCommData                          stru_CommData
+0x200001c8  0x4        struAppCommData.wStartCurSet1            s32
+0x200001cc  0x4        struAppCommData.wStartCurSet2            s32
+0x200001d0  0x4        struAppCommData.wSvcMinFreq              s32
+0x200001d4  0x2        struAppCommData.nStartAngleComp          u16
+0x200001d6  0x1        struAppCommData.bChargeFlag              u8
+0x200001d7  0x1        struAppCommData.bChargeEndFlag           u8
+0x200001d8  0x2        struAppCommData.nDirTrackFreq            s16
+0x200001da  0x2        struAppCommData.nDirEbreakFreq           s16
+0x200001dc  0x2        struAppCommData.nCurrentACC              s16
+0x200001de  0x2        struAppCommData.nCurrentDEC              s16
+0x200001e0  0x4        struAppCommData.wSpeedRef                s32
+0x200001e4  0x2        struAppCommData.nLoopCntr                s16
+0x200001e6  0x1      * struAppCommData.bOpenRunFlag             u8
+0x200001e8  0x4        struAppCommData.wThetaErr                s32
+0x200001ec  0x2        struAppCommData.nMatchCnt                s16
+0x200001ee  0x2        struAppCommData.nPowerFistFlag           s16
+0x200001f0  0x2        struAppCommData.nTempADC                 s16
+0x200001f2  0x2        struAppCommData.nMotorRunDirPre          u16
+0x200001f4  0x4        struAppCommData.wPWMPowerSet             s32
+0x200001f8  0x4        struAppCommData.wPWMSpeedSet             s32
+0x200001fc  0x2      * struAppCommData.nVspADC                  s16
+0x20000200  0x4        struAppCommData.wVSPSpeedSet             s32
+0x20000204  0x4        struAppCommData.wPIMatchSpeed            s32
+0x20000208  0x4        struAppCommData.wCloseSpeed              s32
+
+address     size       variable name                            type
+0x00005374  0x24       struBoardParam                           stru_BoardParameterDef
+0x00005374  0x2        struBoardParam.nRatedUdc                 s16
+0x00005376  0x2        struBoardParam.nMaxUdc                   s16
+0x00005378  0x2        struBoardParam.nMaxCur                   s16
+0x0000537a  0x2        struBoardParam.nDeadTime                 s16
+0x0000537c  0x4        struBoardParam.nMaxFreq                  s32
+0x00005380  0x2      * struBoardParam.nPWMFreq                  u16
+0x00005384  0x4        struBoardParam.fAdcSupplyVol             float
+0x00005388  0x4        struBoardParam.fRShunt                   float
+0x0000538c  0x4        struBoardParam.fAmpGain                  float
+0x00005390  0x4        struBoardParam.fVolShuntRatio            float
+0x00005394  0x4        struBoardParam.fBemfShuntRatio           float
+
+address     size       variable name                            type
+0x200003c0  0x20       struCore2App                             stru_TransCoef
+0x200003c0  0x2        struCore2App.cur                         u16
+0x200003c2  0x2        struCore2App.curShftNum                  s16
+0x200003c4  0x2        struCore2App.vol                         u16
+0x200003c6  0x2        struCore2App.volShftNum                  s16
+0x200003c8  0x2        struCore2App.freq                        u16
+0x200003ca  0x2        struCore2App.freqShftNum                 s16
+0x200003cc  0x2        struCore2App.speed                       u16
+0x200003ce  0x2        struCore2App.speedShftNum                s16
+0x200003d0  0x2        struCore2App.power                       u16
+0x200003d2  0x2        struCore2App.powerShftNum                s16
+0x200003d4  0x2        struCore2App.torque                      u16
+0x200003d6  0x2        struCore2App.torqueShftNum               s16
+0x200003d8  0x2        struCore2App.angle                       u16
+0x200003da  0x2        struCore2App.angleShftNum                s16
+0x200003dc  0x2        struCore2App.vDc                         u16
+0x200003de  0x2        struCore2App.vDcShftNum                  s16
+
+address     size       variable name                            type
+0x00005336  0x10       struFOC_ConstParam                       Stru_FOC_ConstParame
+0x00005336  0x2        struFOC_ConstParam.MIN_PWMSampTime3Shunt u16
+0x00005338  0x2        struFOC_ConstParam.SampStableTime3Shunt  u16
+0x0000533a  0x2        struFOC_ConstParam.ShiftSampTime3Shunt   s16
+0x0000533c  0x2        struFOC_ConstParam.SampWaitTime3Shunt    s16
+0x0000533e  0x2        struFOC_ConstParam.SampStableTime1Shunt  s16
+0x00005340  0x2        struFOC_ConstParam.ShiftSampTime1Shunt   u16
+0x00005342  0x2        struFOC_ConstParam.nPWM_PERIOD           u16
+0x00005344  0x2        struFOC_ConstParam.nDEADTIMECOMP         u16
+
+address     size       variable name                            type
+0x200000c4  0x10       struFOC_CtrProc                          stru_FOC_CtrProcDef
+0x200000c4  0x2        struFOC_CtrProc.nSys_TimerPWM            volatile u16
+0x200000c6  0x1        struFOC_CtrProc.bMotorDirtionCtrl        u8
+0x200000c7  0x1        struFOC_CtrProc.bMC_RunFlg               u8
+0x200000c8  0x1      * struFOC_CtrProc.eSysState                enum_SystStatus
+0x200000ca  0x2        struFOC_CtrProc.nSetTimeLeftCnt          u16
+0x200000cc  0x8        struFOC_CtrProc.struBusCurr_RC           stru_RC_Def
+0x200000cc  0x4        struFOC_CtrProc.struBusCurr_RC.yk_1      s32
+0x200000d0  0x2        struFOC_CtrProc.struBusCurr_RC.coef      u16
+
+address     size       variable name                            type
+0x200000d4  0xb4       struFOC_CurrLoop                         stru_FOC_CurrLoopDef
+0x200000d4  0x6        struFOC_CurrLoop.mStatCurrUVW            stru_CurrPhaseUVW
+0x200000d4  0x2        struFOC_CurrLoop.mStatCurrUVW.nPhaseU    s16
+0x200000d6  0x2        struFOC_CurrLoop.mStatCurrUVW.nPhaseV    s16
+0x200000d8  0x2        struFOC_CurrLoop.mStatCurrUVW.nPhaseW    s16
+0x200000da  0x6        struFOC_CurrLoop.mLastStatCurrUVW        stru_CurrPhaseUVW
+0x200000da  0x2        struFOC_CurrLoop.mLastStatCurrUVW.nPhaseU s16
+0x200000dc  0x2        struFOC_CurrLoop.mLastStatCurrUVW.nPhaseV s16
+0x200000de  0x2        struFOC_CurrLoop.mLastStatCurrUVW.nPhaseW s16
+0x200000e0  0x4        struFOC_CurrLoop.mStatCurrDQ             stru_CurrVoctorDQ
+0x200000e0  0x2        struFOC_CurrLoop.mStatCurrDQ.nAxisQ      s16
+0x200000e2  0x2        struFOC_CurrLoop.mStatCurrDQ.nAxisD      s16
+0x200000e4  0x4        struFOC_CurrLoop.mStatCurrAlfaBeta       stru_CurrAlphBeta
+0x200000e4  0x2        struFOC_CurrLoop.mStatCurrAlfaBeta.nAlph s16
+0x200000e6  0x2        struFOC_CurrLoop.mStatCurrAlfaBeta.nBeta s16
+0x200000e8  0x4        struFOC_CurrLoop.mStatVoltDQ             stru_VoltVoctorDQ
+0x200000e8  0x2        struFOC_CurrLoop.mStatVoltDQ.nAxisQ      s16
+0x200000ea  0x2        struFOC_CurrLoop.mStatVoltDQ.nAxisD      s16
+0x200000ec  0x4        struFOC_CurrLoop.mStatVoltAlfaBeta       stru_VoltAlphBeta
+0x200000ec  0x2        struFOC_CurrLoop.mStatVoltAlfaBeta.nAlph s16
+0x200000ee  0x2        struFOC_CurrLoop.mStatVoltAlfaBeta.nBeta s16
+0x200000f0  0x4        struFOC_CurrLoop.mTrigSinCos             stru_TrigComponents
+0x200000f0  0x2        struFOC_CurrLoop.mTrigSinCos.hCos        s16
+0x200000f2  0x2        struFOC_CurrLoop.mTrigSinCos.hSin        s16
+0x200000f4  0x2        struFOC_CurrLoop.wElectrical_Angle       u16
+0x200000f6  0x2        struFOC_CurrLoop.nBusVoltage             s16
+0x200000f8  0x6        struFOC_CurrLoop.mVdtComp                stru_VoltPhaseUVW
+0x200000f8  0x2        struFOC_CurrLoop.mVdtComp.nPhaseU        s16
+0x200000fa  0x2        struFOC_CurrLoop.mVdtComp.nPhaseV        s16
+0x200000fc  0x2        struFOC_CurrLoop.mVdtComp.nPhaseW        s16
+0x200000fe  0x6        struFOC_CurrLoop.mVoltUVW_PWM            stru_VoltPhaseUVW
+0x200000fe  0x2        struFOC_CurrLoop.mVoltUVW_PWM.nPhaseU    s16
+0x20000100  0x2        struFOC_CurrLoop.mVoltUVW_PWM.nPhaseV    s16
+0x20000102  0x2        struFOC_CurrLoop.mVoltUVW_PWM.nPhaseW    s16
+0x20000104  0x6        struFOC_CurrLoop.mVoltUVW_NegPWM         stru_VoltPhaseUVW
+0x20000104  0x2        struFOC_CurrLoop.mVoltUVW_NegPWM.nPhaseU s16
+0x20000106  0x2        struFOC_CurrLoop.mVoltUVW_NegPWM.nPhaseV s16
+0x20000108  0x2        struFOC_CurrLoop.mVoltUVW_NegPWM.nPhaseW s16
+0x2000010a  0x2        struFOC_CurrLoop.nVoltageCircleLim       u16
+0x2000010c  0x1        struFOC_CurrLoop.bSampCur0               u8
+0x2000010d  0x1        struFOC_CurrLoop.bSampCur1               u8
+0x2000010e  0x1      * struFOC_CurrLoop.bSampCur2               u8
+0x20000110  0x2        struFOC_CurrLoop.nADC_TrigPoint0         u16
+0x20000112  0x2        struFOC_CurrLoop.nADC_TrigPoint1         u16
+0x20000114  0x2        struFOC_CurrLoop.ADC_A_B_CurrentSamp     u16
+0x20000116  0x2        struFOC_CurrLoop.ADC_A_C_CurrentSamp     u16
+0x20000118  0x2        struFOC_CurrLoop.ADC_B_C_CurrentSamp     u16
+0x2000011a  0x2        struFOC_CurrLoop.nPhaseAOffset           s16
+0x2000011c  0x2        struFOC_CurrLoop.nPhaseBOffset           s16
+0x2000011e  0x2        struFOC_CurrLoop.nPhaseCOffset           s16
+0x20000120  0x2        struFOC_CurrLoop.nBusShuntOffset         s16
+0x20000122  0x2        struFOC_CurrLoop.nQCur_Reference         s16
+0x20000124  0x2        struFOC_CurrLoop.nDCur_Reference         s16
+0x20000126  0x2        struFOC_CurrLoop.nQCurrentSet            s16
+0x20000128  0x2        struFOC_CurrLoop.nDCurrentSet            s16
+0x2000012a  0x2        struFOC_CurrLoop.nRequestPower           s16
+0x2000012c  0x2        struFOC_CurrLoop.nWeakFieldLim           s16
+0x2000012e  0x1        struFOC_CurrLoop.bCntFirCurA             s8
+0x2000012f  0x1        struFOC_CurrLoop.bCntFirCurB             s8
+0x20000130  0x8        struFOC_CurrLoop.mCurrA_RC               stru_RC_Def
+0x20000130  0x4        struFOC_CurrLoop.mCurrA_RC.yk_1          s32
+0x20000134  0x2      * struFOC_CurrLoop.mCurrA_RC.coef          u16
+0x20000138  0x8        struFOC_CurrLoop.mCurrB_RC               stru_RC_Def
+0x20000138  0x4        struFOC_CurrLoop.mCurrB_RC.yk_1          s32
+0x2000013c  0x2      * struFOC_CurrLoop.mCurrB_RC.coef          u16
+0x20000140  0x1      * struFOC_CurrLoop.bSVPWM_Type             u8
+0x20000142  0x2        struFOC_CurrLoop.nCurrentSqrtOrg         u16
+0x20000144  0x1c       struFOC_CurrLoop.mPI_Torque              stru_PIRegulator
+0x20000144  0x4        struFOC_CurrLoop.mPI_Torque.wUpperLimitOutput s32
+0x20000148  0x4        struFOC_CurrLoop.mPI_Torque.wLowerLimitOutput s32
+0x2000014c  0x2        struFOC_CurrLoop.mPI_Torque.KP           u16
+0x2000014e  0x2        struFOC_CurrLoop.mPI_Torque.KI           u16
+0x20000150  0x4        struFOC_CurrLoop.mPI_Torque.wIntegral    s32
+0x20000154  0x4        struFOC_CurrLoop.mPI_Torque.wInError     s32
+0x20000158  0x4        struFOC_CurrLoop.mPI_Torque.wLastError   s32
+0x2000015c  0x4        struFOC_CurrLoop.mPI_Torque.wErrorC      s32
+0x20000160  0x1c       struFOC_CurrLoop.mPI_Flux                stru_PIRegulator
+0x20000160  0x4        struFOC_CurrLoop.mPI_Flux.wUpperLimitOutput s32
+0x20000164  0x4        struFOC_CurrLoop.mPI_Flux.wLowerLimitOutput s32
+0x20000168  0x2        struFOC_CurrLoop.mPI_Flux.KP             u16
+0x2000016a  0x2        struFOC_CurrLoop.mPI_Flux.KI             u16
+0x2000016c  0x4        struFOC_CurrLoop.mPI_Flux.wIntegral      s32
+0x20000170  0x4        struFOC_CurrLoop.mPI_Flux.wInError       s32
+0x20000174  0x4        struFOC_CurrLoop.mPI_Flux.wLastError     s32
+0x20000178  0x4        struFOC_CurrLoop.mPI_Flux.wErrorC        s32
+0x2000017c  0x2      * struFOC_CurrLoop.nMAX_CurrentLimThd      s16
+0x20000180  0x4        struFOC_CurrLoop.pStruFOC_ConstPar       pStru_FOC_ConstParame
+0x20000184  0x4        struFOC_CurrLoop.MCPWMx_RegUpdate        pointer to function 
+
+address     size       variable name                            type
+0x20000188  0x40       struFluxOB_Param                         stru_FluxOB_ParameterDef
+0x20000188  0x2        struFluxOB_Param.nCurrLoopIniKP          u16
+0x2000018a  0x2        struFluxOB_Param.nCurrLoopIniKI          u16
+0x2000018c  0x2        struFluxOB_Param.nCurrLoopIniKPL         u16
+0x2000018e  0x2        struFluxOB_Param.nCurrLoopIniKIL         u16
+0x20000190  0x2        struFluxOB_Param.nD_CurrLoopKP           u16
+0x20000192  0x2        struFluxOB_Param.nD_CurrLoopKI           u16
+0x20000194  0x2        struFluxOB_Param.nQ_CurrLoopKP           u16
+0x20000196  0x2        struFluxOB_Param.nQ_CurrLoopKI           u16
+0x20000198  0x2        struFluxOB_Param.nSTO_KP                 u16
+0x2000019a  0x2        struFluxOB_Param.nSTO_KI                 u16
+0x2000019c  0x2        struFluxOB_Param.nSTO_KP_H               u16
+0x2000019e  0x2        struFluxOB_Param.nSTO_KI_H               u16
+0x200001a0  0x4        struFluxOB_Param.wElectAngleEst          u32
+0x200001a4  0x4        struFluxOB_Param.wElectAngleOpen         u32
+0x200001a8  0x4        struFluxOB_Param.wElectAngle             u32
+0x200001ac  0x4        struFluxOB_Param.CurrentPerUnitGAIN      s32
+0x200001b0  0x4        struFluxOB_Param.VDC_PerUnitGAIN         s32
+0x200001b4  0x4        struFluxOB_Param.FREQ_PerUnit_GAIN       s32
+0x200001b8  0x4        struFluxOB_Param.BEMF_PerUnit_GAIN       s32
+0x200001bc  0x4        struFluxOB_Param.pStruMotorParame        pStru_MotorParameterDef
+0x200001c0  0x4        struFluxOB_Param.pStruBoardParame        pStru_BoardParameterDef
+0x200001c4  0x2        struFluxOB_Param.nObserveMinSpeed        u16
+0x200001c6  0x2        struFluxOB_Param.nSpeedFiltFac           u16
+
+address     size       variable name                            type
+0x20000284  0xe8       struHallProcess                          stru_HallProcessDef
+0x20000284  0x1      * struHallProcess.bFstHallSigFlg           u8
+0x20000288  0x4        struHallProcess.wOldSensorPeriod         u32
+0x2000028c  0x4        struHallProcess.wMotorSpeedAvgCnt        u32
+0x20000290  0x18       struHallProcess.wSensorPeriod            array[6] of u32
+0x200002a8  0x1      * struHallProcess.bSpeedFIFO_Index         u8
+0x200002ac  0x4        struHallProcess.wHallPWMTimerCnt         volatile u32
+0x200002b0  0x2        struHallProcess.nElectrical_Angle        u16
+0x200002b2  0x2        struHallProcess.nOldElectrical_Angle     u16
+0x200002b4  0x2        struHallProcess.nEndElectricalAngle      s16
+0x200002b6  0x2        struHallProcess.nTabElectrical_Angle     u16
+0x200002b8  0x2        struHallProcess.nRotorFreqDpp            u16
+0x200002ba  0x2        struHallProcess.nRotorFreqDppFir         u16
+0x200002bc  0x2        struHallProcess.nReduceToqueDpp          u16
+0x200002be  0x2        struHallProcess.nReduceToqueAngle        u16
+0x200002c0  0x4        struHallProcess.wHallCapCnt              u32
+0x200002c4  0x2        struHallProcess.nMaxReduceIncAngle       s16
+0x200002c6  0x1        struHallProcess.bHallState               u8
+0x200002c7  0x1        struHallProcess.bOldHallState            u8
+0x200002c8  0x1      * struHallProcess.bHallStateOrg            u8
+0x200002ca  0x2        struHallProcess.nCommErrType1Cnt         u16
+0x200002cc  0x2        struHallProcess.nCommErrType2Cnt         u16
+0x200002ce  0x2        struHallProcess.nHallCheckCnt            u16
+0x200002d0  0x2        struHallProcess.nHallCheckCnt2           u16
+0x200002d2  0x1      * struHallProcess.bMotorDirtionCtrl        u8
+0x200002d4  0x2        struHallProcess.nOverAngleCnt            u16
+0x200002d6  0x1        struHallProcess.bHallType                u8
+0x200002d7  0x1        struHallProcess.bHallRunFlg              u8
+0x200002d8  0x1      * struHallProcess.bHallLearnFlg            u8
+0x200002da  0x2        struHallProcess.nLearnHallTimeCnt        u16
+0x200002dc  0x2        struHallProcess.nLearnHallStep           u16
+0x200002de  0x1        struHallProcess.bHallLearnStateFlg       u8
+0x200002df  0x1        struHallProcess.bMotorTypeLearnAngle     u8
+0x200002e0  0x1        struHallProcess.bLearn_AngleOffset       u8
+0x200002e1  0x1        struHallProcess.bLearn_AngleCnt          u8
+0x200002e2  0x1      * struHallProcess.bFirHallState            u8
+0x200002e4  0x4        struHallProcess.wHallErrTimeMark         s32
+0x200002e8  0x1        struHallProcess.bReduceToqueFlg          u8
+0x200002e9  0x1        struHallProcess.bFastAddElecAngleFlg     u8
+0x200002ea  0x1        struHallProcess.bCloseLoopCnt            u8
+0x200002eb  0x1        struHallProcess.bCloseLoopAngleFlg       u8
+0x200002ec  0x2        struHallProcess.nHallChangeCnt           u16
+0x200002ee  0x2        struHallProcess.nHallQEP_Cnt             s16
+0x200002f0  0x2        struHallProcess.nPhaseShift              u16
+0x200002f2  0x2        struHallProcess.nPhaseShiftOffset        u16
+0x200002f4  0x4        struHallProcess.wCloseLoopPeriodThd      u32
+0x200002f8  0x4        struHallProcess.wOpenLoopPeriodThd       u32
+0x200002fc  0x1      * struHallProcess.bOpenStartUpCntThd       u8
+0x200002fe  0x2        struHallProcess.nMaxIncAngle             u16
+0x20000300  0x2      * struHallProcess.nCloseLoopMaxAngle       u16
+0x20000304  0x8        struHallProcess.stru_HallDppRC           stru_RC_Def
+0x20000304  0x4        struHallProcess.stru_HallDppRC.yk_1      s32
+0x20000308  0x2      * struHallProcess.stru_HallDppRC.coef      u16
+0x2000030c  0x1        struHallProcess.eMotorState              enum_SystStatus
+0x2000030d  0x1        struHallProcess.bHallErrorCnt            u8
+0x2000030e  0x1        struHallProcess.bCommErrType1            u8
+0x2000030f  0x1        struHallProcess.bCommErrType2            u8
+0x20000310  0x2        struHallProcess.nHallCaliCnt             u16
+0x20000312  0x1      * struHallProcess.bCalibrationHallFlg      u8
+0x20000314  0xc        struHallProcess.nHallOffsetArry          array[6] of u16
+0x20000320  0xc        struHallProcess.nHallCaliArray           array[6] of s16
+0x2000032c  0x8        struHallProcess.bHallPossableTab         array[8] of u8
+0x20000334  0x8        struHallProcess.bHallPossableTab2        array[8] of u8
+0x2000033c  0x8        struHallProcess.bHallCommTab             array[8] of u8
+0x20000344  0x4        struHallProcess.pStru_HallParama         pStru_HallParama
+0x20000348  0x1a       struHallProcess.stru_HallRepare          stru_HallRepairDef
+0x20000348  0x1        struHallProcess.stru_HallRepare.bLast_hall u8
+0x20000349  0x1        struHallProcess.stru_HallRepare.bBeforeLast_hall u8
+0x2000034a  0x1        struHallProcess.stru_HallRepare.bCheckCnt u8
+0x2000034b  0x1        struHallProcess.stru_HallRepare.bBrokenHallFlg u8
+0x2000034c  0x1        struHallProcess.stru_HallRepare.bOldBrokenHallFlg u8
+0x2000034d  0x1        struHallProcess.stru_HallRepare.bBrokenTypeFlg u8
+0x2000034e  0x1        struHallProcess.stru_HallRepare.bNeed_DelayComm u8
+0x2000034f  0x1        struHallProcess.stru_HallRepare.bHallState_org u8
+0x20000350  0x1      * struHallProcess.stru_HallRepare.bRepareDirect u8
+0x20000352  0x2        struHallProcess.stru_HallRepare.bDelay_timeCnt u16
+0x20000354  0x1      * struHallProcess.stru_HallRepare.bChangedHall u8
+0x20000356  0x2        struHallProcess.stru_HallRepare.nFocusCommCnt u16
+0x20000358  0x1      * struHallProcess.stru_HallRepare.bCommErrCnt u8
+0x2000035a  0x2        struHallProcess.stru_HallRepare.nSeekAngleLowThd u16
+0x2000035c  0x2        struHallProcess.stru_HallRepare.nSeekAngleHighThd u16
+0x2000035e  0x1      * struHallProcess.stru_HallRepare.nSeekAngleFlg u8
+0x20000360  0x2      * struHallProcess.stru_HallRepare.nSeekAngleIncValue u16
+0x20000364  0x4        struHallProcess.wSpeedfbkHall            s32
+0x20000368  0x1        struHallProcess.bHallSpeedDirFlag        s8
+
+address     size       variable name                            type
+0x00005348  0x2c       struMotorParam                           stru_MotorParameterDef
+0x00005348  0x1      * struMotorParam.bMotorType                s8
+0x0000534a  0x2        struMotorParam.nRatedPower               s16
+0x0000534c  0x4        struMotorParam.wRatedFreq                s32
+0x00005350  0x1      * struMotorParam.bPolePairs                s8
+0x00005352  0x2        struMotorParam.nRatedCur                 s16
+0x00005354  0x4        struMotorParam.wMotorRs                  s32
+0x00005358  0x4        struMotorParam.wMotorLd                  s32
+0x0000535c  0x4        struMotorParam.wMotorLq                  s32
+0x00005360  0x4        struMotorParam.nFluxConst                u32
+0x00005364  0x4        struMotorParam.wMotorRr                  s32
+0x00005368  0x4        struMotorParam.wMotorLr                  s32
+0x0000536c  0x4        struMotorParam.wMotorlm                  s32
+0x00005370  0x2        struMotorParam.nNoLoadCur                s16
+0x00005372  0x2        struMotorParam.nRatedTorque              u16
+
+address     size       variable name                            type
+0x20000210  0x50       struMotorSpeed                           MechanicalQuantity
+0x20000210  0x4        struMotorSpeed.wSpeedRef                 s32
+0x20000214  0x4        struMotorSpeed.wSpeedfbk                 s32
+0x20000218  0x4        struMotorSpeed.we                        s32
+0x2000021c  0x4        struMotorSpeed.wSpeedSet                 s32
+0x20000220  0x4        struMotorSpeed.wSpeedEst                 s32
+0x20000224  0x2        struMotorSpeed.nSpeedLoopKP              u16
+0x20000226  0x2        struMotorSpeed.nSpeedLoopKI              u16
+0x20000228  0x20       struMotorSpeed.mSpeedPI                  stru_SpeedPIRegulator
+0x20000228  0x4        struMotorSpeed.mSpeedPI.wUpperLimitOutput s32
+0x2000022c  0x4        struMotorSpeed.mSpeedPI.wLowerLimitOutput s32
+0x20000230  0x2        struMotorSpeed.mSpeedPI.KP               u16
+0x20000232  0x2        struMotorSpeed.mSpeedPI.KI               u16
+0x20000234  0x4        struMotorSpeed.mSpeedPI.wInError         s32
+0x20000238  0x8        struMotorSpeed.mSpeedPI.wIntegral        s64
+0x20000240  0x8        struMotorSpeed.mSpeedPI.lACC             s64
+0x20000248  0x4        struMotorSpeed.wSpeedRampACCStep         s32
+0x2000024c  0x4        struMotorSpeed.wSpeedRampDECStep         s32
+0x20000250  0x4        struMotorSpeed.wPowerLimitSpeedRef       s32
+0x20000254  0x4        struMotorSpeed.wPowerLimitSpeedSet       s32
+0x20000258  0x4        struMotorSpeed.wPowerLimitValue          s32
+0x2000025c  0x2        struMotorSpeed.nPowerLimitCntr           s16
+
+address     size       variable name                            type
+0x200000b8  0xc        struTaskScheduler                        stru_TaskSchedulerDef
+0x200000b8  0x2        struTaskScheduler.nTimeBaseFlg           u16
+0x200000ba  0x1        struTaskScheduler.bPWM_UpdateFlg         u8
+0x200000bb  0x1        struTaskScheduler.bTimeCnt1ms            u8
+0x200000bc  0x2        struTaskScheduler.nTimeCnt10ms           u16
+0x200000be  0x2        struTaskScheduler.nTimeCnt500ms          u16
+0x200000c0  0x4        struTaskScheduler.sVersion               pointer to const char
+
+address     size       variable name                            type
+0x200003a0  0x20       struUser2App                             stru_TransCoef
+0x200003a0  0x2        struUser2App.cur                         u16
+0x200003a2  0x2        struUser2App.curShftNum                  s16
+0x200003a4  0x2        struUser2App.vol                         u16
+0x200003a6  0x2        struUser2App.volShftNum                  s16
+0x200003a8  0x2        struUser2App.freq                        u16
+0x200003aa  0x2        struUser2App.freqShftNum                 s16
+0x200003ac  0x2        struUser2App.speed                       u16
+0x200003ae  0x2        struUser2App.speedShftNum                s16
+0x200003b0  0x2        struUser2App.power                       u16
+0x200003b2  0x2        struUser2App.powerShftNum                s16
+0x200003b4  0x2        struUser2App.torque                      u16
+0x200003b6  0x2        struUser2App.torqueShftNum               s16
+0x200003b8  0x2        struUser2App.angle                       u16
+0x200003ba  0x2        struUser2App.angleShftNum                s16
+0x200003bc  0x2        struUser2App.vDc                         u16
+0x200003be  0x2        struUser2App.vDcShftNum                  s16
+
