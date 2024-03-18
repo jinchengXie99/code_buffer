@@ -72,6 +72,8 @@
 .\obj\task_scheduler.o: .\Include\SpeedScan.h
 .\obj\task_scheduler.o: .\Include\PowerCalculation.h
 .\obj\task_scheduler.o: .\USER_APP\USER_APP.h
+.\obj\task_scheduler.o: .\USER_APP\button.h
+.\obj\task_scheduler.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\task_scheduler.o: .\Include\HeatControl.h
 .\obj\task_scheduler.o: C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h
 .\obj\task_scheduler.o: C:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CMSIS\Core\Include\core_cm0.h

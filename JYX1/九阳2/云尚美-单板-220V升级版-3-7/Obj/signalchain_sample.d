@@ -67,3 +67,5 @@
 .\obj\signalchain_sample.o: .\Kernal_Source\mc_hall.h
 .\obj\signalchain_sample.o: Kernal_Source\mc_math.h
 .\obj\signalchain_sample.o: .\USER_APP\USER_APP.h
+.\obj\signalchain_sample.o: .\USER_APP\button.h
+.\obj\signalchain_sample.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

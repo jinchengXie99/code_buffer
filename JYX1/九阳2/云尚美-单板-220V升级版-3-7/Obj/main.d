@@ -66,3 +66,5 @@
 .\obj\main.o: .\Kernal_Source\MC_IPD.h
 .\obj\main.o: .\Kernal_Source\mc_hall.h
 .\obj\main.o: .\USER_APP\USER_APP.h
+.\obj\main.o: .\USER_APP\button.h
+.\obj\main.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h

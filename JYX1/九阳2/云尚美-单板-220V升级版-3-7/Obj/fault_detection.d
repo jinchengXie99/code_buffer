@@ -67,6 +67,8 @@
 .\obj\fault_detection.o: .\Kernal_Source\MC_IPD.h
 .\obj\fault_detection.o: .\Kernal_Source\mc_hall.h
 .\obj\fault_detection.o: .\USER_APP\USER_APP.h
+.\obj\fault_detection.o: .\USER_APP\button.h
+.\obj\fault_detection.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\fault_detection.o: .\Include\PowerCalculation.h
 .\obj\fault_detection.o: .\Include\SpeedScan.h
 .\obj\fault_detection.o: .\Include\PowerCalculation.h

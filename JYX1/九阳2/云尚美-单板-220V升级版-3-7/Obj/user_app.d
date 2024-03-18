@@ -66,6 +66,8 @@
 .\obj\user_app.o: .\Kernal_Source\MC_IPD.h
 .\obj\user_app.o: .\Kernal_Source\mc_hall.h
 .\obj\user_app.o: USER_APP\USER_APP.h
+.\obj\user_app.o: USER_APP\button.h
+.\obj\user_app.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
 .\obj\user_app.o: .\LKS32MC03x_Periph_Driver\include\lks32MC03x_Flash.h
 .\obj\user_app.o: .\Include\HeatControl.h
 .\obj\user_app.o: C:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5\Device\Include\lks32mc03x.h

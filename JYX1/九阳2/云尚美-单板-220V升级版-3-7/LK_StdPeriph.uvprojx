@@ -625,14 +625,14 @@
               <FilePath>.\USER_APP\USER_APP.h</FilePath>
             </File>
             <File>
-              <FileName>key.c</FileName>
+              <FileName>button.c</FileName>
               <FileType>1</FileType>
-              <FilePath>.\USER_APP\key.c</FilePath>
+              <FilePath>.\USER_APP\button.c</FilePath>
             </File>
             <File>
-              <FileName>key.h</FileName>
+              <FileName>button.h</FileName>
               <FileType>5</FileType>
-              <FilePath>.\USER_APP\key.h</FilePath>
+              <FilePath>.\USER_APP\button.h</FilePath>
             </File>
           </Files>
         </Group>

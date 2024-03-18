@@ -73,3 +73,5 @@
 .\obj\heatcontrol.o: .\Kernal_Source\mc_hall.h
 .\obj\heatcontrol.o: .\Include\fault_detection.h
 .\obj\heatcontrol.o: .\USER_APP\USER_APP.h
+.\obj\heatcontrol.o: .\USER_APP\button.h
+.\obj\heatcontrol.o: C:\Keil_v5\ARM\ARMCC\Bin\..\include\string.h
