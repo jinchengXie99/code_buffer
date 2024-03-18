@@ -1485,53 +1485,53 @@ Image Symbol Table
     i.StateStop                              0x00004e2c   Section        0  state_machine.o(i.StateStop)
     i.SysTick_Handler                        0x00004e50   Section        0  interrupt.o(i.SysTick_Handler)
     i.Sys_State_Machine                      0x00004e54   Section        0  state_machine.o(i.Sys_State_Machine)
-    i.SystemInit                             0x00004f6c   Section        0  hardware_init.o(i.SystemInit)
-    i.TIMER0_IRQHandler                      0x00004f74   Section        0  interrupt.o(i.TIMER0_IRQHandler)
-    i.TIMER1_IRQHandler                      0x00004f7c   Section        0  interrupt.o(i.TIMER1_IRQHandler)
-    i.TIM_TimerInit                          0x00004fb0   Section        0  lks32mc03x_timer.o(i.TIM_TimerInit)
-    i.TIM_TimerStrutInit                     0x0000505c   Section        0  lks32mc03x_timer.o(i.TIM_TimerStrutInit)
-    i.Task_Scheduler                         0x00005090   Section        0  task_scheduler.o(i.Task_Scheduler)
-    i.TempSensor_Init                        0x00005150   Section        0  hardware_init.o(i.TempSensor_Init)
-    i.Trig_Functions                         0x0000516c   Section        0  mc_math.o(i.Trig_Functions)
-    i.UART_IRQHandler                        0x000051e4   Section        0  interrupt.o(i.UART_IRQHandler)
-    i.USER_APP_vTick05ms                     0x000051e6   Section        0  user_app.o(i.USER_APP_vTick05ms)
-    i.USER_APP_vTick10ms                     0x000051e8   Section        0  user_app.o(i.USER_APP_vTick10ms)
-    i.USER_APP_vTick1ms                      0x00005208   Section        0  user_app.o(i.USER_APP_vTick1ms)
-    i.USER_APP_vTick500ms                    0x00005218   Section        0  user_app.o(i.USER_APP_vTick500ms)
-    i.USER_GPIO_Init                         0x00005454   Section        0  user_app.o(i.USER_GPIO_Init)
-    i.USER_Init                              0x000054f8   Section        0  user_app.o(i.USER_Init)
-    i.UTimer_init                            0x0000551c   Section        0  hardware_init.o(i.UTimer_init)
-    i.User2AppAngleTrans                     0x00005548   Section        0  app2core.o(i.User2AppAngleTrans)
-    i.User2AppCurTrans                       0x0000556c   Section        0  app2core.o(i.User2AppCurTrans)
-    i.User2AppFreqTrans                      0x0000558c   Section        0  app2core.o(i.User2AppFreqTrans)
-    i.User2AppVolTrans                       0x000055ac   Section        0  app2core.o(i.User2AppVolTrans)
-    i.VolPulsePwmSet                         0x000055e4   Section        0  lib_ipd.o(i.VolPulsePwmSet)
-    i.WAKE_IRQHandler                        0x00005630   Section        0  interrupt.o(i.WAKE_IRQHandler)
-    i.__ARM_common_ll_mulss                  0x00005632   Section        0  fluxobserve.o(i.__ARM_common_ll_mulss)
-    i.__ARM_common_ll_muluu                  0x00005662   Section        0  fluxobserve.o(i.__ARM_common_ll_muluu)
-    i.__ARM_common_switch8                   0x00005692   Section        0  state_machine.o(i.__ARM_common_switch8)
-    i.__NVIC_EnableIRQ                       0x000056ac   Section        0  hardware_init.o(i.__NVIC_EnableIRQ)
-    __NVIC_EnableIRQ                         0x000056ad   Thumb Code    18  hardware_init.o(i.__NVIC_EnableIRQ)
-    i.__NVIC_SetPriority                     0x000056c4   Section        0  hardware_init.o(i.__NVIC_SetPriority)
-    __NVIC_SetPriority                       0x000056c5   Thumb Code    60  hardware_init.o(i.__NVIC_SetPriority)
-    i.main                                   0x00005708   Section        0  main.o(i.main)
-    i.read_key_vealu_num                     0x0000573c   Section        0  user_app.o(i.read_key_vealu_num)
-    i.soft_Trg_ADC                           0x00005750   Section        0  lib_ipd.o(i.soft_Trg_ADC)
-    i.sys_init                               0x00005778   Section        0  system_init.o(i.sys_init)
-    i.vLoadForFlashing                       0x0000579c   Section        0  user_app.o(i.vLoadForFlashing)
-    x$fpl$fmul                               0x000057b4   Section      176  fmul.o(x$fpl$fmul)
-    .constdata                               0x00005864   Section       10  global_variable.o(.constdata)
-    x$fpl$usenofp                            0x00005864   Section        0  usenofp.o(x$fpl$usenofp)
-    .constdata                               0x0000586e   Section       16  global_variable.o(.constdata)
-    .constdata                               0x00005880   Section       44  global_variable.o(.constdata)
-    .constdata                               0x000058ac   Section       36  global_variable.o(.constdata)
-    .constdata                               0x000058d0   Section     2500  heatcontrol.o(.constdata)
-    .constdata                               0x00006294   Section      512  mc_math.o(.constdata)
-    .constdata                               0x00006494   Section      544  lib_svpwm.o(.constdata)
-    .constdata                               0x000066b4   Section      128  ddiv.o(.constdata)
-    ddiv_reciptbl                            0x000066b4   Data         128  ddiv.o(.constdata)
-    .constdata                               0x00006734   Section       64  fdiv.o(.constdata)
-    fdiv_tab                                 0x00006734   Data          64  fdiv.o(.constdata)
+    i.SystemInit                             0x00004f74   Section        0  hardware_init.o(i.SystemInit)
+    i.TIMER0_IRQHandler                      0x00004f7c   Section        0  interrupt.o(i.TIMER0_IRQHandler)
+    i.TIMER1_IRQHandler                      0x00004f84   Section        0  interrupt.o(i.TIMER1_IRQHandler)
+    i.TIM_TimerInit                          0x00004fb8   Section        0  lks32mc03x_timer.o(i.TIM_TimerInit)
+    i.TIM_TimerStrutInit                     0x00005064   Section        0  lks32mc03x_timer.o(i.TIM_TimerStrutInit)
+    i.Task_Scheduler                         0x00005098   Section        0  task_scheduler.o(i.Task_Scheduler)
+    i.TempSensor_Init                        0x00005158   Section        0  hardware_init.o(i.TempSensor_Init)
+    i.Trig_Functions                         0x00005174   Section        0  mc_math.o(i.Trig_Functions)
+    i.UART_IRQHandler                        0x000051ec   Section        0  interrupt.o(i.UART_IRQHandler)
+    i.USER_APP_vTick05ms                     0x000051ee   Section        0  user_app.o(i.USER_APP_vTick05ms)
+    i.USER_APP_vTick10ms                     0x000051f0   Section        0  user_app.o(i.USER_APP_vTick10ms)
+    i.USER_APP_vTick1ms                      0x00005210   Section        0  user_app.o(i.USER_APP_vTick1ms)
+    i.USER_APP_vTick500ms                    0x00005220   Section        0  user_app.o(i.USER_APP_vTick500ms)
+    i.USER_GPIO_Init                         0x0000545c   Section        0  user_app.o(i.USER_GPIO_Init)
+    i.USER_Init                              0x00005500   Section        0  user_app.o(i.USER_Init)
+    i.UTimer_init                            0x00005524   Section        0  hardware_init.o(i.UTimer_init)
+    i.User2AppAngleTrans                     0x00005550   Section        0  app2core.o(i.User2AppAngleTrans)
+    i.User2AppCurTrans                       0x00005574   Section        0  app2core.o(i.User2AppCurTrans)
+    i.User2AppFreqTrans                      0x00005594   Section        0  app2core.o(i.User2AppFreqTrans)
+    i.User2AppVolTrans                       0x000055b4   Section        0  app2core.o(i.User2AppVolTrans)
+    i.VolPulsePwmSet                         0x000055ec   Section        0  lib_ipd.o(i.VolPulsePwmSet)
+    i.WAKE_IRQHandler                        0x00005638   Section        0  interrupt.o(i.WAKE_IRQHandler)
+    i.__ARM_common_ll_mulss                  0x0000563a   Section        0  fluxobserve.o(i.__ARM_common_ll_mulss)
+    i.__ARM_common_ll_muluu                  0x0000566a   Section        0  fluxobserve.o(i.__ARM_common_ll_muluu)
+    i.__ARM_common_switch8                   0x0000569a   Section        0  state_machine.o(i.__ARM_common_switch8)
+    i.__NVIC_EnableIRQ                       0x000056b4   Section        0  hardware_init.o(i.__NVIC_EnableIRQ)
+    __NVIC_EnableIRQ                         0x000056b5   Thumb Code    18  hardware_init.o(i.__NVIC_EnableIRQ)
+    i.__NVIC_SetPriority                     0x000056cc   Section        0  hardware_init.o(i.__NVIC_SetPriority)
+    __NVIC_SetPriority                       0x000056cd   Thumb Code    60  hardware_init.o(i.__NVIC_SetPriority)
+    i.main                                   0x00005710   Section        0  main.o(i.main)
+    i.read_key_vealu_num                     0x00005744   Section        0  user_app.o(i.read_key_vealu_num)
+    i.soft_Trg_ADC                           0x00005758   Section        0  lib_ipd.o(i.soft_Trg_ADC)
+    i.sys_init                               0x00005780   Section        0  system_init.o(i.sys_init)
+    i.vLoadForFlashing                       0x000057a4   Section        0  user_app.o(i.vLoadForFlashing)
+    x$fpl$fmul                               0x000057bc   Section      176  fmul.o(x$fpl$fmul)
+    .constdata                               0x0000586c   Section       10  global_variable.o(.constdata)
+    x$fpl$usenofp                            0x0000586c   Section        0  usenofp.o(x$fpl$usenofp)
+    .constdata                               0x00005876   Section       16  global_variable.o(.constdata)
+    .constdata                               0x00005888   Section       44  global_variable.o(.constdata)
+    .constdata                               0x000058b4   Section       36  global_variable.o(.constdata)
+    .constdata                               0x000058d8   Section     2500  heatcontrol.o(.constdata)
+    .constdata                               0x0000629c   Section      512  mc_math.o(.constdata)
+    .constdata                               0x0000649c   Section      544  lib_svpwm.o(.constdata)
+    .constdata                               0x000066bc   Section      128  ddiv.o(.constdata)
+    ddiv_reciptbl                            0x000066bc   Data         128  ddiv.o(.constdata)
+    .constdata                               0x0000673c   Section       64  fdiv.o(.constdata)
+    fdiv_tab                                 0x0000673c   Data          64  fdiv.o(.constdata)
     .data                                    0x20000000   Section       12  state_machine.o(.data)
     .data                                    0x2000000c   Section       12  fault_detection.o(.data)
     t_nFlagCheck                             0x2000000e   Data           2  fault_detection.o(.data)
@@ -1870,49 +1870,49 @@ Image Symbol Table
     StateRun                                 0x00004c1d   Thumb Code   450  state_machine.o(i.StateRun)
     StateStop                                0x00004e2d   Thumb Code    28  state_machine.o(i.StateStop)
     SysTick_Handler                          0x00004e51   Thumb Code     2  interrupt.o(i.SysTick_Handler)
-    Sys_State_Machine                        0x00004e55   Thumb Code   248  state_machine.o(i.Sys_State_Machine)
-    SystemInit                               0x00004f6d   Thumb Code     8  hardware_init.o(i.SystemInit)
-    TIMER0_IRQHandler                        0x00004f75   Thumb Code     8  interrupt.o(i.TIMER0_IRQHandler)
-    TIMER1_IRQHandler                        0x00004f7d   Thumb Code    44  interrupt.o(i.TIMER1_IRQHandler)
-    TIM_TimerInit                            0x00004fb1   Thumb Code   162  lks32mc03x_timer.o(i.TIM_TimerInit)
-    TIM_TimerStrutInit                       0x0000505d   Thumb Code    52  lks32mc03x_timer.o(i.TIM_TimerStrutInit)
-    Task_Scheduler                           0x00005091   Thumb Code   160  task_scheduler.o(i.Task_Scheduler)
-    TempSensor_Init                          0x00005151   Thumb Code    18  hardware_init.o(i.TempSensor_Init)
-    Trig_Functions                           0x0000516d   Thumb Code   114  mc_math.o(i.Trig_Functions)
-    UART_IRQHandler                          0x000051e5   Thumb Code     2  interrupt.o(i.UART_IRQHandler)
-    USER_APP_vTick05ms                       0x000051e7   Thumb Code     2  user_app.o(i.USER_APP_vTick05ms)
-    USER_APP_vTick10ms                       0x000051e9   Thumb Code    22  user_app.o(i.USER_APP_vTick10ms)
-    USER_APP_vTick1ms                        0x00005209   Thumb Code    16  user_app.o(i.USER_APP_vTick1ms)
-    USER_APP_vTick500ms                      0x00005219   Thumb Code   552  user_app.o(i.USER_APP_vTick500ms)
-    USER_GPIO_Init                           0x00005455   Thumb Code   160  user_app.o(i.USER_GPIO_Init)
-    USER_Init                                0x000054f9   Thumb Code    28  user_app.o(i.USER_Init)
-    UTimer_init                              0x0000551d   Thumb Code    34  hardware_init.o(i.UTimer_init)
-    User2AppAngleTrans                       0x00005549   Thumb Code    30  app2core.o(i.User2AppAngleTrans)
-    User2AppCurTrans                         0x0000556d   Thumb Code    28  app2core.o(i.User2AppCurTrans)
-    User2AppFreqTrans                        0x0000558d   Thumb Code    28  app2core.o(i.User2AppFreqTrans)
-    User2AppVolTrans                         0x000055ad   Thumb Code    36  app2core.o(i.User2AppVolTrans)
-    VolPulsePwmSet                           0x000055e5   Thumb Code    68  lib_ipd.o(i.VolPulsePwmSet)
-    WAKE_IRQHandler                          0x00005631   Thumb Code     2  interrupt.o(i.WAKE_IRQHandler)
-    __ARM_common_ll_mulss                    0x00005633   Thumb Code    48  fluxobserve.o(i.__ARM_common_ll_mulss)
-    __ARM_common_ll_muluu                    0x00005663   Thumb Code    48  fluxobserve.o(i.__ARM_common_ll_muluu)
-    __ARM_common_switch8                     0x00005693   Thumb Code    26  state_machine.o(i.__ARM_common_switch8)
-    main                                     0x00005709   Thumb Code    40  main.o(i.main)
-    read_key_vealu_num                       0x0000573d   Thumb Code    10  user_app.o(i.read_key_vealu_num)
-    soft_Trg_ADC                             0x00005751   Thumb Code    30  lib_ipd.o(i.soft_Trg_ADC)
-    sys_init                                 0x00005779   Thumb Code    26  system_init.o(i.sys_init)
-    vLoadForFlashing                         0x0000579d   Thumb Code    20  user_app.o(i.vLoadForFlashing)
-    __aeabi_fmul                             0x000057b5   Thumb Code     0  fmul.o(x$fpl$fmul)
-    _fmul                                    0x000057b5   Thumb Code   172  fmul.o(x$fpl$fmul)
-    __I$use$fp                               0x00005864   Number         0  usenofp.o(x$fpl$usenofp)
-    sVersion                                 0x00005864   Data          10  global_variable.o(.constdata)
-    struFOC_ConstParam                       0x0000586e   Data          16  global_variable.o(.constdata)
-    struMotorParam                           0x00005880   Data          44  global_variable.o(.constdata)
-    struBoardParam                           0x000058ac   Data          36  global_variable.o(.constdata)
-    HotTab                                   0x000058d0   Data        2500  heatcontrol.o(.constdata)
-    hSin_Cos_Table                           0x00006294   Data         512  mc_math.o(.constdata)
-    atantab1                                 0x00006494   Data         544  lib_svpwm.o(.constdata)
-    Region$$Table$$Base                      0x00006774   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x00006794   Number         0  anon$$obj.o(Region$$Table)
+    Sys_State_Machine                        0x00004e55   Thumb Code   254  state_machine.o(i.Sys_State_Machine)
+    SystemInit                               0x00004f75   Thumb Code     8  hardware_init.o(i.SystemInit)
+    TIMER0_IRQHandler                        0x00004f7d   Thumb Code     8  interrupt.o(i.TIMER0_IRQHandler)
+    TIMER1_IRQHandler                        0x00004f85   Thumb Code    44  interrupt.o(i.TIMER1_IRQHandler)
+    TIM_TimerInit                            0x00004fb9   Thumb Code   162  lks32mc03x_timer.o(i.TIM_TimerInit)
+    TIM_TimerStrutInit                       0x00005065   Thumb Code    52  lks32mc03x_timer.o(i.TIM_TimerStrutInit)
+    Task_Scheduler                           0x00005099   Thumb Code   160  task_scheduler.o(i.Task_Scheduler)
+    TempSensor_Init                          0x00005159   Thumb Code    18  hardware_init.o(i.TempSensor_Init)
+    Trig_Functions                           0x00005175   Thumb Code   114  mc_math.o(i.Trig_Functions)
+    UART_IRQHandler                          0x000051ed   Thumb Code     2  interrupt.o(i.UART_IRQHandler)
+    USER_APP_vTick05ms                       0x000051ef   Thumb Code     2  user_app.o(i.USER_APP_vTick05ms)
+    USER_APP_vTick10ms                       0x000051f1   Thumb Code    22  user_app.o(i.USER_APP_vTick10ms)
+    USER_APP_vTick1ms                        0x00005211   Thumb Code    16  user_app.o(i.USER_APP_vTick1ms)
+    USER_APP_vTick500ms                      0x00005221   Thumb Code   552  user_app.o(i.USER_APP_vTick500ms)
+    USER_GPIO_Init                           0x0000545d   Thumb Code   160  user_app.o(i.USER_GPIO_Init)
+    USER_Init                                0x00005501   Thumb Code    28  user_app.o(i.USER_Init)
+    UTimer_init                              0x00005525   Thumb Code    34  hardware_init.o(i.UTimer_init)
+    User2AppAngleTrans                       0x00005551   Thumb Code    30  app2core.o(i.User2AppAngleTrans)
+    User2AppCurTrans                         0x00005575   Thumb Code    28  app2core.o(i.User2AppCurTrans)
+    User2AppFreqTrans                        0x00005595   Thumb Code    28  app2core.o(i.User2AppFreqTrans)
+    User2AppVolTrans                         0x000055b5   Thumb Code    36  app2core.o(i.User2AppVolTrans)
+    VolPulsePwmSet                           0x000055ed   Thumb Code    68  lib_ipd.o(i.VolPulsePwmSet)
+    WAKE_IRQHandler                          0x00005639   Thumb Code     2  interrupt.o(i.WAKE_IRQHandler)
+    __ARM_common_ll_mulss                    0x0000563b   Thumb Code    48  fluxobserve.o(i.__ARM_common_ll_mulss)
+    __ARM_common_ll_muluu                    0x0000566b   Thumb Code    48  fluxobserve.o(i.__ARM_common_ll_muluu)
+    __ARM_common_switch8                     0x0000569b   Thumb Code    26  state_machine.o(i.__ARM_common_switch8)
+    main                                     0x00005711   Thumb Code    40  main.o(i.main)
+    read_key_vealu_num                       0x00005745   Thumb Code    10  user_app.o(i.read_key_vealu_num)
+    soft_Trg_ADC                             0x00005759   Thumb Code    30  lib_ipd.o(i.soft_Trg_ADC)
+    sys_init                                 0x00005781   Thumb Code    26  system_init.o(i.sys_init)
+    vLoadForFlashing                         0x000057a5   Thumb Code    20  user_app.o(i.vLoadForFlashing)
+    __aeabi_fmul                             0x000057bd   Thumb Code     0  fmul.o(x$fpl$fmul)
+    _fmul                                    0x000057bd   Thumb Code   172  fmul.o(x$fpl$fmul)
+    __I$use$fp                               0x0000586c   Number         0  usenofp.o(x$fpl$usenofp)
+    sVersion                                 0x0000586c   Data          10  global_variable.o(.constdata)
+    struFOC_ConstParam                       0x00005876   Data          16  global_variable.o(.constdata)
+    struMotorParam                           0x00005888   Data          44  global_variable.o(.constdata)
+    struBoardParam                           0x000058b4   Data          36  global_variable.o(.constdata)
+    HotTab                                   0x000058d8   Data        2500  heatcontrol.o(.constdata)
+    hSin_Cos_Table                           0x0000629c   Data         512  mc_math.o(.constdata)
+    atantab1                                 0x0000649c   Data         544  lib_svpwm.o(.constdata)
+    Region$$Table$$Base                      0x0000677c   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x0000679c   Number         0  anon$$obj.o(Region$$Table)
     BrakeFlag                                0x20000000   Data           1  state_machine.o(.data)
     testspeed                                0x20000001   Data           1  state_machine.o(.data)
     g_uDirCheckStep                          0x20000002   Data           2  state_machine.o(.data)
@@ -2042,9 +2042,9 @@ Memory Map of the image
 
   Image Entry point : 0x000000c1
 
-  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x000068a0, Max: 0x00008000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x00000000, Size: 0x000068a8, Max: 0x00008000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x00006794, Max: 0x00008000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x00000000, Load base: 0x00000000, Size: 0x0000679c, Max: 0x00008000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -2252,74 +2252,74 @@ Memory Map of the image
     0x00004e2c   0x00004e2c   0x00000024   Code   RO          538    i.StateStop         state_machine.o
     0x00004e50   0x00004e50   0x00000002   Code   RO          298    i.SysTick_Handler   interrupt.o
     0x00004e52   0x00004e52   0x00000002   PAD
-    0x00004e54   0x00004e54   0x00000118   Code   RO          539    i.Sys_State_Machine  state_machine.o
-    0x00004f6c   0x00004f6c   0x00000008   Code   RO          168    i.SystemInit        hardware_init.o
-    0x00004f74   0x00004f74   0x00000008   Code   RO          299    i.TIMER0_IRQHandler  interrupt.o
-    0x00004f7c   0x00004f7c   0x00000034   Code   RO          300    i.TIMER1_IRQHandler  interrupt.o
-    0x00004fb0   0x00004fb0   0x000000ac   Code   RO         2193    i.TIM_TimerInit     lks32mc03x_timer.o
-    0x0000505c   0x0000505c   0x00000034   Code   RO         2194    i.TIM_TimerStrutInit  lks32mc03x_timer.o
-    0x00005090   0x00005090   0x000000c0   Code   RO          492    i.Task_Scheduler    task_scheduler.o
-    0x00005150   0x00005150   0x0000001c   Code   RO          169    i.TempSensor_Init   hardware_init.o
-    0x0000516c   0x0000516c   0x00000078   Code   RO         1041    i.Trig_Functions    mc_math.o
-    0x000051e4   0x000051e4   0x00000002   Code   RO          302    i.UART_IRQHandler   interrupt.o
-    0x000051e6   0x000051e6   0x00000002   Code   RO         2292    i.USER_APP_vTick05ms  user_app.o
-    0x000051e8   0x000051e8   0x00000020   Code   RO         2293    i.USER_APP_vTick10ms  user_app.o
-    0x00005208   0x00005208   0x00000010   Code   RO         2294    i.USER_APP_vTick1ms  user_app.o
-    0x00005218   0x00005218   0x0000023c   Code   RO         2295    i.USER_APP_vTick500ms  user_app.o
-    0x00005454   0x00005454   0x000000a4   Code   RO         2296    i.USER_GPIO_Init    user_app.o
-    0x000054f8   0x000054f8   0x00000024   Code   RO         2297    i.USER_Init         user_app.o
-    0x0000551c   0x0000551c   0x0000002c   Code   RO          172    i.UTimer_init       hardware_init.o
-    0x00005548   0x00005548   0x00000024   Code   RO         1087    i.User2AppAngleTrans  app2core.o
-    0x0000556c   0x0000556c   0x00000020   Code   RO         1088    i.User2AppCurTrans  app2core.o
-    0x0000558c   0x0000558c   0x00000020   Code   RO         1089    i.User2AppFreqTrans  app2core.o
-    0x000055ac   0x000055ac   0x00000038   Code   RO         1090    i.User2AppVolTrans  app2core.o
-    0x000055e4   0x000055e4   0x0000004c   Code   RO         2673    i.VolPulsePwmSet    LKS03x_FluxOBS_V2p16cs3.lib(lib_ipd.o)
-    0x00005630   0x00005630   0x00000002   Code   RO          303    i.WAKE_IRQHandler   interrupt.o
-    0x00005632   0x00005632   0x00000030   Code   RO         2663    i.__ARM_common_ll_mulss  LKS03x_FluxOBS_V2p16cs3.lib(fluxobserve.o)
-    0x00005662   0x00005662   0x00000030   Code   RO         2661    i.__ARM_common_ll_muluu  LKS03x_FluxOBS_V2p16cs3.lib(fluxobserve.o)
-    0x00005692   0x00005692   0x0000001a   Code   RO          635    i.__ARM_common_switch8  state_machine.o
-    0x000056ac   0x000056ac   0x00000018   Code   RO          173    i.__NVIC_EnableIRQ  hardware_init.o
-    0x000056c4   0x000056c4   0x00000044   Code   RO          174    i.__NVIC_SetPriority  hardware_init.o
-    0x00005708   0x00005708   0x00000034   Code   RO         1018    i.main              main.o
-    0x0000573c   0x0000573c   0x00000014   Code   RO         2298    i.read_key_vealu_num  user_app.o
-    0x00005750   0x00005750   0x00000028   Code   RO         2674    i.soft_Trg_ADC      LKS03x_FluxOBS_V2p16cs3.lib(lib_ipd.o)
-    0x00005778   0x00005778   0x00000024   Code   RO          453    i.sys_init          system_init.o
-    0x0000579c   0x0000579c   0x00000018   Code   RO         2299    i.vLoadForFlashing  user_app.o
-    0x000057b4   0x000057b4   0x000000b0   Code   RO         2910    x$fpl$fmul          fz_ps.l(fmul.o)
-    0x00005864   0x00005864   0x00000000   Code   RO         2919    x$fpl$usenofp       fz_ps.l(usenofp.o)
-    0x00005864   0x00005864   0x0000000a   Data   RO           17    .constdata          global_variable.o
-    0x0000586e   0x0000586e   0x00000010   Data   RO           18    .constdata          global_variable.o
-    0x0000587e   0x0000587e   0x00000002   PAD
-    0x00005880   0x00005880   0x0000002c   Data   RO           19    .constdata          global_variable.o
-    0x000058ac   0x000058ac   0x00000024   Data   RO           20    .constdata          global_variable.o
-    0x000058d0   0x000058d0   0x000009c4   Data   RO          963    .constdata          heatcontrol.o
-    0x00006294   0x00006294   0x00000200   Data   RO         1042    .constdata          mc_math.o
-    0x00006494   0x00006494   0x00000220   Data   RO         2443    .constdata          LKS03x_FluxOBS_V2p16cs3.lib(lib_svpwm.o)
-    0x000066b4   0x000066b4   0x00000080   Data   RO         2887    .constdata          fz_ps.l(ddiv.o)
-    0x00006734   0x00006734   0x00000040   Data   RO         2904    .constdata          fz_ps.l(fdiv.o)
-    0x00006774   0x00006774   0x00000020   Data   RO         3086    Region$$Table       anon$$obj.o
+    0x00004e54   0x00004e54   0x00000120   Code   RO          539    i.Sys_State_Machine  state_machine.o
+    0x00004f74   0x00004f74   0x00000008   Code   RO          168    i.SystemInit        hardware_init.o
+    0x00004f7c   0x00004f7c   0x00000008   Code   RO          299    i.TIMER0_IRQHandler  interrupt.o
+    0x00004f84   0x00004f84   0x00000034   Code   RO          300    i.TIMER1_IRQHandler  interrupt.o
+    0x00004fb8   0x00004fb8   0x000000ac   Code   RO         2193    i.TIM_TimerInit     lks32mc03x_timer.o
+    0x00005064   0x00005064   0x00000034   Code   RO         2194    i.TIM_TimerStrutInit  lks32mc03x_timer.o
+    0x00005098   0x00005098   0x000000c0   Code   RO          492    i.Task_Scheduler    task_scheduler.o
+    0x00005158   0x00005158   0x0000001c   Code   RO          169    i.TempSensor_Init   hardware_init.o
+    0x00005174   0x00005174   0x00000078   Code   RO         1041    i.Trig_Functions    mc_math.o
+    0x000051ec   0x000051ec   0x00000002   Code   RO          302    i.UART_IRQHandler   interrupt.o
+    0x000051ee   0x000051ee   0x00000002   Code   RO         2292    i.USER_APP_vTick05ms  user_app.o
+    0x000051f0   0x000051f0   0x00000020   Code   RO         2293    i.USER_APP_vTick10ms  user_app.o
+    0x00005210   0x00005210   0x00000010   Code   RO         2294    i.USER_APP_vTick1ms  user_app.o
+    0x00005220   0x00005220   0x0000023c   Code   RO         2295    i.USER_APP_vTick500ms  user_app.o
+    0x0000545c   0x0000545c   0x000000a4   Code   RO         2296    i.USER_GPIO_Init    user_app.o
+    0x00005500   0x00005500   0x00000024   Code   RO         2297    i.USER_Init         user_app.o
+    0x00005524   0x00005524   0x0000002c   Code   RO          172    i.UTimer_init       hardware_init.o
+    0x00005550   0x00005550   0x00000024   Code   RO         1087    i.User2AppAngleTrans  app2core.o
+    0x00005574   0x00005574   0x00000020   Code   RO         1088    i.User2AppCurTrans  app2core.o
+    0x00005594   0x00005594   0x00000020   Code   RO         1089    i.User2AppFreqTrans  app2core.o
+    0x000055b4   0x000055b4   0x00000038   Code   RO         1090    i.User2AppVolTrans  app2core.o
+    0x000055ec   0x000055ec   0x0000004c   Code   RO         2673    i.VolPulsePwmSet    LKS03x_FluxOBS_V2p16cs3.lib(lib_ipd.o)
+    0x00005638   0x00005638   0x00000002   Code   RO          303    i.WAKE_IRQHandler   interrupt.o
+    0x0000563a   0x0000563a   0x00000030   Code   RO         2663    i.__ARM_common_ll_mulss  LKS03x_FluxOBS_V2p16cs3.lib(fluxobserve.o)
+    0x0000566a   0x0000566a   0x00000030   Code   RO         2661    i.__ARM_common_ll_muluu  LKS03x_FluxOBS_V2p16cs3.lib(fluxobserve.o)
+    0x0000569a   0x0000569a   0x0000001a   Code   RO          635    i.__ARM_common_switch8  state_machine.o
+    0x000056b4   0x000056b4   0x00000018   Code   RO          173    i.__NVIC_EnableIRQ  hardware_init.o
+    0x000056cc   0x000056cc   0x00000044   Code   RO          174    i.__NVIC_SetPriority  hardware_init.o
+    0x00005710   0x00005710   0x00000034   Code   RO         1018    i.main              main.o
+    0x00005744   0x00005744   0x00000014   Code   RO         2298    i.read_key_vealu_num  user_app.o
+    0x00005758   0x00005758   0x00000028   Code   RO         2674    i.soft_Trg_ADC      LKS03x_FluxOBS_V2p16cs3.lib(lib_ipd.o)
+    0x00005780   0x00005780   0x00000024   Code   RO          453    i.sys_init          system_init.o
+    0x000057a4   0x000057a4   0x00000018   Code   RO         2299    i.vLoadForFlashing  user_app.o
+    0x000057bc   0x000057bc   0x000000b0   Code   RO         2910    x$fpl$fmul          fz_ps.l(fmul.o)
+    0x0000586c   0x0000586c   0x00000000   Code   RO         2919    x$fpl$usenofp       fz_ps.l(usenofp.o)
+    0x0000586c   0x0000586c   0x0000000a   Data   RO           17    .constdata          global_variable.o
+    0x00005876   0x00005876   0x00000010   Data   RO           18    .constdata          global_variable.o
+    0x00005886   0x00005886   0x00000002   PAD
+    0x00005888   0x00005888   0x0000002c   Data   RO           19    .constdata          global_variable.o
+    0x000058b4   0x000058b4   0x00000024   Data   RO           20    .constdata          global_variable.o
+    0x000058d8   0x000058d8   0x000009c4   Data   RO          963    .constdata          heatcontrol.o
+    0x0000629c   0x0000629c   0x00000200   Data   RO         1042    .constdata          mc_math.o
+    0x0000649c   0x0000649c   0x00000220   Data   RO         2443    .constdata          LKS03x_FluxOBS_V2p16cs3.lib(lib_svpwm.o)
+    0x000066bc   0x000066bc   0x00000080   Data   RO         2887    .constdata          fz_ps.l(ddiv.o)
+    0x0000673c   0x0000673c   0x00000040   Data   RO         2904    .constdata          fz_ps.l(fdiv.o)
+    0x0000677c   0x0000677c   0x00000020   Data   RO         3086    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x00006794, Size: 0x00000c90, Max: 0x00001000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x0000679c, Size: 0x00000c90, Max: 0x00001000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x00006794   0x0000000c   Data   RW          541    .data               state_machine.o
-    0x2000000c   0x000067a0   0x0000000c   Data   RW          684    .data               fault_detection.o
-    0x20000018   0x000067ac   0x00000014   Data   RW          964    .data               heatcontrol.o
-    0x2000002c   0x000067c0   0x00000004   Data   RW         1181    .data               foc_drive.o
-    0x20000030   0x000067c4   0x00000034   Data   RW         2302    .data               user_app.o
-    0x20000064   0x000067f8   0x00000001   Data   RW         2303    .data               user_app.o
-    0x20000065   0x000067f9   0x00000003   PAD
-    0x20000068   0x000067fc   0x00000064   Data   RW         2580    .data               LKS03x_FluxOBS_V2p16cs3.lib(fluxobserve.o)
-    0x200000cc   0x00006860   0x0000003e   Data   RW         2719    .data               LKS03x_FluxOBS_V2p16cs3.lib(onthefly.o)
-    0x2000010a   0x0000689e   0x00000002   PAD
+    0x20000000   0x0000679c   0x0000000c   Data   RW          541    .data               state_machine.o
+    0x2000000c   0x000067a8   0x0000000c   Data   RW          684    .data               fault_detection.o
+    0x20000018   0x000067b4   0x00000014   Data   RW          964    .data               heatcontrol.o
+    0x2000002c   0x000067c8   0x00000004   Data   RW         1181    .data               foc_drive.o
+    0x20000030   0x000067cc   0x00000034   Data   RW         2302    .data               user_app.o
+    0x20000064   0x00006800   0x00000001   Data   RW         2303    .data               user_app.o
+    0x20000065   0x00006801   0x00000003   PAD
+    0x20000068   0x00006804   0x00000064   Data   RW         2580    .data               LKS03x_FluxOBS_V2p16cs3.lib(fluxobserve.o)
+    0x200000cc   0x00006868   0x0000003e   Data   RW         2719    .data               LKS03x_FluxOBS_V2p16cs3.lib(onthefly.o)
+    0x2000010a   0x000068a6   0x00000002   PAD
     0x2000010c        -       0x00000010   Zero   RW            3    .bss                global_variable.o
     0x2000011c        -       0x00000010   Zero   RW            4    .bss                global_variable.o
     0x2000012c        -       0x000000ec   Zero   RW            5    .bss                global_variable.o
     0x20000218        -       0x00000040   Zero   RW            6    .bss                global_variable.o
     0x20000258        -       0x00000044   Zero   RW            7    .bss                global_variable.o
-    0x2000029c   0x0000689e   0x00000004   PAD
+    0x2000029c   0x000068a6   0x00000004   PAD
     0x200002a0        -       0x00000058   Zero   RW            8    .bss                global_variable.o
     0x200002f8        -       0x00000024   Zero   RW            9    .bss                global_variable.o
     0x2000031c        -       0x00000018   Zero   RW           12    .bss                global_variable.o
@@ -2328,16 +2328,16 @@ Memory Map of the image
     0x20000374        -       0x00000020   Zero   RW           15    .bss                global_variable.o
     0x20000394        -       0x00000020   Zero   RW           16    .bss                global_variable.o
     0x200003b4        -       0x0000000e   Zero   RW          540    .bss                state_machine.o
-    0x200003c2   0x0000689e   0x00000002   PAD
+    0x200003c2   0x000068a6   0x00000002   PAD
     0x200003c4        -       0x000000a4   Zero   RW          682    .bss                fault_detection.o
     0x20000468        -       0x00000070   Zero   RW          823    .bss                powercalculation.o
     0x200004d8        -       0x00000020   Zero   RW          897    .bss                speedscan.o
     0x200004f8        -       0x00000058   Zero   RW          962    .bss                heatcontrol.o
     0x20000550        -       0x00000022   Zero   RW         2301    .bss                user_app.o
-    0x20000572   0x0000689e   0x00000002   PAD
+    0x20000572   0x000068a6   0x00000002   PAD
     0x20000574        -       0x000000b8   Zero   RW         2579    .bss                LKS03x_FluxOBS_V2p16cs3.lib(fluxobserve.o)
     0x2000062c        -       0x00000060   Zero   RW         2957    .bss                c_p.l(libspace.o)
-    0x2000068c   0x0000689e   0x00000004   PAD
+    0x2000068c   0x000068a6   0x00000004   PAD
     0x20000690        -       0x00000200   Zero   RW         2274    HEAP                startup_lks32mc03x.o
     0x20000890        -       0x00000400   Zero   RW         2273    STACK               startup_lks32mc03x.o
 
@@ -2349,36 +2349,36 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   Object Name
 
-       188         42          0          0          0       3174   app2core.o
-      1662        210          0         12        164       9775   fault_detection.o
-       476         58          0          4          0      10286   foc_drive.o
-         0          0        106          0        676      52153   global_variable.o
-       932        120          0          0          0      18431   hardware_init.o
-      1676        330       2500         20         88      10368   heatcontrol.o
-       344         64          0          0          0       7095   interrupt.o
-       104          0          0          0          0       5452   lks32mc03x_adc.o
-       286         18          0          0          0       3148   lks32mc03x_cmp.o
-       388         76          0          0          0       2432   lks32mc03x_flash.o
-       362         28          0          0          0       4557   lks32mc03x_gpio.o
-       116          8          0          0          0       2590   lks32mc03x_hall.o
-       602         28          0          0          0       7501   lks32mc03x_mcpwm.o
-       104         20          0          0          0       1252   lks32mc03x_sys.o
-       224         10          0          0          0       3629   lks32mc03x_timer.o
-        52         12          0          0          0        459   main.o
-       140         10        512          0          0       3567   mc_math.o
-       208          0          0          0          0       1796   pid_regulators.o
-         0          0          0          0        112       1358   powercalculation.o
-       110          0          0          0          0       1486   process_control.o
-       192         40          0          0          0       2718   signalchain_sample.o
-        96         14          0          0         32       2084   speedscan.o
+       188         42          0          0          0       3234   app2core.o
+      1662        210          0         12        164       9887   fault_detection.o
+       476         58          0          4          0      10374   foc_drive.o
+         0          0        106          0        676      52285   global_variable.o
+       932        120          0          0          0      18579   hardware_init.o
+      1676        330       2500         20         88      10448   heatcontrol.o
+       344         64          0          0          0       7227   interrupt.o
+       104          0          0          0          0       5488   lks32mc03x_adc.o
+       286         18          0          0          0       3180   lks32mc03x_cmp.o
+       388         76          0          0          0       2456   lks32mc03x_flash.o
+       362         28          0          0          0       4621   lks32mc03x_gpio.o
+       116          8          0          0          0       2626   lks32mc03x_hall.o
+       602         28          0          0          0       7545   lks32mc03x_mcpwm.o
+       104         20          0          0          0       1272   lks32mc03x_sys.o
+       224         10          0          0          0       3661   lks32mc03x_timer.o
+        52         12          0          0          0        467   main.o
+       140         10        512          0          0       3603   mc_math.o
+       208          0          0          0          0       1824   pid_regulators.o
+         0          0          0          0        112       1374   powercalculation.o
+       110          0          0          0          0       1514   process_control.o
+       192         40          0          0          0       2762   signalchain_sample.o
+        96         14          0          0         32       2108   speedscan.o
         68         32        192          0       1536        676   startup_lks32mc03x.o
-      2654        430          0         12         14      13892   state_machine.o
-       364         72          0          0          0       2184   system_init.o
-       210         32          0          0          0       2945   task_scheduler.o
-      1314        126          0         53         34      11674   user_app.o
+      2662        432          0         12         14      14076   state_machine.o
+       364         72          0          0          0       2216   system_init.o
+       210         32          0          0          0       2977   task_scheduler.o
+      1314        126          0         53         34      11822   user_app.o
 
     ----------------------------------------------------------------------
-     12896       1780       3344        104       2664     186682   Object Totals
+     12904       1782       3344        104       2664     188302   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         24          0          2          3          8          0   (incl. Padding)
 
@@ -2454,15 +2454,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     22436       2340       4080        268       2948     218522   Grand Totals
-     22436       2340       4080        268       2948     218522   ELF Image Totals
-     22436       2340       4080        268          0          0   ROM Totals
+     22444       2342       4080        268       2948     220142   Grand Totals
+     22444       2342       4080        268       2948     220142   ELF Image Totals
+     22444       2342       4080        268          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                26516 (  25.89kB)
+    Total RO  Size (Code + RO Data)                26524 (  25.90kB)
     Total RW  Size (RW Data + ZI Data)              3216 (   3.14kB)
-    Total ROM Size (Code + RO Data + RW Data)      26784 (  26.16kB)
+    Total ROM Size (Code + RO Data + RW Data)      26792 (  26.16kB)
 
 ==============================================================================
 
