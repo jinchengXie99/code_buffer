@@ -317,11 +317,12 @@ ARM Macro Assembler    Page 5
               00000000 
 Command Line: --debug --xref --diag_suppress=9931 --cpu=Cortex-M0 --apcs=interw
 ork --depend=.\obj\startup_lks32mc03x.d -o.\obj\startup_lks32mc03x.o -I.\RTE\_L
-inko_03x_Project -IC:\Users\yun.chen\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.0\CM
-SIS\Core\Include -IC:\Users\yun.chen\AppData\Local\Arm\Packs\Linko\LKS03x\1.1.5
-\Device\Include --predefine="__UVISION_VERSION SETA 538" --predefine="_RTE_ SET
-A 1" --predefine="LKS32MC038Y6P8 SETA 1" --predefine="_RTE_ SETA 1" --list=.\li
-st\startup_lks32mc03x.lst LKS32MC03x_Periph_Driver\Source\startup_lks32mc03x.s
+inko_03x_Project -IC:\Users\jincheng.xie\AppData\Local\Arm\Packs\ARM\CMSIS\5.8.
+0\CMSIS\Core\Include -IC:\Users\jincheng.xie\AppData\Local\Arm\Packs\Linko\LKS0
+3x\1.1.5\Device\Include --predefine="__EVAL SETA 1" --predefine="__UVISION_VERS
+ION SETA 536" --predefine="_RTE_ SETA 1" --predefine="LKS32MC038Y6P8 SETA 1" --
+predefine="_RTE_ SETA 1" --list=.\list\startup_lks32mc03x.lst LKS32MC03x_Periph
+_Driver\Source\startup_lks32mc03x.s
 
 
 
@@ -729,4 +730,4 @@ Symbol: __use_two_region_memory
       None
 Comment: __use_two_region_memory unused
 3 symbols
-377 symbols in table
+378 symbols in table
