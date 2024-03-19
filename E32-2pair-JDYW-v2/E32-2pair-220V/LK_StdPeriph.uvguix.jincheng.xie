@@ -93,18 +93,18 @@
       <flags>2</flags>
       <showCmd>3</showCmd>
       <MinPosition>
-        <xPos>-1</xPos>
-        <yPos>-1</yPos>
+        <xPos>-32000</xPos>
+        <yPos>-32000</yPos>
       </MinPosition>
       <MaxPosition>
         <xPos>-1</xPos>
         <yPos>-1</yPos>
       </MaxPosition>
       <NormalPosition>
-        <Top>282</Top>
-        <Left>744</Left>
-        <Right>2195</Right>
-        <Bottom>1220</Bottom>
+        <Top>124</Top>
+        <Left>1018</Left>
+        <Right>2469</Right>
+        <Bottom>1062</Bottom>
       </NormalPosition>
     </WindowPosition>
     <MDIClientArea>
@@ -1865,8 +1865,8 @@
       <ActiveTab>5</ActiveTab>
       <Doc>
         <Name>.\Kernal_Source\main.c</Name>
-        <ColumnNumber>18</ColumnNumber>
-        <TopLine>1</TopLine>
+        <ColumnNumber>17</ColumnNumber>
+        <TopLine>6</TopLine>
         <CurrentLine>53</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
@@ -1883,9 +1883,9 @@
       </Doc>
       <Doc>
         <Name>.\USER_APP\USER_APP.c</Name>
-        <ColumnNumber>18</ColumnNumber>
-        <TopLine>307</TopLine>
-        <CurrentLine>345</CurrentLine>
+        <ColumnNumber>0</ColumnNumber>
+        <TopLine>310</TopLine>
+        <CurrentLine>341</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
@@ -1901,7 +1901,7 @@
       </Doc>
       <Doc>
         <Name>.\AppFunction\Task_Scheduler.c</Name>
-        <ColumnNumber>19</ColumnNumber>
+        <ColumnNumber>13</ColumnNumber>
         <TopLine>28</TopLine>
         <CurrentLine>69</CurrentLine>
         <Folding>1</Folding>
@@ -1911,7 +1911,7 @@
       <Doc>
         <Name>.\AppFunction\state_machine.c</Name>
         <ColumnNumber>27</ColumnNumber>
-        <TopLine>45</TopLine>
+        <TopLine>105</TopLine>
         <CurrentLine>73</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
