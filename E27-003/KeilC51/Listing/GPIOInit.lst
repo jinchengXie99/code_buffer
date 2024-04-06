@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   GPIOINIT                                                          02/24/2024 10:00:32 PAGE 1   
+C51 COMPILER V9.60.7.0   GPIOINIT                                                          04/03/2024 13:28:04 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE GPIOINIT
@@ -62,7 +62,7 @@ line level    source
   47          {
   48   1        SetBit(P0_PU, P05);            // LOCK
   49   1        SetBit(P0_PU, P06);            // GO
-C51 COMPILER V9.60.7.0   GPIOINIT                                                          02/24/2024 10:00:32 PAGE 2   
+C51 COMPILER V9.60.7.0   GPIOINIT                                                          04/03/2024 13:28:04 PAGE 2   
 
   50   1        
   51   1        SetBit(P3_OE, P36);            // LED1
@@ -126,7 +126,7 @@ line level    source
  109   1      //  GP11 = 1;   
  110   1      
  111   1      //  SetBit(P2_OE, P22);            // 
-C51 COMPILER V9.60.7.0   GPIOINIT                                                          02/24/2024 10:00:32 PAGE 3   
+C51 COMPILER V9.60.7.0   GPIOINIT                                                          04/03/2024 13:28:04 PAGE 3   
 
  112   1      //  SetBit(P2_PU, P22);            // 
  113   1      //  GP22 = 1;                      // FLZ

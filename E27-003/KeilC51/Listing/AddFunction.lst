@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 1   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE ADDFUNCTION
@@ -62,7 +62,7 @@ line level    source
   51   1        #elif (Motor_Speed_Control_Mode == POWER_LOOP_CONTROL)
                 {
                   mcSpeedRamp.IncValue    = POWRAMPSTARTINC;
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 2   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 2   
 
                   mcSpeedRamp.DecValue    = POWRAMPSTARTDEC;
                 }
@@ -126,7 +126,7 @@ line level    source
  113   1        {
  114   2          return (- value);
  115   2        }
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 3   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 3   
 
  116   1        else
  117   1        {
@@ -190,7 +190,7 @@ line level    source
  174   3                mcPwmInput.PWMFlag=1;                               // PWMFlagÖÃ1ÆÚ¼ä£¬²»¶ÁÈ¡TIM3__DRºÍTIM3__ARR
              -;£¬·ÀÖ¹³ö´í
  175   3                mcPwmInput.pwm.PWMCompareUpdate[0]=(mcPwmInput.PWMCompare>>1);// ¶ÔÆä³ËÒÔ32768
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 4   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 4   
 
  176   3                mcPwmInput.PWMARRUpdate=mcPwmInput.PWMARR;
  177   3                mcPwmInput.PWMDivFlag=1;                            // Æô¶¯³ý·¨
@@ -254,7 +254,7 @@ line level    source
  234                           µç»ú¹ýÇ·Ñ¹±£»¤×´Ì¬ÏÂ£¬Ä¸ÏßµçÑ¹»Ö¸´µ½Ç·Ñ¹»Ö¸´ÖµÒÔÉÏ£¬¹ýÑ¹»Ö¸´ÖµÒÔÏÂÊ±£¬¼ÆÊýÆ÷¼ÓÒ»£¬³¬¹ý200
              -´Îºó£¬»Ö¸´¡£¸ù¾ÝµµÎ»ÐÅÏ¢À´¾ö¶¨»Ö¸´µ½ÄÄ¸ö×´Ì¬¡£
  235           * Parameter:     mcFaultVarible *h_Fault
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 5   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 5   
 
  236           * Return:       no
  237           *****************************************************************************/
@@ -318,7 +318,7 @@ line level    source
              -ount >0))
  294   1          {  
  295   2            if(h_Fault->VoltDetecBraketCount > 0)
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 6   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 6   
 
  296   2            {h_Fault->VoltDetecBraketCount--;}
  297   2            
@@ -382,7 +382,7 @@ line level    source
  354   1          if(mcFaultSource == FaultNoSource)//³ÌÐòÎÞÆäËû±£»¤ÏÂ
  355   1          {
  356   2              if(mcFocCtrl.Powerlpf > PowerLimit)   //¹¦ÂÊ´óÓÚ±£»¤ÖµÊ±¼ÆÊý£¬³¬¹ý20´Î£¬ÅÐ¶ÏÎª¹ýÔØ±£»¤£¬¹Ø±ÕÊä³ö;·
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 7   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 7   
 
              -´Ö®£¬¼ÆÊýÆ÷ÂýÂý¼õ
  357   2              {
@@ -446,7 +446,7 @@ line level    source
  415   3              if(mcFaultDect.TemperatureRecCount > 0)
  416   3              {mcFaultDect.TemperatureRecCount--;}
  417   3            }   
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 8   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 8   
 
  418   2         }
  419   1         
@@ -510,7 +510,7 @@ line level    source
  477   2          if(h_Cur->Abs_ic > h_Cur->Max_ic)
  478   2          {
  479   3             h_Cur->Max_ic = h_Cur->Abs_ic;
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 9   
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 9   
 
  480   3          }
  481   2      
@@ -574,7 +574,7 @@ line level    source
  537   2          if(h_Fault->OverPowerDetecCnt>=OverPowerRecoverTime)
  538   2          {
  539   3            h_Fault->OverPowerDetecCnt=0;
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 10  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 10  
 
  540   3            mcProtectTime.PowerPretectTimes++;
  541   3            mcState = mcReady;
@@ -638,7 +638,7 @@ line level    source
  598   5                  }
  599   4             }
  600   3           }
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 11  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 11  
 
  601   2           else
  602   2           {
@@ -702,7 +702,7 @@ line level    source
  659   4              {
  660   5                h_Fault->StallDectEs=0;
  661   5                mcFaultSource=FaultStall;
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 12  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 12  
 
  662   5                mcProtectTime.StallTimes++;        //¶Â×ª´ÎÊý+1
  663   5                FaultProcess();
@@ -766,7 +766,7 @@ line level    source
  721   2      //        if((mcFaultSource==FaultStall)&&(mcState == mcFault)&&(mcProtectTime.StallTimes<=4))  //¶Â×ªÖØÆô
              -´ÎÊý
  722   2      //        {
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 13  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 13  
 
  723   2      //          h_Fault->StallReCount++;
  724   2      //          if(h_Fault->StallReCount>=StallRecoverTime)
@@ -830,7 +830,7 @@ line level    source
  778   4               if(h_Fault->COpencnt>0)
  779   4                h_Fault->COpencnt --;
  780   4             }
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 14  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 14  
 
  781   3              mcCurVarible.Max_ia = 0;
  782   3              mcCurVarible.Max_ib = 0;
@@ -894,7 +894,7 @@ line level    source
  840   2          
  841   2          if(TemperatureProtectEnable) //ÎÂ¶È±£»¤
  842   2          {
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 15  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 15  
 
  843   3            Fault_Temperature(&mcFaultDect);
  844   3          }    
@@ -958,7 +958,7 @@ line level    source
  902   3      //      mcSpeedRamp.TargetValue = 0;
  903   3          }
  904   2        }
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 16  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 16  
 
  905   1        else
  906   1        {
@@ -1022,7 +1022,7 @@ line level    source
                             mcFocCtrl.mcIqref = FOC_IQREF;
                             if (FOC_IQREF < QOUTVALUE)
                             {
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 17  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 17  
 
                                 mcFocCtrl.mcIqref += QOUTINC;
                                 if (mcFocCtrl.mcIqref > QOUTVALUE) mcFocCtrl.mcIqref = QOUTVALUE;
@@ -1086,7 +1086,7 @@ line level    source
                                 {
                                   if(mcFocCtrl.SpeedFlt > (_Q15(100000 / MOTOR_SPEED_BASE)))
                                   {
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 18  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 18  
 
                                       FOC_DQKP  = DQKPH;
                                       FOC_DQKI  = DQKIH;
@@ -1150,7 +1150,7 @@ line level    source
 1088   2          if((FOC__THETA>=0)&&(FOC__THETA<32768))//0-180
 1089   2          {
 1090   3            ResetFGPin;
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 19  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 19  
 
 1091   3          }
 1092   2          else if((FOC__THETA>=32768)&&(FOC__THETA<65536))//180-360
@@ -1214,7 +1214,7 @@ line level    source
 1150   2          case FaultStall:                     //¶Â×ª±£»¤ÉÁË¸6´Î
 1151   2              Led_OnOff(&mcLedDisplay,6);
 1152   2            break;
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 20  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 20  
 
 1153   2          case  FaultOverPower:               //¹¦ÂÊ±£»¤ÉÁË¸7´Î
 1154   2              Led_OnOff(&mcLedDisplay,7);
@@ -1278,7 +1278,7 @@ line level    source
 1212   3            }
 1213   2        }
 1214   1        else
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 21  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 21  
 
 1215   1        {
 1216   2            if(hSpeedramp->ActualValue - hSpeedramp->DecValue > hSpeedramp->TargetValue)
@@ -1342,7 +1342,7 @@ line level    source
 1274   1        LPF_Y = Xn0;
 1275   1        SetBit(PI_LPF_CR, LPFSTA);
 1276   1        _nop_();_nop_();_nop_();_nop_();_nop_();
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 22  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 22  
 
 1277   1        return LPF_Y;
 1278   1      }
@@ -1406,7 +1406,7 @@ line level    source
 1336   3            FOC_EKP = OBSW_KP_GAIN_RUN3;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKP
 1337   3            FOC_EKI = OBSW_KI_GAIN_RUN3;                          // ¹ÀËãÆ÷ÀïµÄPIµÄKI
 1338   3          }
-C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       02/24/2024 10:00:29 PAGE 23  
+C51 COMPILER V9.60.7.0   ADDFUNCTION                                                       04/03/2024 13:28:01 PAGE 23  
 
 1339   2          else if(mcFocCtrl.State_Count == 50)
 1340   2          {

@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 1   
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERCALCULATE
@@ -62,7 +62,7 @@ line level    source
   51          
   52          //----------------------------------------------------------------------------//
   53          // 说明：检测电流
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 2   
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 2   
 
   54          //s16 FocIAAbs, FocIBAbs, FocICAbs;
   55          s16 FocIA, FocIB, FocIC;
@@ -126,7 +126,7 @@ line level    source
  113          //----------------------------------------------------------------------------//
  114          // 说明：温度计算公式
  115          s16 CalTemperOffset(u16 base,u16 val, u16 warm, u16 cool)
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 3   
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 3   
 
  116          {
  117   1        return(base - 25*(val-warm)/(cool-warm));
@@ -190,7 +190,7 @@ line level    source
  175          // ---------|-------|-------|-------|-------|-------|-------|
  176          // ℃     -25       0      25      50      75     100     125
  177          // R 1287.405 325.711  100.00  35.882  14.665   6.6519   3.2750
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 4   
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 4   
 
  178          
  179          // ---------|-------|-------|-------|-------|-------|-------|-------|-------|-------|
@@ -254,7 +254,7 @@ line level    source
  237   1      //    {
  238   1      //      MaxSpdOfStop = U_LOW_MAX_SPD + 
  239   1      //        (UBusX10 - U_BUS_LOW_X10)*((s32)U_TURN1_MAX_SPD-U_LOW_MAX_SPD)/(U_BUS_TURN1_X10 - U_BUS_LOW_X10)
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 5   
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 5   
 
              -;
  240   1      //    }
@@ -318,7 +318,7 @@ line level    source
  292   1      //      MaxSpdOfStop = U_TURN1_MAX_SPD_B + 
  293   1      //        (UBusX10 - U_BUS_TURN1_X10_B)*((s32)U_TURN2_MAX_SPD_B-U_TURN1_MAX_SPD_B)/(U_BUS_TURN2_X10_B - U_
              -BUS_TURN1_X10_B);
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 6   
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 6   
 
  294   1      //    }
  295   1      //    else if(UBusX10 <= U_BUS_HIGH_X10)
@@ -382,7 +382,7 @@ line level    source
                 
                 if(++PulseSmpCnt >= 4)
                 {
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 7   
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 7   
 
                   PulseSmpCnt = 0;
                   PulseDutyAvr = PulseDutySum >> 2;
@@ -446,7 +446,7 @@ line level    source
  413   4              {
  414   5                if(++MaxSpdX10ms > HIHG_SPD_TIME/10)        // 高速保持Ns
  415   5                {
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 8   
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 8   
 
  416   6                  MaxSpdX10ms = HIHG_SPD_TIME/10;
  417   6                  HighSpdInhibitLv = 1;
@@ -510,7 +510,7 @@ line level    source
  475   1          UltraSpdX10ms = 0;
  476   1      }
  477          //----------------------------------------------------------------------------//
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 9   
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 9   
 
  478          u16 VspIBusAlt;
  479          s32 VspRPMAlt;
@@ -574,7 +574,7 @@ line level    source
  535   1      //      VspIBusAlt = I_BUS_CMD_MAX;
  536   1      //    else if(Vsp_Q12 > VSP_MIN_Q12)
  537   1      //      VspIBusAlt = I_BUS_CMD_MIN + 
-C51 COMPILER V9.60.7.0   USERCALCULATE                                                     02/24/2024 10:04:48 PAGE 10  
+C51 COMPILER V9.60.7.0   USERCALCULATE                                                     04/03/2024 13:54:56 PAGE 10  
 
  538   1      //        ((u32)(I_BUS_CMD_MAX - I_BUS_CMD_MIN)*(Vsp_Q12-VSP_MIN_Q12))/(VSP_MAX_Q12-VSP_MIN_Q12);
  539   1      //    else

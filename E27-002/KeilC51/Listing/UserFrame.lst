@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 1   
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERFRAME
@@ -62,7 +62,7 @@ line level    source
   51          
   52          extern u16 idata HeatTemperADCVal;
   53          
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 2   
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 2   
 
   54          struct KeyIn KeyOn;
   55          
@@ -126,7 +126,7 @@ line level    source
  113          
  114          u16 IBusOCCnt;                      // 过流计数
  115          u16 IBusWarningCnt;                 // 预警(过热)电流计数
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 3   
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 3   
 
  116          
  117          u16 KeyGoDuty;                      // 按键给定输出量 Q12
@@ -190,7 +190,7 @@ line level    source
  175          u8  FltReStartTrig;
  176          u8  ReStartCnt;
  177          u8  ReStartDlyCmd;
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 4   
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 4   
 
  178          u16 ReStartDlyX10ms;
  179          
@@ -254,7 +254,7 @@ line level    source
  237   1        if (VspSpdAlt < VspSpdCmd)
  238   1        {
  239   2          VspSpdAlt += SPEED_CMD_INC;
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 5   
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 5   
 
  240   2          
  241   2          if (VspSpdAlt > VspSpdCmd)
@@ -318,7 +318,7 @@ line level    source
  299   1          IBusSmp = 0;
  300   1        
  301   1        //计算电流电压，计算功率
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 6   
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 6   
 
  302   1        UBusX10 = ((u32)UBusSmp * U_BUS_X10_COEF)>>12;
  303   1        
@@ -382,7 +382,7 @@ line level    source
  361   2        }
  362   1      
  363   1        // 电压保护
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 7   
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 7   
 
  364   1        if((Loop1msCnt==3)||(Loop1msCnt==7))
  365   1        {
@@ -446,7 +446,7 @@ line level    source
  423   3            FlagLowVolt = 0;
  424   3          }
  425   2        }
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 8   
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 8   
 
  426   1        else if(Loop1msCnt == 5)
  427   1        {
@@ -510,7 +510,7 @@ line level    source
  485   1        // 如一定时长内未测得交流过零信号，表明交流输入异常，设置标志位
  486   1        // 如要求交流异常停机，则在此时设置标志停止电机运行
  487   1        // 当检测交流信号回归正常，设置标志，提醒是否开机
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 9   
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 9   
 
  488   1      
  489   1        #if (CHECK_AC_CROSS_ENABLE == 1)
@@ -574,7 +574,7 @@ line level    source
  547          //u16 PwrOnX10msCnt;
  548          //u16 Run1sCnt;
  549          //u8  To1sX10msCnt;
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 10  
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 10  
 
  550          u8  Restart10msCnt;
  551          u8  QuickStartFlag;
@@ -638,7 +638,7 @@ line level    source
                 #elif (COMMAND_MODE == CMD_MODE_KEYS)
                   if(QuickStartFlag == 1)
                     CalKeysDuty();
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 11  
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 11  
 
                   GivenDuty_Q12 = KeyGoDuty;
                   
@@ -702,7 +702,7 @@ line level    source
  671   1      
  672   1        // 电压跌落或过零异常，设置掉电标志位
  673   1        // 电压跌落后暂停运行，在无故障并且无关机指令的情况下，电压回升后继续运行
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 12  
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 12  
 
  674   1        // 当过零异常暂停置位，在无故障并且无关机指令的情况下，过零正常后继续运行
  675   1        
@@ -766,7 +766,7 @@ line level    source
  733   3          }
  734   2          else if(ExpectedDrvRef < VSP_OFF_Q12)
  735   2            DrvHystericLv = 0;
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 13  
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 13  
 
  736   2          
  737   2          // 根据所处滞回区间位置，确定是否开启
@@ -830,7 +830,7 @@ line level    source
  795   2        }
  796   1        // 驱动给定有触发,重新检测各量
  797   1        else// if(RunTrigger>0)
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 14  
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 14  
 
  798   1        {
  799   2          RunTrigger = 0;   // 清除标志
@@ -894,7 +894,7 @@ line level    source
  856   1        //
  857   1        if(UBusX10 > 1000)
  858   1          IBusCommand_mA = ((u32)VspPowerAlt*1000)/UBusX10;
-C51 COMPILER V9.60.7.0   USERFRAME                                                         02/24/2024 10:04:48 PAGE 15  
+C51 COMPILER V9.60.7.0   USERFRAME                                                         04/03/2024 13:54:55 PAGE 15  
 
  859   1        else
  860   1          //IBusCommand_mA = ((u32)VspPowerAlt*10000)/2500;

@@ -1,0 +1,268 @@
+C51 COMPILER V9.60.7.0   USERMAIN                                                          04/03/2024 13:18:11 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERMAIN
+OBJECT MODULE PLACED IN .\Output\UserMain.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\UserFiles\UserMain.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE(
+                    -5,SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\UserMain.lst) TA
+                    -BS(2) OBJECT(.\Output\UserMain.obj)
+
+line level    source
+
+   1          
+   2          /* Includes -------------------------------------------------------------------------------------*/
+   3          #include <FU68xx_2.h>
+   4          #include <Myproject.h>
+   5          #include <Customer_Debug.h>
+   6          
+   7          #include <UserGlobal.h>
+   8          #include <UserDefine.h>
+   9          
+  10          /* Private typedef ------------------------------------------------------------------------------*/
+  11          /* Private define -------------------------------------------------------------------------------*/
+  12          /* Private macro --------------------------------------------------------------------------------*/
+  13          /* Private variables ----------------------------------------------------------------------------*/
+  14          /* Private function prototypes ------------------------------------------------------------------*/
+  15          /* Private functions ----------------------------------------------------------------------------*/
+  16          
+  17          extern u8  Loop1msFlag;
+  18          extern u8  Loop10msFlag;
+  19          extern u16 IbusADCOffset;
+  20          extern s16 idata Vsp_Q12;
+  21          
+  22          extern u8  idata SpeedShiftStep;
+  23          extern u8  idata SpeedCmdLv;
+  24          extern u8  idata HeatShiftStep;
+  25          extern u8  idata HeatCmdLv;
+  26          extern u8  idata CoolShiftLv;
+  27          extern u8  idata CoolCmdLv;
+  28          
+  29          bit TestMode = 0;
+  30          
+  31          uint16 PowerUpCnt;
+  32          /*-------------------------------------------------------------------------------------------------
+  33            Function Name : void main(void)
+  34            Description   : Ö÷º¯ÊýÖ÷Òª¹¦ÄÜÊÇ³õÊ¼»¯£¬°üÀ¨ÉÏµçµÈ´ý£¬Èí¼þ³õÊ¼»¯£¬Ó²¼þ³õÊ¼»¯£¬µ÷ÊÔÄ£Ê½ÉèÖÃ£¬Ö÷Ñ­»·É¨Ãè¡£
+  35                                        Èí¼þ³õÊ¼»¯--³õÊ¼»¯ËùÓÐ¶¨ÒåµÄ±äÁ¿
+  36                                        Ó²¼þ³õÊ¼»¯--³õÊ¼»¯Ó²¼þÉè±¸ÅäÖÃ
+  37                                        µ÷ÊÔÄ£Ê½ÉèÖÃ--µ÷ÊÔÄ£Ê½
+  38            Input         : ÎÞ
+  39            Output        : ÎÞ
+  40          -------------------------------------------------------------------------------------------------*/
+  41          void main(void)
+  42          {
+  43   1      
+  44   1        u8  xdata *addr_x;
+  45   1        u8  idata *addr_i;
+  46   1      
+  47   1        /*Wait For Power Up*/
+  48   1      //  for(PowerUpCnt=0;PowerUpCnt<SystemPowerUpTime;PowerUpCnt++)
+  49   1      //  {}
+  50   1        
+  51   1        PowerUpCnt = 0;
+  52   1        while(PowerUpCnt++ < SystemPowerUpTime)
+  53   1        {;}
+C51 COMPILER V9.60.7.0   USERMAIN                                                          04/03/2024 13:18:11 PAGE 2   
+
+  54   1      
+  55   1        for(addr_i = 0x0030; addr_i < 0x00FF; addr_i++)   // IRAM£º0x30 - 0xFF (²»¿É <= )
+  56   1          *addr_i = 0;
+  57   1          
+  58   1        // Çå¿ÕIRAM¼°XRAM£¬È«²¿¹éÁã
+  59   1        for(addr_x = 0x0000; addr_x <= 0x02FF; addr_x++)  // XRAM£º6818: 0 - 0x0FFF , 6861: 0 - 0x02FF
+  60   1          *addr_x = 0;
+  61   1       
+  62   1      //  addr_i = 0x00FF;
+  63   1      //  *addr_i = 0;
+  64   1      
+  65   1        *(uint8 idata *)0x00FF = 0;
+  66   1          
+  67   1        //--------------------------------------------------------------------------//
+  68   1        /*Software Init*/
+  69   1        /*****³õÊ¼»¯ËùÓÐ¶¨ÒåµÄ²ÎÊý±äÁ¿*****/
+  70   1        MotorcontrolInit();
+  71   1      
+  72   1        /*****°´¼ü³õÊ¼»¯*****/
+  73   1      //  KeyInit();             //ÉÏµç¶ÁÈ¡flashÀïÃæ°´¼üÖµ
+  74   1      
+  75   1        /****µç»ú³õÊ¼×´Ì¬ÎªmcReady£¬¹ÊÕÏ±£»¤ÎªÎÞ¹ÊÕÏ******/
+  76   1        mcState = mcReady;
+  77   1        mcFaultSource = FaultNoSource;
+  78   1          
+  79   1        // ´µ·çÍ²ÓÃ»§Flash²ÎÊý¶ÁÈ¡
+  80   1        #if (COMMAND_MODE == CMD_MODE_DRYER_KEYS)
+  81   1          #if (FLASH_SAVE_ENABLE == 0)
+                    DryerKeysDefault();
+                  #else
+  84   1            DryerFlashInit();
+  85   1          #endif
+  86   1          
+  87   1          CalSpeedStepToCmd();
+  88   1          CalHeatStepToCmd();
+  89   1          CalCoolLvToCmd();
+  90   1        #endif
+  91   1        
+  92   1        //--------------------------------------------------------------------------//
+  93   1        /*Hardware Init*/
+  94   1        // ÎªÌá¸ßÐ¾Æ¬µÄ¿¹¸ÉÈÅÄÜÁ¦£¬½µµÍÐ¾Æ¬¹¦ºÄ£¬ÇëÔÚ¾ßÌåÏîÄ¿Ê±£¬½«²»ÐèÒªÓÃµÄGPIOÄ¬ÈÏ¶¼ÅäÖÃÎªÊäÈëÉÏÀ­¡£
+  95   1        // ¾ßÌåÅäÖÃ¿ÉÔÚGPIO_Default_InitÉèÖÃ¡£
+  96   1        //    GPIO_Default_Init();
+  97   1        
+  98   1        //Sleepmode_Init();
+  99   1      
+ 100   1        /******Ó²¼þFO¹ýÁ÷£¬±È½ÏÆ÷³õÊ¼»¯£¬ÓÃÓÚÓ²¼þ¹ýÁ÷±È½Ï±£»¤******/
+ 101   1        #if (HardwareCurrent_Protect == Hardware_FO_Protect)                //Íâ²¿ÖÐ¶Ï³õÊ¼»¯£¬ÓÃÓÚÍâ²¿ÖÐ¶ÏÓ²¼þ¹ý
+             -Á÷FOµÄ±£»¤
+                EXTI_Init();
+                #elif (HardwareCurrent_Protect == Hardware_CMP_Protect)             //Ñ¡Ôñ±È½Ï¹ýÁ÷£¬±È½ÏÆ÷³õÊ¼»¯
+ 104   1        CMP3_Init();
+ 105   1        #elif (HardwareCurrent_Protect == Hardware_FO_CMP_Protect)          //Á½Õß¶¼Ñ¡Ôñ
+                EXTI_Init();
+                CMP3_Init();
+                #endif
+ 109   1      
+ 110   1        /*****¹¦ÄÜIO³õÊ¼»¯*************/
+ 111   1        GPIO_Init();
+ 112   1        
+ 113   1        /*****ÔËËã·Å´óÆ÷³õÊ¼»¯*********/
+ 114   1        AMP_Init();
+C51 COMPILER V9.60.7.0   USERMAIN                                                          04/03/2024 13:18:11 PAGE 3   
+
+ 115   1      
+ 116   1        /*****ADC³õÊ¼»¯***************/
+ 117   1        ADC_Init();
+ 118   1        
+ 119   1        /*****±È½ÏÆ÷ÖÐ¶ÏÅäÖÃ**********/
+ 120   1        CMP3_Inter_Init();                                                  // ½¨ÒéºÍ±È½ÏÆ÷³õÊ¼»¯¼ä¸ôÒ»¶ÎÊ±¼ä
+ 121   1      
+ 122   1        /*****Driver³õÊ¼»¯***********/
+ 123   1        Driver_Init();
+ 124   1      
+ 125   1        /***²âÊÔÄ£Ê½ÅÐ¶ÏÆÁ±ÎµµÎ»´æ´¢***/                                     //  Ç¿ÖÆÉè¶¨·çËÙµµ--1£¬ÎÂ¶Èµµ--1£¬À
+             -ä·çµµ--0
+ 126   1        if( (GP15 == 0)  &&  (GP13 == 0) )
+ 127   1        {
+ 128   2          TestMode = 1;
+ 129   2          
+ 130   2          SpeedShiftStep = 1;
+ 131   2          SpeedCmdLv = 1;
+ 132   2          
+ 133   2          HeatShiftStep = 1;
+ 134   2          HeatCmdLv = 1;
+ 135   2          
+ 136   2          CoolShiftLv = 0;
+ 137   2          CoolCmdLv = 0;
+ 138   2        }
+ 139   1      
+ 140   1        /*****¹ýÁã¼ì²âÍâ²¿ÖÐ¶Ï³õÊ¼»¯***/
+ 141   1        ZeroCrossing_Init();
+ 142   1        
+ 143   1        /*****UART³õÊ¼»¯*************/
+ 144   1        #if (COMMAND_MODE == CMD_MODE_UART)
+                UART_Init();                                                        // P05-TX P06-RX
+                UARTDataInit();
+                #endif
+ 148   1      
+ 149   1      //  #if defined (SPI_DBG_HW) | defined (SPI_DBG_SW)                   // µ÷ÊÔÄ£Ê½
+ 150   1      //  SPI_Init();                                                       //µ÷ÊÔÄ£Ê½ÏÂ£¬Õ¼ÓÃSPI¶Ë¿ÚµÄNSS(GP04)
+             -,MOSI(GP05),SCK(GP06)
+ 151   1      //  #endif
+ 152   1        
+ 153   1        // ÓÃ»§²ÎÊý¸³Öµ
+ 154   1        UserParas();
+ 155   1        
+ 156   1        /*****Timer³õÊ¼»¯***********/
+ 157   1      //  TIM2_Init();                                                      //¶Ë¿ÚGP07 & GP10
+ 158   1      //  TIM3_Init();                                                      //¿ØÖÆ·¢ÈÈË¿
+ 159   1      //  TIM4_Init();                                                      //¼ì²â¹âñîÆ«²î
+ 160   1        TIM1ms_Init();                                                      //²ÉÓÃ1ms¶¨Ê±Æ÷ÖÐ¶Ï×÷Îª³£¼ûÖÐ¶Ï,´¦Àí
+             -¹ÊÕÏ±£»¤µÈ¸½¼Ó¹¦ÄÜ
+ 161   1        
+ 162   1        //--------------------------------------------------------------------------//
+ 163   1        //Ö÷Ñ­»·
+ 164   1        while(1)
+ 165   1        {
+ 166   2          if(mcCurOffset.OffsetFlag == 0)
+ 167   2          {
+ 168   3            GetCurrentOffset();                                             // µçÁ÷Æ«ÖÃµÄ»ñÈ¡
+ 169   3            
+ 170   3            //IBusSmpOffset = (IBusSmpOffset + ((ADC3_DR&0x0fff)<<3))>>1;
+ 171   3      
+ 172   3            if(mcCurOffset.OffsetFlag == 1)
+ 173   3            {
+C51 COMPILER V9.60.7.0   USERMAIN                                                          04/03/2024 13:18:11 PAGE 4   
+
+ 174   4              mcCurOffset.OffsetCount = 0;
+ 175   4              IbusADCOffset = mcCurOffset.Iw_busOffset;
+ 176   4            }
+ 177   3          }
+ 178   2          else
+ 179   2          {
+ 180   3            // Ã¿1msÖ´ÐÐÒ»´Î
+ 181   3            if(Loop1msFlag == 1)
+ 182   3            {
+ 183   4              Loop1msFlag = 0;
+ 184   4              
+ 185   4              LoopProPer1ms();
+ 186   4              
+ 187   4              #if (COMMAND_MODE == CMD_MODE_DRYER_KEYS)
+ 188   4              DryerPer1ms();
+ 189   4              #endif
+ 190   4              //
+ 191   4              // Ã¿10msÖ´ÐÐÒ»´Î
+ 192   4              if(Loop10msFlag == 1)
+ 193   4              {
+ 194   5                Loop10msFlag = 0;
+ 195   5                CommandPer10ms();
+ 196   5              }
+ 197   4              
+ 198   4              // ÓÉVSPµÄÖµ£¬È·¶¨Start»òStop×´Ì¬
+ 199   4              if(Vsp_Q12 >= VSP_ON_Q12)                 //ÔËÐÐ
+ 200   4              {
+ 201   5                mcSpeedRamp.FlagONOFF = 1;
+ 202   5                mcSpeedRamp.TargetValue = 1;
+ 203   5              }
+ 204   4              else if(Vsp_Q12 < VSP_OFF_Q12)            //Í£»ú
+ 205   4              {
+ 206   5                mcSpeedRamp.FlagONOFF = 0;
+ 207   5                mcSpeedRamp.TargetValue = 0;
+ 208   5              }
+ 209   4              
+ 210   4              /* Ö÷¿Øº¯Êý£¬×´Ì¬É¨Ãè 1kHz */
+ 211   4              MC_Control();
+ 212   4      
+ 213   4              //»·Â·ÏìÓ¦£¬ÈçËÙ¶È»·¡¢×ª¾Ø»·¡¢¹¦ÂÊ»·µÈ
+ 214   4              Regulation();
+ 215   4      
+ 216   4              // ×´Ì¬´æ´¢
+ 217   4              #if ((FLASH_SAVE_ENABLE == 1)&&(COMMAND_MODE == CMD_MODE_DRYER_KEYS))
+ 218   4                FlashLoopPro();
+ 219   4              #endif
+ 220   4              
+ 221   4              #if (COMMAND_MODE == CMD_MODE_UART)
+                      UARTPer1ms();
+                      #endif
+ 224   4            }
+ 225   3          }
+ 226   2        }
+ 227   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    289    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =      2    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+C51 COMPILER V9.60.7.0   USERMAIN                                                          04/03/2024 13:18:11 PAGE 5   
+
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =      1    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

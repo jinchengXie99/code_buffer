@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 1   
+C51 COMPILER V9.60.7.0   USERFLASH                                                         04/03/2024 13:28:02 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERFLASH
@@ -62,7 +62,7 @@ line level    source
   51          
   52          //----------------------------------------------------------------------------//
   53          // 说明：用户数据组写入存储区
-C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 2   
+C51 COMPILER V9.60.7.0   USERFLASH                                                         04/03/2024 13:28:02 PAGE 2   
 
   54          void FlashWriteData(void)
   55          {
@@ -126,7 +126,7 @@ line level    source
  113   1      ////    _nop_();
  114   1      //    
  115   1      //    FLA_CR = 0x08;                  //开始预编程，完成后Flash再次上锁
-C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 3   
+C51 COMPILER V9.60.7.0   USERFLASH                                                         04/03/2024 13:28:02 PAGE 3   
 
  116   1      //    //EA = TempEA;
  117   1      
@@ -190,7 +190,7 @@ line level    source
  175   4              
  176   4              FlashPieceNum = 2;          // 更改待写入数组的存储区编号
  177   4              FlashAddrOffset = 8;        // 更改待写入数组的存储区偏移首地址
-C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 4   
+C51 COMPILER V9.60.7.0   USERFLASH                                                         04/03/2024 13:28:02 PAGE 4   
 
  178   4            }
  179   3            // 区块未写满，计算待操作区块的编号及首地址，用以下次写入
@@ -254,7 +254,7 @@ line level    source
  237   1        {
  238   2          if(PowerLose == 0)
  239   2          {
-C51 COMPILER V9.60.7.0   USERFLASH                                                         02/24/2024 10:00:30 PAGE 5   
+C51 COMPILER V9.60.7.0   USERFLASH                                                         04/03/2024 13:28:02 PAGE 5   
 
  240   3            FlashSaveFlag = 0;
  241   3          }

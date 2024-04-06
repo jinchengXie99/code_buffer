@@ -1,0 +1,7 @@
+Change Component Designator: OldDesignator=C100 NewDesignator=C59
+Change Component Designator: OldDesignator=C101 NewDesignator=C58
+Change Net Name : Old Net Name=NetC100_1 New Net Name=NetC59_1
+Change Net Name : Old Net Name=NetC101_2 New Net Name=NetC58_2
+Added Member To Class: ClassName=CDS-YT-JB-V2 Member=Component C58 100nF/25V
+Added Member To Class: ClassName=CDS-YT-JB-V2 Member=Component C59 100nF/25V
+Added Room: Name=CDS-YT-JB-V2

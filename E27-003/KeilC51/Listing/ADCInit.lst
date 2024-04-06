@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   ADCINIT                                                           02/24/2024 10:00:32 PAGE 1   
+C51 COMPILER V9.60.7.0   ADCINIT                                                           04/03/2024 13:28:03 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE ADCINIT
@@ -62,7 +62,7 @@ line level    source
   49   1        ADC_CH0--P20_AN--IU--固定                 ADC_CH5--P32_AN
   50   1        ADC_CH1--P23_AN--IV--固定                 ADC_CH6--P33_AN
   51   1        ADC_CH2--P24_AN--DCBUS--固定              ADC_CH7--P34_AN
-C51 COMPILER V9.60.7.0   ADCINIT                                                           02/24/2024 10:00:32 PAGE 2   
+C51 COMPILER V9.60.7.0   ADCINIT                                                           04/03/2024 13:28:03 PAGE 2   
 
   52   1        ADC_CH3--P25_AN--VSP                      ADC_CH8--P21_AN
   53   1        ADC_CH4--P27_AN--IBUS/IW--固定            ADC_CH9--P16_AN

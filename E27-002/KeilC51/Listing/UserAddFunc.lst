@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   USERADDFUNC                                                       02/24/2024 10:04:48 PAGE 1   
+C51 COMPILER V9.60.7.0   USERADDFUNC                                                       04/03/2024 13:54:55 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERADDFUNC
@@ -62,7 +62,7 @@ line level    source
   51   1        
   52   1        DrvEnFlag = 0;
   53   1        Vsp_Q12 = 0;
-C51 COMPILER V9.60.7.0   USERADDFUNC                                                       02/24/2024 10:04:48 PAGE 2   
+C51 COMPILER V9.60.7.0   USERADDFUNC                                                       04/03/2024 13:54:55 PAGE 2   
 
   54   1        //KeyGoCmdOn = 0;
   55   1        KeyOnOffCmd = 0;
@@ -126,7 +126,7 @@ line level    source
  113          void IBusPI(int16 err)
  114          {
  115   1        //PI_UKMAX = 2000;
-C51 COMPILER V9.60.7.0   USERADDFUNC                                                       02/24/2024 10:04:48 PAGE 3   
+C51 COMPILER V9.60.7.0   USERADDFUNC                                                       04/03/2024 13:54:55 PAGE 3   
 
  116   1        PI_EK = err;
  117   1        PI_LPF_CR |= 0x02;                  // Start PI
@@ -190,7 +190,7 @@ line level    source
  175   5                PI_UKMIN   = SOUTMIN;
  176   5                
  177   5                
-C51 COMPILER V9.60.7.0   USERADDFUNC                                                       02/24/2024 10:04:48 PAGE 4   
+C51 COMPILER V9.60.7.0   USERADDFUNC                                                       04/03/2024 13:54:55 PAGE 4   
 
  178   5                #if (CONTROL_TARGET==CONTROL_TARGET_POWER)
                         {
@@ -254,7 +254,7 @@ line level    source
  237   5                
  238   5                //PI_KP    = _Q12(0.9);
  239   5                //PI_KI    = _Q12(0.010);
-C51 COMPILER V9.60.7.0   USERADDFUNC                                                       02/24/2024 10:04:48 PAGE 5   
+C51 COMPILER V9.60.7.0   USERADDFUNC                                                       04/03/2024 13:54:55 PAGE 5   
 
  240   5      
  241   5      //          //功率调节方法1：----------------------------------------------------//
@@ -318,7 +318,7 @@ line level    source
  299   3            {
  300   4              if(++mcFocCtrl.SpeedLoopTime >= 5)
  301   4              {
-C51 COMPILER V9.60.7.0   USERADDFUNC                                                       02/24/2024 10:04:48 PAGE 6   
+C51 COMPILER V9.60.7.0   USERADDFUNC                                                       04/03/2024 13:54:55 PAGE 6   
 
  302   5                mcFocCtrl.SpeedLoopTime = 0;
  303   5                ////
@@ -382,7 +382,7 @@ line level    source
  361   3            {
  362   4              mcFaultDect.StartDelay = 1500;
  363   4              if((mcFocCtrl.EsValue < 5))//&&(mcFocCtrl.CtrlMode==0))
-C51 COMPILER V9.60.7.0   USERADDFUNC                                                       02/24/2024 10:04:48 PAGE 7   
+C51 COMPILER V9.60.7.0   USERADDFUNC                                                       04/03/2024 13:54:55 PAGE 7   
 
  364   4              {
  365   5                  mcFaultDect.StartESCount++;
@@ -446,7 +446,7 @@ line level    source
  423   4              mcFaultDect.StallDectEs++;
  424   4              if(mcFaultDect.StallDectEs >= 10)
  425   4              {
-C51 COMPILER V9.60.7.0   USERADDFUNC                                                       02/24/2024 10:04:48 PAGE 8   
+C51 COMPILER V9.60.7.0   USERADDFUNC                                                       04/03/2024 13:54:55 PAGE 8   
 
  426   5                mcFaultDect.StallDectEs = 0;
  427   5                mcProtectTime.StallFlag = 1;

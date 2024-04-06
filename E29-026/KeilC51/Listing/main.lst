@@ -1,0 +1,210 @@
+C51 COMPILER V9.60.7.0   MAIN                                                              04/03/2024 13:18:11 PAGE 1   
+
+
+C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
+OBJECT MODULE PLACED IN .\Output\main.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE ..\User\Source\Application\main.c LARGE OMF2 WARNINGLEVEL(0) OPTIMIZE(5,
+                    -SPEED) BROWSE INCDIR(..\Library\FU68xx_Hardware_Driver\Include;..\User\Include) DEBUG PRINT(.\Listing\main.lst) TABS(2) 
+                    -OBJECT(.\Output\main.obj)
+
+line level    source
+
+   1          /**************************** (C) COPYRIGHT 2017 Fortiortech shenzhen *****************************
+   2          * File Name          : main.c
+   3          * Author             : Fortiortech Appliction Team
+   4          * Version            : V1.0
+   5          * Date               : 2017-12-27
+   6          * Description        : This file contains main function used for Motor Control.
+   7          ***************************************************************************************************
+   8          * All Rights Reserved
+   9          **************************************************************************************************/
+  10          
+  11          /* Includes -------------------------------------------------------------------------------------*/
+  12          #include <FU68xx_2.h>
+  13          #include <Myproject.h>
+  14          #include <Customer_Debug.h>
+  15          
+  16          /* Private typedef ------------------------------------------------------------------------------*/
+  17          /* Private define -------------------------------------------------------------------------------*/
+  18          /* Private macro --------------------------------------------------------------------------------*/
+  19          /* Private variables ----------------------------------------------------------------------------*/
+  20          /* Private function prototypes ------------------------------------------------------------------*/
+  21          /* Private functions ----------------------------------------------------------------------------*/
+  22          void SoftwareInit(void);
+  23          void HardwareInit(void);
+  24          void DebugSet(void);
+  25          void MotorControlInit(void);
+  26          extern uint16 KeyCount_Long;
+  27          /*-------------------------------------------------------------------------------------------------
+  28                  Function Name : void main(void)
+  29                  Description   : Ö÷º¯ÊýÖ÷Òª¹¦ÄÜÊÇ³õÊ¼»¯£¬°üÀ¨ÉÏµçµÈ´ý£¬Èí¼þ³õÊ¼»¯£¬Ó²¼þ³õÊ¼»¯£¬µ÷ÊÔÄ£Ê½ÉèÖÃ£¬Ö÷Ñ­»·
+             -É¨Ãè¡£
+  30                                              Èí¼þ³õÊ¼»¯--³õÊ¼»¯ËùÓÐ¶¨ÒåµÄ±äÁ¿
+  31                                              Ó²¼þ³õÊ¼»¯--³õÊ¼»¯Ó²¼þÉè±¸ÅäÖÃ
+  32                                              µ÷ÊÔÄ£Ê½ÉèÖÃ--µ÷ÊÔÄ£Ê½
+  33                  Input         : ÎÞ
+  34                  Output        : ÎÞ
+  35          -------------------------------------------------------------------------------------------------*/
+  36          //void main(void)
+  37          //{
+  38          //    uint16 PowerUpCnt = 0;
+  39          
+  40          //    for(PowerUpCnt=0;PowerUpCnt<SystemPowerUpTime;PowerUpCnt++){};
+  41          
+  42          //    /*Software Init*/
+  43          //    SoftwareInit();
+  44          
+  45          //    /*Hardware Init*/
+  46          //    HardwareInit();
+  47          
+  48          ////    /*µ÷ÊÔÄ£Ê½ÉèÖÃ--ÄÚ²¿±äÁ¿²éÑ¯£»CMPÊä³ö²éÑ¯£»ADC´¥·¢ÐÅºÅ²éÑ¯*/
+  49          ////    DebugSet();
+  50          
+  51          //      /*ÆôÍ£²âÊÔ¼Ó*/
+  52          ////    ONOFFTest.ONOFF_Flag = 1;
+C51 COMPILER V9.60.7.0   MAIN                                                              04/03/2024 13:18:11 PAGE 2   
+
+  53          ////    mcSpeedRamp.FlagONOFF   = 1;
+  54          ////    mcSpeedRamp.TargetValue = _Q15(110000 / MOTOR_SPEED_BASE);
+  55          //  
+  56          //    while(1)
+  57          //    {
+  58          //      GetCurrentOffset();                                                      // µçÁ÷Æ«ÖÃµÄ»ñÈ¡
+  59          //      MC_Control();                                                            // Ö÷¿Øº¯Êý£¬×´Ì¬É¨Ãè 2.6
+             -k
+  60          //      RealPowerCal();           // ¹¦ÂÊ¼ÆËã
+  61          //      #if (!StartONOFF_Enable)                                                 // µ÷ËÙ·½Ê½
+  62          //          #if (SPEED_MODE == PWMMODE)                                          // PWMµ÷ËÙÄ£Ê½
+  63          //                PWMInputCapture();                                            // PWM dutyµ÷ËÙÄ£Ê½
+  64          //          #elif (SPEED_MODE == NONEMODE)                                      // Ö±½ÓÉÏµçÔËÐÐÄ£Ê½
+  65          //              mcSpeedRamp.FlagONOFF   = 1;
+  66          ////              mcSpeedRamp.TargetValue = _Q15(69000 / MOTOR_SPEED_BASE);
+  67          //          #endif
+  68          //      #endif
+  69          //    }
+  70          //}
+  71          /*-------------------------------------------------------------------------------------------------
+  72                  Function Name : void DebugSet(void)
+  73                  Description   : µ÷ÊÔÄ£Ê½ÅäÖÃ
+  74                  Input         : ÎÞ
+  75                  Output        : ÎÞ
+  76          -------------------------------------------------------------------------------------------------*/
+  77          void DebugSet(void)
+  78          {
+  79   1      //    #if defined (SPI_DBG_HW)                                                    // Ó²¼þµ÷ÊÔÄ£Ê½
+  80   1      //        Set_DBG_DMA(&HARD_SPIDATA);
+  81   1      //    #elif defined (SPI_DBG_SW)                                                  // Èí¼þµ÷ÊÔÄ£Ê½
+  82   1      //        Set_DBG_DMA(spidebug);
+  83   1      //    #endif
+  84   1      
+  85   1      //    #if defined (SPI_DBG_HW) && defined (SPI_DBG_SW)
+  86   1      //        #error Only one DBG mode can be selected
+  87   1      //    #endif
+  88   1      
+  89   1      //    SetReg(CMP_CR3, DBGSEL0 | DBGSEL1,  GP01_DBG_Conf);
+  90   1      //    SetReg(CMP_CR3, CMPSEL0 | CMPSEL1 | CMPSEL2, GP07_DBG_Conf);
+  91   1      }
+  92          
+  93          /*-------------------------------------------------------------------------------------------------
+  94                  Function Name : void SoftwareInit(void)
+  95                  Description   : Èí¼þ³õÊ¼»¯£¬³õÊ¼»¯ËùÓÐ¶¨Òå±äÁ¿£¬°´¼ü³õÊ¼»¯É¨Ãè
+  96                  Input         : ÎÞ
+  97                  Output        : ÎÞ
+  98          -------------------------------------------------------------------------------------------------*/
+  99          void SoftwareInit(void)
+ 100          {
+ 101   1          /****³õÊ¼»¯ËùÓÐ¶¨ÒåµÄ²ÎÊý±äÁ¿****/
+ 102   1          MotorcontrolInit();
+ 103   1        
+ 104   1         /******°´¼ü³õÊ¼»¯******/
+ 105   1          KeyInit();             //ÉÏµç¶ÁÈ¡flashÀïÃæ°´¼üÖµ
+ 106   1        
+ 107   1          /****µç»ú³õÊ¼×´Ì¬ÎªmcReady£¬¹ÊÕÏ±£»¤ÎªÎÞ¹ÊÕÏ******/
+ 108   1          mcState = mcReady;
+ 109   1          mcFaultSource = FaultNoSource;
+ 110   1          KeyCount_Long = 0;
+ 111   1      }
+ 112          
+ 113          /*-------------------------------------------------------------------------------------------------
+C51 COMPILER V9.60.7.0   MAIN                                                              04/03/2024 13:18:11 PAGE 3   
+
+ 114                  Function Name : void HardwareInit(void)
+ 115                  Description   : Ó²¼þ³õÊ¼»¯£¬³õÊ¼»¯ÐèÒªÊ¹ÓÃµÄÓ²¼þÉè±¸ÅäÖÃ£¬FOC±ØÐëÅäÖÃµÄÊÇÔË·ÅµçÑ¹¡¢ÔË·Å³õÊ¼»¯¡¢ADC
+             -³õÊ¼»¯¡¢Driver³õÊ¼»¯
+ 116                                              TIM4³õÊ¼»¯£¬ÆäËûµÄ¿É¸ù¾ÝÊµ¼ÊÐèÇó¼Ó¡£
+ 117                  Input         : ÎÞ
+ 118                  Output        : ÎÞ
+ 119          -------------------------------------------------------------------------------------------------*/
+ 120          void HardwareInit(void)
+ 121          {
+ 122   1        // ÎªÌá¸ßÐ¾Æ¬µÄ¿¹¸ÉÈÅÄÜÁ¦£¬½µµÍÐ¾Æ¬¹¦ºÄ£¬ÇëÔÚ¾ßÌåÏîÄ¿Ê±£¬½«²»ÐèÒªÓÃµÄGPIOÄ¬ÈÏ¶¼ÅäÖÃÎªÊäÈëÉÏÀ­¡£
+ 123   1        // ¾ßÌåÅäÖÃ¿ÉÔÚGPIO_Default_InitÉèÖÃ¡£
+ 124   1        //    GPIO_Default_Init();
+ 125   1      
+ 126   1        /******Ó²¼þFO¹ýÁ÷£¬±È½ÏÆ÷³õÊ¼»¯£¬ÓÃÓÚÓ²¼þ¹ýÁ÷±È½Ï±£»¤******/
+ 127   1        #if (HardwareCurrent_Protect == Hardware_FO_Protect)                        //Íâ²¿ÖÐ¶Ï³õÊ¼»¯£¬ÓÃÓÚÍâ²¿ÖÐ
+             -¶ÏÓ²¼þ¹ýÁ÷FOµÄ±£»¤
+                    EXTI_Init();
+                #elif (HardwareCurrent_Protect == Hardware_CMP_Protect)                     //Ñ¡Ôñ±È½Ï¹ýÁ÷£¬±È½ÏÆ÷³õÊ¼»¯
+ 130   1            CMP3_Init();
+ 131   1        #elif (HardwareCurrent_Protect == Hardware_FO_CMP_Protect)                  //Á½Õß¶¼Ñ¡Ôñ
+                    EXTI_Init();
+                    CMP3_Init();
+                #endif
+ 135   1      
+ 136   1        //Sleepmode_Init();
+ 137   1       
+ 138   1        /*****¹¦ÄÜIO³õÊ¼»¯*****/
+ 139   1        GPIO_Init();
+ 140   1        
+ 141   1        /*****¹ýÁã¼ì²âÍâ²¿ÖÐ¶Ï³õÊ¼»¯*****/
+ 142   1        ZeroCrossing_Init();
+ 143   1      
+ 144   1        /*****ÔËËã·Å´óÆ÷³õÊ¼»¯*****/
+ 145   1        AMP_Init();
+ 146   1      
+ 147   1        /*****ADC³õÊ¼»¯*****/
+ 148   1        ADC_Init();
+ 149   1        
+ 150   1        /*****±È½ÏÆ÷ÖÐ¶ÏÅäÖÃ*****/
+ 151   1        CMP3_Inter_Init();                                                          // ½¨ÒéºÍ±È½ÏÆ÷³õÊ¼»¯¼ä¸ôÒ»¶
+             -ÎÊ±¼ä
+ 152   1      
+ 153   1        /*****Driver³õÊ¼»¯*****/
+ 154   1        Driver_Init();
+ 155   1          
+ 156   1          /*****UART³õÊ¼»¯*****/
+ 157   1      //  UART_Init();//Î´ÅäÖÃ
+ 158   1      
+ 159   1      //  #if defined (SPI_DBG_HW) | defined (SPI_DBG_SW)                           // µ÷ÊÔÄ£Ê½
+ 160   1      //    SPI_Init();                                                             //µ÷ÊÔÄ£Ê½ÏÂ£¬Õ¼ÓÃSPI¶Ë¿ÚµÄN
+             -SS(GP04),MOSI(GP05),SCK(GP06)
+ 161   1      //  #endif
+ 162   1      
+ 163   1          /*****Timer³õÊ¼»¯*****/
+ 164   1      //  TIM2_Init();                                                              //¶Ë¿ÚGP07 & GP10
+ 165   1      //  TIM3_Init();                                                              //¿ØÖÆ·¢ÈÈË¿
+ 166   1      //  TIM4_Init();                                                              //¼ì²â¹âñîÆ«²î
+ 167   1        TIM1ms_Init();                                                              //²ÉÓÃ1ms¶¨Ê±Æ÷ÖÐ¶Ï×÷Îª³£¼ûÖ
+             -Ð¶Ï,´¦Àí¹ÊÕÏ±£»¤µÈ¸½¼Ó¹¦ÄÜ
+ 168   1      }
+
+
+C51 COMPILER V9.60.7.0   MAIN                                                              04/03/2024 13:18:11 PAGE 4   
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =     48    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----    ----
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+   EDATA SIZE       =   ----    ----
+   HDATA SIZE       =   ----    ----
+   XDATA CONST SIZE =   ----    ----
+   FAR CONST SIZE   =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

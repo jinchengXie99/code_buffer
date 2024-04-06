@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   USERUART                                                          02/24/2024 10:00:30 PAGE 1   
+C51 COMPILER V9.60.7.0   USERUART                                                          04/03/2024 13:28:02 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERUART
@@ -62,7 +62,7 @@ line level    source
   51          
   52          u16 UartRxIdleX1ms;         // 通信空闲等待
   53          u16 UartRxInvalidX1ms;      // 通信无效等待
-C51 COMPILER V9.60.7.0   USERUART                                                          02/24/2024 10:00:30 PAGE 2   
+C51 COMPILER V9.60.7.0   USERUART                                                          04/03/2024 13:28:02 PAGE 2   
 
   54          
   55          u8  URXCmdVal;
@@ -126,7 +126,7 @@ line level    source
  113          // 说明：发送数据
  114          void UARTSetData(void)
  115          {
-C51 COMPILER V9.60.7.0   USERUART                                                          02/24/2024 10:00:30 PAGE 3   
+C51 COMPILER V9.60.7.0   USERUART                                                          04/03/2024 13:28:02 PAGE 3   
 
  116   1      
  117   1        // 当前无发送任务
@@ -190,7 +190,7 @@ line level    source
  175   3          
  176   3            if(UartRxLine[2] == 0xFF)           // 只有0xFF开机,其他一律关机
  177   3            {
-C51 COMPILER V9.60.7.0   USERUART                                                          02/24/2024 10:00:30 PAGE 4   
+C51 COMPILER V9.60.7.0   USERUART                                                          04/03/2024 13:28:02 PAGE 4   
 
  178   4              URXCmdVal = UartRxLine[3];
  179   4            }
@@ -254,7 +254,7 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    HDATA SIZE       =   ----    ----
    XDATA CONST SIZE =   ----    ----
    FAR CONST SIZE   =   ----    ----
-C51 COMPILER V9.60.7.0   USERUART                                                          02/24/2024 10:00:30 PAGE 5   
+C51 COMPILER V9.60.7.0   USERUART                                                          04/03/2024 13:28:02 PAGE 5   
 
 END OF MODULE INFORMATION.
 

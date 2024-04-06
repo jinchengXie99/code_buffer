@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 1   
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE FOCCONTROLFUNCTION
@@ -62,7 +62,7 @@ line level    source
   51   1        FOC_QMAX       = QOUTMAX;
   52   1        FOC_QMIN       = QOUTMIN;
   53   1      
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 2   
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 2   
 
   54   1        /*Î»ÖÃ¹ÀËã²ÎÊýÅäÖÃ*/
   55   1        FOC_EK1       = OBS_K1T;
@@ -126,7 +126,7 @@ line level    source
  113   2        }
  114   1        #endif //end IRMODE
  115   1          
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 3   
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 3   
 
  116   1      
  117   1        /**¹ýµ÷ÖÆ**/
@@ -190,7 +190,7 @@ line level    source
               
                   FOC_TSMIN  = PWM_DT_LOAD;                              // ËÀÇø²¹³¥Öµ
                   FOC_TRGDLY =0F;                                        // ADC²ÉÑùµÄÊ±¿Ì£¬²ÉÑùÊ±¿ÌÔÚ¼ÆÊýÆ÷Áãµã¸½½ü£¬83Î
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 4   
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 4   
 
              -ªÏÂ½µÑØ½áÊøÇ°3¸öclock²ÉÑùIa£¬Óëµ¥µç×è²»Í¬¡£
                                                                         // 01ÎªÉÏÉýÑØ¿ªÊ¼ºóµÚÒ»¸öclock¿ªÊ¼²ÉÑù¡£¸ù¾ÝÊµ¼Ê
@@ -254,7 +254,7 @@ line level    source
                       SetReg(FOC_CR2, CSOC0 | CSOC1, CSOC1);
                       FOC_CSO = mcCurOffset.IvOffset;                    // Ð´ÈëIBµÄÆ«ÖÃ
               
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 5   
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 5   
 
                       SetReg(FOC_CR2, CSOC0 | CSOC1, 0x00);
                       FOC_CSO = mcCurOffset.Iw_busOffset;                // Ð´ÈëICµÄÆ«ÖÃ
@@ -318,7 +318,7 @@ line level    source
  291   2           }
  292   1           if(( mcFocCtrl.State_Count <= (Charge_Time<<1)/3)&&(mcFocCtrl.ChargeStep== 1))
  293   1           {
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 6   
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 6   
 
  294   2             mcFocCtrl.ChargeStep = 2;
  295   2             #if (IPMState == IPMtest)
@@ -382,7 +382,7 @@ line level    source
                         FOC__THETA   = mcFocCtrl.mcPosCheckAngle + _Q15((float)60.0/180.0);;
                       }
                       #else
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 7   
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 7   
 
  356   3              {
  357   4                FOC__THETA    =Align_Theta;
@@ -446,7 +446,7 @@ line level    source
  415   2            TimeCnt=FOC__ETHETA;
  416   2            /*Æô¶¯µçÁ÷¡¢KP¡¢KI¡¢FOC_EKP¡¢FOC_EKI*/
  417   2            FOC_IDREF = ID_Start_CURRENT;                         // DÖáÆô¶¯µçÁ÷
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 8   
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 8   
 
  418   2            mcFocCtrl.mcIqref= IQ_Start_CURRENT;                  // QÖáÆô¶¯µçÁ÷
  419   2            
@@ -510,7 +510,7 @@ line level    source
                           OpenRampCycles++;
                         }
                       }
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 9   
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 9   
 
                       else
                       {
@@ -574,7 +574,7 @@ line level    source
  538   3              if(TailWindDetect.PLLDetectCnt>0)
  539   3              {
  540   4                TailWindDetect.PLLDetectCnt--;
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 10  
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 10  
 
  541   4              }
  542   3            }
@@ -638,7 +638,7 @@ line level    source
  600   2            /*²»Í¬Æô¶¯·½Ê½ÏÂ£¬ÇÐ»»µ½MCRUN×´Ì¬*/
  601   2            #if (Open_Start_Mode == Open_Start)      //OPEN×´Ì¬Æô¶¯Ê±ÍÏ¶¯¶à´Î
                     {
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 11  
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 11  
 
                       if(OpenRampCycles<(MOTOR_OPEN_ACC_CYCLE-1))
                       {
@@ -702,7 +702,7 @@ line level    source
  662   3      
  663   3          }
  664   2          #if (FRDetectMethod==RSDMethod)
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 12  
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 12  
 
                   {
                     RSDDealwith();
@@ -766,7 +766,7 @@ line level    source
  722   1        mcCurOffset.IuOffsetSum            = 16383;
  723   1        mcCurOffset.IvOffsetSum            = 16383;
  724   1        mcCurOffset.Iw_busOffsetSum        = 16383;
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 13  
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 13  
 
  725   1      
  726   1        /*****LEDµÆÏìÓ¦***/
@@ -830,7 +830,7 @@ line level    source
  784          /* Output  :  NO
  785          /* Description:  ÉÏµçÊ±£¬ÏÈ¶ÔÓ²¼þµçÂ·µÄµçÁ÷½øÐÐ²É¼¯£¬Ð´Èë¶ÔÓ¦µÄÐ£×¼¼Ä´æÆ÷ÖÐ¡£
  786                          µ÷ÊÔÊ±£¬Ðè¹Û²ìmcCurOffset½á¹¹ÌåÖÐ¶ÔÓ¦±äÁ¿ÊÇ·ñÔÚ·¶Î§ÄÚ¡£²É¼¯½áÊøºó£¬OffsetFlagÖÃ1¡£
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 14  
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 14  
 
  787          /*---------------------------------------------------------------------------*/
  788          void GetCurrentOffset(void)
@@ -894,7 +894,7 @@ line level    source
  843   1         if(McStaSet.SetFlag.CalibFlag==0)
  844   1         {
  845   2           McStaSet.SetFlag.CalibFlag=1;
-C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                02/24/2024 10:00:30 PAGE 15  
+C51 COMPILER V9.60.7.0   FOCCONTROLFUNCTION                                                04/03/2024 13:28:02 PAGE 15  
 
  846   2           ClrBit(DRV_CR, FOCEN);      // ¹Ø±ÕFOC
  847   2           MOE      = 0;               // ¹Ø±ÕMOE

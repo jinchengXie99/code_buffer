@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MDUINIT                                                           02/24/2024 10:04:52 PAGE 1   
+C51 COMPILER V9.60.7.0   MDUINIT                                                           04/03/2024 13:54:58 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MDUINIT
@@ -62,7 +62,7 @@ line level    source
   49            Function Name : uint16 MDU_DIV_XDATA_U16(uint8 xdata *TData0, uint8 xdata *TData1)
   50            Description   :  16位无符号除法，返回16位无符号值，运行时间5.6us，函数在调用过
              -程中如果
-C51 COMPILER V9.60.7.0   MDUINIT                                                           02/24/2024 10:04:52 PAGE 2   
+C51 COMPILER V9.60.7.0   MDUINIT                                                           04/03/2024 13:54:58 PAGE 2   
 
   51                            被中断打断则会重复调用
   52            Input         :  TData0-被除数(16位)，TData1-除数(16位)，商是16位的，应用于数据类型
@@ -126,7 +126,7 @@ line level    source
  107   1      
  108   1      }
  109          
-C51 COMPILER V9.60.7.0   MDUINIT                                                           02/24/2024 10:04:52 PAGE 3   
+C51 COMPILER V9.60.7.0   MDUINIT                                                           04/03/2024 13:54:58 PAGE 3   
 
  110          /*-------------------------------------------------------------------------------------------------
  111            Function Name : uint16 MDU_DIV_XDATA_U16(uint8 xdata *TData0, uint8 xdata *TData1)
@@ -190,7 +190,7 @@ line level    source
  167   2          MDU_CR |= (1<<ALIGN0);          /*11:乘法结果右移15位*/
  168   2        }
  169   1        else ;
-C51 COMPILER V9.60.7.0   MDUINIT                                                           02/24/2024 10:04:52 PAGE 4   
+C51 COMPILER V9.60.7.0   MDUINIT                                                           04/03/2024 13:54:58 PAGE 4   
 
  170   1      
  171   1        if(SIGN == 0)
@@ -254,7 +254,7 @@ line level    source
  226   1      
  227   1        ClrBit(MDU_CR, MDSN);                               // 0-无符号乘法，1-有符号乘法
  228   1      
-C51 COMPILER V9.60.7.0   MDUINIT                                                           02/24/2024 10:04:52 PAGE 5   
+C51 COMPILER V9.60.7.0   MDUINIT                                                           04/03/2024 13:54:58 PAGE 5   
 
  229   1        MDU_MA = TData0;
  230   1        MDU_MB = TData1;                                   // 写被乘数和乘数
@@ -319,7 +319,7 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    FAR CONST SIZE   =   ----    ----
 END OF MODULE INFORMATION.
 
-C51 COMPILER V9.60.7.0   MDUINIT                                                           02/24/2024 10:04:52 PAGE 6   
+C51 COMPILER V9.60.7.0   MDUINIT                                                           04/03/2024 13:54:58 PAGE 6   
 
 
 C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)

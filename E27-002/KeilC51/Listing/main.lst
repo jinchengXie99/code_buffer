@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   MAIN                                                              02/24/2024 10:04:47 PAGE 1   
+C51 COMPILER V9.60.7.0   MAIN                                                              04/03/2024 13:54:55 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE MAIN
@@ -62,7 +62,7 @@ line level    source
   50          
   51          //      /*启停测试加*/
   52          ////    ONOFFTest.ONOFF_Flag = 1;
-C51 COMPILER V9.60.7.0   MAIN                                                              02/24/2024 10:04:47 PAGE 2   
+C51 COMPILER V9.60.7.0   MAIN                                                              04/03/2024 13:54:55 PAGE 2   
 
   53          ////    mcSpeedRamp.FlagONOFF   = 1;
   54          ////    mcSpeedRamp.TargetValue = _Q15(110000 / MOTOR_SPEED_BASE);
@@ -126,7 +126,7 @@ line level    source
  111   1      }
  112          
  113          /*-------------------------------------------------------------------------------------------------
-C51 COMPILER V9.60.7.0   MAIN                                                              02/24/2024 10:04:47 PAGE 3   
+C51 COMPILER V9.60.7.0   MAIN                                                              04/03/2024 13:54:55 PAGE 3   
 
  114                  Function Name : void HardwareInit(void)
  115                  Description   : 硬件初始化，初始化需要使用的硬件设备配置，FOC必须配置的是运放电压、运放初始化、ADC
@@ -190,7 +190,7 @@ line level    source
  168   1      }
 
 
-C51 COMPILER V9.60.7.0   MAIN                                                              02/24/2024 10:04:47 PAGE 4   
+C51 COMPILER V9.60.7.0   MAIN                                                              04/03/2024 13:54:55 PAGE 4   
 
 MODULE INFORMATION:   STATIC OVERLAYABLE
    CODE SIZE        =     48    ----

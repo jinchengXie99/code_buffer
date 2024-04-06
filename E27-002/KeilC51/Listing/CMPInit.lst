@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   CMPINIT                                                           02/24/2024 10:04:51 PAGE 1   
+C51 COMPILER V9.60.7.0   CMPINIT                                                           04/03/2024 13:54:58 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE CMPINIT
@@ -62,7 +62,7 @@ line level    source
   51   2          SetBit(P2_AN, P26);
   52   2          SetBit(P2_OE, P26); 
   53   2          
-C51 COMPILER V9.60.7.0   CMPINIT                                                           02/24/2024 10:04:51 PAGE 2   
+C51 COMPILER V9.60.7.0   CMPINIT                                                           04/03/2024 13:54:58 PAGE 2   
 
   54   2          /******************************
   55   2          0: 正常模式，DAC输出电压范围为0到VREF，适用于硬件过流保护
@@ -126,7 +126,7 @@ MODULE INFORMATION:   STATIC OVERLAYABLE
    PDATA SIZE       =   ----    ----
    DATA SIZE        =   ----    ----
    IDATA SIZE       =   ----    ----
-C51 COMPILER V9.60.7.0   CMPINIT                                                           02/24/2024 10:04:51 PAGE 3   
+C51 COMPILER V9.60.7.0   CMPINIT                                                           04/03/2024 13:54:58 PAGE 3   
 
    BIT SIZE         =   ----    ----
    EDATA SIZE       =   ----    ----

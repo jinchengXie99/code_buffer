@@ -1,4 +1,4 @@
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 1   
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 1   
 
 
 C51 COMPILER V9.60.7.0, COMPILATION OF MODULE USERDRYER
@@ -62,7 +62,7 @@ line level    source
   51          
   52          // xjc µµÎ»¶þ½øÖÆ
   53          #define   LED_SPEED_bit_1   GP03
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 2   
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 2   
 
   54          #define   LED_SPEED_bit_2   GP02
   55          #define   LED_SPEED_bit_3   GP01
@@ -126,7 +126,7 @@ line level    source
  113          #define HEAT_ADC_VAL_LV4      HEAT_CELSIUS_ADC(HEAT_R_VAL_LV4)    // 3µ²¸ø¶¨ÈÈ·çÎÂ¶È¶ÔÓ¦²ÉÑùµç×èÖµ
  114          
  115          #define POWER_DUTY_LV1        CAL_POWER_Q12(POWER_LV1)
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 3   
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 3   
 
  116          #define POWER_DUTY_LV2        CAL_POWER_Q12(POWER_LV2)
  117          #define POWER_DUTY_LV3        CAL_POWER_Q12(POWER_LV3)
@@ -190,7 +190,7 @@ line level    source
  175          u8  idata HeatShiftStep;            // 
  176          u8  idata HeatCmdLv;                // 
  177          
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 4   
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 4   
 
  178          u8  idata CoolCmdLv;                // Àä·çÃüÁî
  179          u8  idata CoolShiftLv;              // 
@@ -254,7 +254,7 @@ line level    source
  237          {
  238   1        // 1  2  3  4  1
  239   1        // 1  2  3  2  1
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 5   
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 5   
 
  240   1        
  241   1        if((SpeedShiftStep == 0)||(SpeedShiftStep >= (2*SPD_CMD_LV_MAX-1)))     // A-0  B-1  C-2  D-3  E-2  F-1 
@@ -318,7 +318,7 @@ line level    source
  297          void DryerPer1ms(void)
  298          {
  299   1        
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 6   
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 6   
 
  300   1        KeyPro1msTmr = Loop1msCnt;   // Óë LoopProPer1ms() ¼ÆÊýÒ»ÖÂ
  301   1        
@@ -382,7 +382,7 @@ line level    source
  359   2      //    }
  360   2      //    else
  361   2      //    {
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 7   
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 7   
 
  362   2      //      if(KeyOnLockLvPre == 0)                  // µ±¿ª¹Ø×´Ì¬ÍÑÀë¹Ø±ÕÌ¬£¬Á¢¼´ÔËÐÐ
  363   2      //      {
@@ -446,7 +446,7 @@ line level    source
  421   2      //      {
  422   2      ////        if(KeyOnLockLv == 1)
  423   2      ////          KeyOnLockLv = 2;
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 8   
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 8   
 
  424   2      ////        else
  425   2      //        {
@@ -510,7 +510,7 @@ line level    source
  483   4              KeySpeed.Fall = 1;
  484   4            }
  485   3            
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 9   
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 9   
 
  486   3            // »ñµÃ¼ÓÈÈ¶Ë¿Ú×´Ì¬
  487   3            KeyHeat.Rise = 0;                 // Çå³ýÉÏÌø±äÑØ
@@ -574,7 +574,7 @@ line level    source
  545   4              // ¡ø--------------------------------------¡ø //
  546   4              
  547   4              // ¨‹--------------------------------------¨‹ //
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 10  
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 10  
 
  548   4              // 2. Àä·ç°´¼ü´¦Àí,Ö»ÔÚ°´ÏÂÊ±Àä·ç
  549   4      //        if(KeyCool.Lv == 0)
@@ -638,7 +638,7 @@ line level    source
  607   2          
  608   2          
  609   2          if(ReverseCleanCmd == 1)
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 11  
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 11  
 
  610   2            VspSpdCmd = _Q15(60000 / MOTOR_SPEED_BASE);
  611   2          
@@ -702,7 +702,7 @@ line level    source
  669   2          
  670   2        
  671   2          // È·¶¨¸÷µ²Î»ÈÈ¶È×î¸ßµ÷½ÚÁ¿
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 12  
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 12  
 
  672   2      
  673   2          if((CoolCmdLv == 1)||(KeyOnOffCmd == 0)||(mcState != mcRun))
@@ -766,7 +766,7 @@ line level    source
  731   3            WindTemperHigh = 1;
  732   3            WindTemperDelta = 0;
  733   3      //      SaveCnt = 0;
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 13  
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 13  
 
  734   3          }
  735   2          else if(HeatTemperCelsius <= (WindTemperRef-0))    //Îª·ÀÖ¹ÁÙ½çµãÊ¶±ð¶¶¶¯£¬µ±Ç°ÎÂ¶ÈµÍÓÚ¸ø¶¨Öµ¼õÈ¥ÖÍ»ØÇ
@@ -830,7 +830,7 @@ line level    source
                       HeatLv4X10ms = 0;
                     else if(HeatLv4X10ms > 200)
                       HeatDutyMax = 0;
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 14  
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 14  
 
                   }
                   else
@@ -894,7 +894,7 @@ line level    source
  852   2      //    {
  853   2      //      SaveCnt = 0;
  854   2      //    }
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 15  
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 15  
 
  855   2      //    else
  856   2      //    {
@@ -958,7 +958,7 @@ line level    source
  914   1        #endif
  915   1        
  916   1      //  // µ÷ÊÔÖÐ£¬¹Ø±Õ¾§Õ¢¹Ü
-C51 COMPILER V9.60.7.0   USERDRYER                                                         02/24/2024 13:55:18 PAGE 16  
+C51 COMPILER V9.60.7.0   USERDRYER                                                         04/03/2024 13:54:55 PAGE 16  
 
  917   1      //  HEAT_WIRE_H_OFF;
  918   1      //  HEAT_WIRE_L_OFF;
